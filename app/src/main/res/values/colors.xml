@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="red">#F64565</color>
+
+    <color name="onSurfaceShade">#FFE7E7F8</color>
+
+    <color name="surface">#FFF5F4FF</color>
+    <color name="onSurface">#FF848498</color>
+    <color name="onSurfaceContrast">#FF46465C</color>
+
+    <color name="primary">#E4E1FD</color>
+    <color name="primaryContrast">#FF6558F8</color>
+    <color name="onPrimary">#FFE1DEFC</color>
+    <color name="onPrimaryContrast">#FFFFFFFF</color>
+
+    <color name="secondary">#FF938BEA</color>
+    <color name="secondaryContrast">#FF6558F8</color>
+    <color name="onSecondary">#FFE1DEFC</color>
+    <color name="onSecondaryContrast">#FFFFFFFF</color>
+
+    <color name="redTune">#FDE1E1</color>
+    <color name="greenTune">#E1FDE5</color>
+
+    <color name="timeline_card">#FFF5F4FF</color>
+
+    <color name="highlight">#FF848498</color>
+</resources>

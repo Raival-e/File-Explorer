@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/background"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:paddingTop="12dp"
+    android:paddingBottom="12dp"
+    android:gravity="center">
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        app:tint="@color/onSurfaceContrast"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_round_menu_24" />
+    <TextView
+        android:id="@+id/label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="8dp"
+        android:textStyle="normal"
+        android:textColor="@color/onSurfaceContrast"
+        android:textSize="16sp"
+        android:text="this is an option"/>
+</LinearLayout>
