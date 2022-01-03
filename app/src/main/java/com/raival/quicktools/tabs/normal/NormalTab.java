@@ -2,10 +2,12 @@ package com.raival.quicktools.tabs.normal;
 
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Parcelable;
 
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.tabs.TabLayout;
+import com.raival.quicktools.App;
 import com.raival.quicktools.tabs.normal.fragment.NormalTabFragment;
 import com.raival.quicktools.interfaces.QTab;
 import com.raival.quicktools.tabs.normal.models.FileItem;
@@ -16,16 +18,23 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class NormalTab implements QTab {
     public final static String MAX_NAME_LENGTH = "maximum name length";
 
     TabLayout.Tab tab;
+
     File currentPath;
+    File previousPath;
+
     NormalTabFragment fragment;
     ArrayList<FileItem> activeFilesList;
     Comparator<File>[] comparators;
+
+    Map<String, Parcelable> pathsStets = new HashMap<>();
 
     public NormalTab(File path){
         currentPath = path;
@@ -37,8 +46,17 @@ public class NormalTab implements QTab {
     }
 
     public void setCurrentPath(File currentPath) {
+        //save state before opening a new folder
+        addPathState(this.currentPath);
+
         this.currentPath = currentPath;
         activeFilesList = null;
+    }
+
+    private void addPathState(File currentPath) {
+        if(fragment.getRecyclerViewInstance() != null){
+            pathsStets.put(currentPath.getAbsolutePath(), fragment.getRecyclerViewInstance());
+        }
     }
 
     @Override
@@ -98,8 +116,16 @@ public class NormalTab implements QTab {
         if(currentPath.getAbsolutePath().equals(Environment.getExternalStorageDirectory().getAbsolutePath())){
             return false;
         }
+
+        previousPath = currentPath;
         setCurrentPath(currentPath.getParentFile());
+
         fragment.updateFilesList();
+
+        if(pathsStets.containsKey(currentPath.getAbsolutePath())){
+            fragment.setRecyclerViewInstance(pathsStets.get(currentPath.getAbsolutePath()));
+            pathsStets.remove(currentPath.getAbsolutePath());
+        }
         return true;
     }
 
@@ -111,5 +137,10 @@ public class NormalTab implements QTab {
         if(tab != null){
             tab.setText(getName());
         }
+    }
+
+    public boolean shouldHighlightFile(File file){
+        if(previousPath == null) return false;
+        return file.getAbsolutePath().equals(previousPath.getAbsolutePath());
     }
 }

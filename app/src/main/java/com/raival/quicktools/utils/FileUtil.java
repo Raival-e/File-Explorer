@@ -280,4 +280,36 @@ public class FileUtil {
             App.showMsg("Cannot open this file");
         }
     }
+
+
+    public static boolean isSingleFolder(ArrayList<File> selectedFiles) {
+        return (selectedFiles.size() == 1 && !selectedFiles.get(0).isFile());
+    }
+
+    public static boolean isOnlyFolders(ArrayList<File> selectedFiles) {
+        for(File file : selectedFiles){
+            if(file.isFile())
+                return false;
+        }
+        return true;
+    }
+
+    public static boolean isSingleFile(ArrayList<File> selectedFiles) {
+        return (selectedFiles.size() == 1 && selectedFiles.get(0).isFile());
+    }
+
+    public static boolean isOnlyFiles(ArrayList<File> selectedFiles) {
+        for(File file : selectedFiles){
+            if(!file.isFile())
+                return false;
+        }
+        return true;
+    }
+
+    public static boolean isSingleArchive(ArrayList<File> selectedFiles) {
+        return (selectedFiles.size() == 1
+                && (isArchiveFile(getFileExtension(selectedFiles.get(0)))
+                || getFileExtension(selectedFiles.get(0)).equals(FileExtensions.apkType)
+                ||getFileExtension(selectedFiles.get(0)).equals(FileExtensions.rarType)));
+    }
 }

@@ -4,22 +4,29 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/surface"
-    android:padding="16dp">
+    android:padding="8dp">
+
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
         android:padding="8dp"
         android:maxLines="1"
         android:text="This is Title"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:textColor="@color/onSurfaceContrast"
-        android:textStyle="normal" />
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/msg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
         android:padding="8dp"
         android:text="This is Title"
         android:textSize="13sp"

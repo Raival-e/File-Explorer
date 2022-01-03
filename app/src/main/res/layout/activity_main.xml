@@ -41,6 +41,7 @@
                 android:textSize="15sp"
                 android:maxLines="1"/>
             <TextView
+                android:id="@+id/subtitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="24 folders, 6 files"
@@ -71,6 +72,7 @@
         android:orientation="horizontal"
         android:gravity="center">
         <ImageView
+            android:id="@+id/tabs_options"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:src="@drawable/ic_baseline_chevron_right_24"

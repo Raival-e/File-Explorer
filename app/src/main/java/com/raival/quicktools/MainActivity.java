@@ -18,12 +18,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
+import android.view.Gravity;
+import android.view.MenuItem;
+import android.widget.PopupMenu;
+import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.raival.quicktools.interfaces.QTab;
 import com.raival.quicktools.tabs.normal.NormalTab;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -50,6 +55,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed(){
         if(!tabs.get(viewPager2.getCurrentItem()).onBackPressed()){
+            if(viewPager2.getCurrentItem() != 0){
+                closeTabAt(viewPager2.getCurrentItem());
+                return;
+            }
             super.onBackPressed();
         }
     }
@@ -88,10 +97,92 @@ public class MainActivity extends AppCompatActivity {
     private void init(){
         AddDefaultTab();
         initTabs();
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) { }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) { }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                showTabsOptionsMenu();
+            }
+        });
     }
 
     private void AddDefaultTab() {
+        findViewById(R.id.tabs_options).setOnClickListener(view -> {
+            showTabsOptionsMenu();
+        });
         tabs.add(new NormalTab(Environment.getExternalStorageDirectory()));
+    }
+
+    private void showTabsOptionsMenu() {
+        PopupMenu popupMenu = new PopupMenu(this, findViewById(R.id.tabs_options));
+
+        popupMenu.getMenu().add("Add new tab");
+
+        if(tabs.size() > 1){
+            popupMenu.getMenu().add("Close tab");
+            popupMenu.getMenu().add("Close others");
+        }
+
+        popupMenu.setOnMenuItemClickListener(menuItem -> {
+            switch (menuItem.getTitle().toString()){
+                case "Add new tab":{
+                    addNewTab(Environment.getExternalStorageDirectory());
+                    return true;
+                }
+                case "Close tab":{
+                    closeTabAt(viewPager2.getCurrentItem());
+                    return true;
+                }
+                case "Close others":{
+                    closeOtherTabs(viewPager2.getCurrentItem());
+                    return true;
+                }
+                default:{
+                    return false;
+                }
+            }
+        });
+        popupMenu.show();
+    }
+
+    private void closeOtherTabs(int currentItem) {
+        QTab q = tabs.get(currentItem);
+        tabs = new ArrayList<>();
+        tabs.add(q);
+        initTabs();
+    }
+
+    private void closeTabAt(int currentItem) {
+        tabs.remove(currentItem);
+        reInitTabs();
+        if(currentItem >= tabs.size()){
+            viewPager2.setCurrentItem(tabs.size()-1, false);
+        } else if(currentItem != 0){
+            viewPager2.setCurrentItem(currentItem - 1, false);
+        }
+    }
+
+    private void reInitTabs() {
+        initTabs();
+    }
+
+    private void linkTabs() {
+        for(int i = 0; i < tabs.size(); i++){
+            tabs.get(i).setTab(tabLayout.getTabAt(i));
+        }
+    }
+
+    public void addNewTab(File path) {
+        int i = viewPager2.getCurrentItem() + 1;
+        tabs.add(i, new NormalTab(path));
+        reInitTabs();
+        viewPager2.setCurrentItem(i, true);
     }
 
     private void initTabs() {
@@ -100,12 +191,12 @@ public class MainActivity extends AppCompatActivity {
             String tabName = tabs.get(position).getName();
             tab.setText(tabName);
         }).attach();
-
-        for(int i = 0; i < tabs.size(); i++){
-            tabs.get(i).setTab(tabLayout.getTabAt(i));
-        }
+        linkTabs();
     }
 
+    public void setPageSubtitle(String subtitle){
+        ((TextView)findViewById(R.id.subtitle)).setText(subtitle);
+    }
 
     public class TabsFragmentAdapter extends FragmentStateAdapter {
 

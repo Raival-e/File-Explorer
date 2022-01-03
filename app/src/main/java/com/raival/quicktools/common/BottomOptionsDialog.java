@@ -1,4 +1,4 @@
-package com.raival.quicktools.fragments;
+package com.raival.quicktools.common;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -20,7 +20,7 @@ import com.raival.quicktools.R;
 import java.util.ArrayList;
 import java.util.Optional;
 
-public class CommonBottomDialog extends BottomSheetDialogFragment {
+public class BottomOptionsDialog extends BottomSheetDialogFragment {
     String title;
     String message;
 
@@ -37,10 +37,10 @@ public class CommonBottomDialog extends BottomSheetDialogFragment {
         public OptionHolder(){ }
     }
 
-    public CommonBottomDialog(String title) {
+    public BottomOptionsDialog(String title) {
         this.title = title;
     }
-    public CommonBottomDialog(String title, String msg) {
+    public BottomOptionsDialog(String title, String msg) {
         this.title = title;
         message = msg;
     }
