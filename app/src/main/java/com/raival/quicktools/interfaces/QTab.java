@@ -11,8 +11,14 @@ import java.util.Comparator;
 
 public interface QTab {
     void setTab(TabLayout.Tab tab);
-    String getName();//used only when the tab get attached to the viewpager
+    String getName();
     ArrayList<FileItem> getFilesList();
     Fragment getFragment();
+
+    //BottomBar options
     boolean onBackPressed();
+    void selectAll();
+    void refresh();
+    boolean canCreateFile();
+    void createFile(String name, boolean isFolder);
 }

@@ -30,8 +30,20 @@ import java.util.Comparator;
 import java.util.Locale;
 
 public class FileUtil {
-    public static Comparator<File> sortByFolders(){
+    public static Comparator<File> sortFoldersFirst(){
         return (file1, file2) -> {
+            if (file1.isDirectory() && !file2.isDirectory()) {
+                return -1;
+            } else if (!file1.isDirectory() && file2.isDirectory()) {
+                return 1;
+            } else {
+                return 0;
+            }
+        };
+    }
+
+    public static Comparator<File> sortFilesFirst(){
+        return (file2, file1) -> {
             if (file1.isDirectory() && !file2.isDirectory()) {
                 return -1;
             } else if (!file1.isDirectory() && file2.isDirectory()) {

@@ -8,6 +8,15 @@ public class FileItem {
     File file;
     String details;
     Drawable icon;
+    boolean isSelected;
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
 
     public File getFile() {
         return file;
@@ -40,5 +49,9 @@ public class FileItem {
     public FileItem(File file, String details){
         this.file = file;
         this.details = details;
+    }
+
+    public void changeSelection() {
+        setSelected(!isSelected);
     }
 }

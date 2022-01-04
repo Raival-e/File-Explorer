@@ -25,6 +25,7 @@ import com.raival.quicktools.common.BottomOptionsDialog;
 import com.raival.quicktools.tabs.normal.NormalTab;
 import com.raival.quicktools.tabs.normal.models.FileItem;
 import com.raival.quicktools.utils.FileUtil;
+import com.raival.quicktools.utils.PrefsUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -32,6 +33,8 @@ import java.util.ArrayList;
 public class NormalTabFragment extends Fragment {
     NormalTab tab;
     RecyclerView recyclerView;
+    int prevPathHighlight = 0x06ffffff;
+    int selectedFileHighlight = 0x320066ff;
 
     public NormalTabFragment(NormalTab tab){
         super();
@@ -49,12 +52,7 @@ public class NormalTabFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        assignComparators();
         initRv();
-    }
-
-    private void assignComparators() {
-        tab.setComparators(FileUtil.sortNameAsc(), FileUtil.sortByFolders());
     }
 
     private void initRv() {
@@ -102,7 +100,7 @@ public class NormalTabFragment extends Fragment {
                 sb.append(" file");
                 if(files > 1) sb.append("s");
             }
-            ((MainActivity)requireActivity()).setPageSubtitle(sb.toString());
+            ((MainActivity)requireActivity()).setPageSubtitle((folders==0&&files==0)? "No items" : sb.toString());
         }
     }
 
@@ -133,12 +131,14 @@ public class NormalTabFragment extends Fragment {
             TextView name;
             TextView details;
             ImageView icon;
+            View background;
 
             public ViewHolder(View v) {
                 super(v);
                 name = v.findViewById(R.id.file_name);
                 details = v.findViewById(R.id.file_details);
                 icon = v.findViewById(R.id.file_icon);
+                background = v.findViewById(R.id.background);
             }
 
             public void bind(){
@@ -147,10 +147,12 @@ public class NormalTabFragment extends Fragment {
                 name.setText(tab.getFilesList().get(position).getName());
                 details.setText(tab.getFilesList().get(position).getDetails());
 
-                if(tab.shouldHighlightFile(tab.getFilesList().get(position).getFile())){
-                    itemView.findViewById(R.id.background).setForeground(new ColorDrawable(0x06ffffff));
+                if(tab.getFilesList().get(position).isSelected()) {
+                    background.setForeground(new ColorDrawable(selectedFileHighlight));
+                } else if(tab.shouldHighlightFile(tab.getFilesList().get(position).getFile())){
+                    background.setForeground(new ColorDrawable(prevPathHighlight));
                 } else {
-                    itemView.findViewById(R.id.background).setForeground(null);
+                    background.setForeground(null);
                 }
 
 
@@ -165,13 +167,23 @@ public class NormalTabFragment extends Fragment {
 
                 icon.setAlpha(tab.getFilesList().get(position).getFile().isHidden()? 0.5f : 1f);
 
+                itemView.findViewById(R.id.icon_container).setOnClickListener(view -> {
+                    tab.getFilesList().get(position).changeSelection();
+                    notifyItemChanged(position);
+                });
+
                 itemView.setOnClickListener(view -> {
-                   if(tab.getFilesList().get(position).getFile().isFile()){
-                       FileUtil.openFileWith(tab.getFilesList().get(position).getFile(), false);
-                   } else {
-                       tab.setCurrentPath(tab.getFilesList().get(position).getFile());
-                       updateFilesList();
-                   }
+                    if(tab.hasSelectedFiles()){
+                        tab.getFilesList().get(position).changeSelection();
+                        notifyItemChanged(position);
+                        return;
+                    }
+                    if(tab.getFilesList().get(position).getFile().isFile()){
+                        FileUtil.openFileWith(tab.getFilesList().get(position).getFile(), false);
+                    } else {
+                        tab.setCurrentPath(tab.getFilesList().get(position).getFile());
+                        updateFilesList();
+                    }
                 });
 
                 itemView.setOnLongClickListener(view -> {
@@ -180,6 +192,10 @@ public class NormalTabFragment extends Fragment {
                 });
             }
         }
+    }
+
+    public RecyclerView getRecyclerView() {
+        return recyclerView;
     }
 
     private void showFileOptions(int position) {

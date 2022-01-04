@@ -11,9 +11,12 @@ import com.raival.quicktools.App;
 import com.raival.quicktools.tabs.normal.fragment.NormalTabFragment;
 import com.raival.quicktools.interfaces.QTab;
 import com.raival.quicktools.tabs.normal.models.FileItem;
+import com.raival.quicktools.utils.FileUtil;
+import com.raival.quicktools.utils.PrefsUtil;
 import com.raival.quicktools.utils.TimeUtil;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -32,7 +35,7 @@ public class NormalTab implements QTab {
 
     NormalTabFragment fragment;
     ArrayList<FileItem> activeFilesList;
-    Comparator<File>[] comparators;
+    ArrayList<Comparator<File>> comparators = new ArrayList<>();
 
     Map<String, Parcelable> pathsStets = new HashMap<>();
 
@@ -40,9 +43,43 @@ public class NormalTab implements QTab {
         currentPath = path;
     }
 
-    @SafeVarargs
-    public final void setComparators(Comparator<File>... comparators) {
-        this.comparators = comparators;
+    private void assignComparators() {
+        comparators.clear();
+        switch (PrefsUtil.getSortingMethod()){
+            case PrefsUtil.SORT_NAME_A2Z:{
+                addComparators(FileUtil.sortNameAsc());
+                break;
+            }
+            case PrefsUtil.SORT_NAME_Z2A:{
+                addComparators(FileUtil.sortNameDesc());
+                break;
+            }
+            case PrefsUtil.SORT_SIZE_SMALLER:{
+                addComparators(FileUtil.sortSizeAsc());
+                break;
+            }
+            case PrefsUtil.SORT_SIZE_BIGGER:{
+                addComparators(FileUtil.sortSizeDesc());
+                break;
+            }
+            case PrefsUtil.SORT_DATE_NEWER:{
+                addComparators(FileUtil.sortDateDesc());
+                break;
+            }
+            case PrefsUtil.SORT_DATE_OLDER:{
+                addComparators(FileUtil.sortDateAsc());
+                break;
+            }
+        }
+        if(PrefsUtil.listFoldersFirst()){
+            addComparators(FileUtil.sortFoldersFirst());
+        } else {
+            addComparators(FileUtil.sortFilesFirst());
+        }
+    }
+
+    public final void addComparators(Comparator<File> comparator) {
+        this.comparators.add(comparator);
     }
 
     public void setCurrentPath(File currentPath) {
@@ -78,14 +115,14 @@ public class NormalTab implements QTab {
 
     @Override
     public ArrayList<FileItem> getFilesList() {
+        assignComparators();
         if(activeFilesList == null){
             activeFilesList = getSortedFilesList(comparators);
         }
         return activeFilesList;
     }
 
-    @SafeVarargs
-    public final ArrayList<FileItem> getSortedFilesList(Comparator<File>... comparators){
+    public final ArrayList<FileItem> getSortedFilesList(ArrayList<Comparator<File>>  comparators){
         ArrayList<FileItem> list = new ArrayList<>();
         File[] files = currentPath.listFiles();
         if(files != null){
@@ -112,7 +149,81 @@ public class NormalTab implements QTab {
         return canGoBack();
     }
 
+    @Override
+    public void selectAll() {
+        for(FileItem item : activeFilesList){
+            item.setSelected(true);
+        }
+        fragment.getRecyclerView().getAdapter().notifyDataSetChanged();
+    }
+
+    @Override
+    public boolean canCreateFile() {
+        return true;
+    }
+
+    @Override
+    public void refresh() {
+        setCurrentPath(currentPath);
+        fragment.updateFilesList();
+    }
+
+    @Override
+    public void createFile(String name, boolean isFolder) {
+        File file = new File(currentPath, name);
+        if(isFolder){
+            if(!file.mkdir()){
+                App.showMsg("Unable to create folder " + file.getAbsolutePath());
+            } else {
+                refresh();
+                scrollTo(file);
+            }
+        } else {
+            try {
+                if(!file.createNewFile()){
+                    App.showMsg("Unable to create file " + file.getAbsolutePath());
+                } else {
+                    refresh();
+                    scrollTo(file);
+                }
+            } catch (IOException e){
+                App.showMsg(e.toString());
+                App.log(e);
+            }
+        }
+    }
+
+    private void scrollTo(File file) {
+        for(int i = 0; i < activeFilesList.size(); i++){
+            if(activeFilesList.get(i).getFile().getAbsolutePath().equals(file.getAbsolutePath())){
+                if(fragment.getRecyclerView().getAdapter().getItemCount() > i){
+                    fragment.getRecyclerView().scrollToPosition(i);
+                    return;
+                }
+            }
+        }
+    }
+
+    public boolean hasSelectedFiles(){
+        for(FileItem item : activeFilesList){
+            if(item.isSelected())
+                return true;
+        }
+        return false;
+    }
+
     private boolean canGoBack() {
+        boolean hasFileSelected = false;
+        for(FileItem item : activeFilesList){
+            if(!hasFileSelected && item.isSelected())
+                hasFileSelected = true;
+            item.setSelected(false);
+        }
+        if(hasFileSelected) {
+            fragment.getRecyclerView().getAdapter().notifyDataSetChanged();
+            return true;
+        }
+
         if(currentPath.getAbsolutePath().equals(Environment.getExternalStorageDirectory().getAbsolutePath())){
             return false;
         }
