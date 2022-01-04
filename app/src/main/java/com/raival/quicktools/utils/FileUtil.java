@@ -81,27 +81,19 @@ public class FileUtil {
     public static void setFileIcon(ImageView icon, File file){
         final String ext = getFileExtension(file).toLowerCase();
         if(!file.isFile()){
-            Glide.with(App.appContext)
-                    .load(R.drawable.folder_icon)
-                    .into(icon);
+            icon.setImageResource(R.drawable.folder_icon);
             return;
         }
         if(isTextFile(ext)){
-            Glide.with(App.appContext)
-                    .load(R.drawable.text_file)
-                    .into(icon);
+            icon.setImageResource(R.drawable.text_file);
             return;
         }
         if(isCodeFile(ext)){
-            Glide.with(App.appContext)
-                    .load(R.drawable.code_file)
-                    .into(icon);
+            icon.setImageResource(R.drawable.code_file);
             return;
         }
         if(isArchiveFile(ext) || ext.equals(FileExtensions.rarType)){
-            Glide.with(App.appContext)
-                    .load(R.drawable.zip_file)
-                    .into(icon);
+            icon.setImageResource(R.drawable.zip_file);
             return;
         }
         if(isVideoFile(ext)){
@@ -113,9 +105,7 @@ public class FileUtil {
             return;
         }
         if(isAudioFile(ext)){
-            Glide.with(App.appContext)
-                    .load(R.drawable.audio_file)
-                    .into(icon);
+            icon.setImageResource(R.drawable.audio_file);
             return;
         }
         if(isImageType(ext)){
@@ -132,17 +122,11 @@ public class FileUtil {
                 ApplicationInfo applicationInfo = info.applicationInfo;
                 applicationInfo.sourceDir = file.getAbsolutePath();
                 applicationInfo.publicSourceDir = file.getAbsolutePath();
-                Glide.with(App.appContext)
-                        .load(applicationInfo.loadIcon(App.appContext.getPackageManager()))
-                        .error(R.drawable.ic_launcher_foreground)
-                        .placeholder(R.drawable.ic_launcher_foreground)
-                        .into(icon);
+                icon.setImageDrawable(applicationInfo.loadIcon(App.appContext.getPackageManager()));
             }
             return;
         }
-        Glide.with(App.appContext)
-                .load(R.drawable.unknown_file)
-                .into(icon);
+        icon.setImageResource(R.drawable.unknown_file);
     }
 
     private static boolean isImageType(String ext) {

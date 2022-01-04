@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#CACADC</color>
-    <color name="white">#393647</color>
+    <color name="white">#2A2936</color>
     <color name="red">#F6F6F6</color>
 
     <color name="onSurfaceShade">#FFE7E7F8</color>
 
     <color name="surface">#1C1B25</color>
-    <color name="onSurface">#9999C3</color>
+    <color name="onSurface">#D5D5D5</color>
     <color name="onSurfaceContrast">#CACADC</color>
 
     <color name="primary">#5C5A5A</color>

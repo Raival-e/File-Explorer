@@ -1,15 +1,5 @@
 package com.raival.quicktools;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
-import androidx.viewpager2.widget.ViewPager2;
-
 import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.content.ContextWrapper;
@@ -20,21 +10,27 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
-import android.view.Gravity;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
+
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pixplicity.easyprefs.library.Prefs;
+import com.raival.quicktools.fragments.QDialogFragment;
 import com.raival.quicktools.interfaces.QTab;
 import com.raival.quicktools.tabs.normal.NormalTab;
-import com.raival.quicktools.utils.FileUtil;
 import com.raival.quicktools.utils.PrefsUtil;
 
 import java.io.File;
@@ -134,12 +130,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initBottomBar() {
-        findViewById(R.id.option_back).setOnClickListener(view -> {
-            onBackPressed();
-        });
-        findViewById(R.id.option_select_all).setOnClickListener(view -> {
-            tabs.get(viewPager2.getCurrentItem()).selectAll();
-        });
+        findViewById(R.id.option_back).setOnClickListener(view -> onBackPressed());
+        findViewById(R.id.option_select_all).setOnClickListener(view -> tabs.get(viewPager2.getCurrentItem()).selectAll());
         findViewById(R.id.option_refresh).setOnClickListener(view -> {
             tabs.get(viewPager2.getCurrentItem()).refresh();
             ObjectAnimator.ofFloat(viewPager2, "alpha", 1.0f, 0.1f, 1f).setDuration(300).start();
@@ -153,21 +145,21 @@ public class MainActivity extends AppCompatActivity {
             App.showMsg("Creating files isn't possible here");
             return;
         }
+
         TextInputLayout input = (TextInputLayout) getLayoutInflater().inflate(R.layout.input, null, false);
         input.setHint("File name");
-        ViewGroup container = (ViewGroup) getLayoutInflater().inflate(R.layout.dialog_container, null, false);
-        container.addView(input);
-        MaterialAlertDialogBuilder dialogBuilder = new MaterialAlertDialogBuilder(this)
+
+        new QDialogFragment()
                 .setTitle("Create new file")
-                .setView(container)
-                .setPositiveButton("File", (dialogInterface, i) -> {
-                    tabs.get(viewPager2.getCurrentItem()).createFile(input.getEditText().getText().toString(), false);
-                })
-                .setNegativeButton("Folder", (dialogInterface, i) -> {
-                    tabs.get(viewPager2.getCurrentItem()).createFile(input.getEditText().getText().toString(), true);
-                })
-                .setNeutralButton("Cancel", null);
-        dialogBuilder.show();
+                .addView(input)
+                .setPositiveButton("File", view ->
+                tabs.get(viewPager2.getCurrentItem())
+                        .createFile(input.getEditText().getText().toString(), false), true)
+                .setNegativeButton("Folder", view ->
+                tabs.get(viewPager2.getCurrentItem())
+                        .createFile(input.getEditText().getText().toString(), true), true)
+                .setNeutralButton("Cancel", null, true)
+                .show(getSupportFragmentManager(), "");
     }
 
     private void showSortOptionsMenu(View view) {
