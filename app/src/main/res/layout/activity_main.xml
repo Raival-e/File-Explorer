@@ -128,6 +128,7 @@
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true">
             <ImageView
+                app:tint="@color/onSurfaceContrast"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@drawable/ic_round_search_24"/>
@@ -142,6 +143,7 @@
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true">
             <ImageView
+                app:tint="@color/onSurfaceContrast"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@drawable/ic_baseline_restart_alt_24"/>
@@ -156,6 +158,7 @@
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true">
             <ImageView
+                app:tint="@color/onSurfaceContrast"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@drawable/ic_baseline_add_24"/>
@@ -170,6 +173,7 @@
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true">
             <ImageView
+                app:tint="@color/onSurfaceContrast"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@drawable/ic_baseline_sort_24"/>
@@ -184,6 +188,7 @@
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true">
             <ImageView
+                app:tint="@color/onSurfaceContrast"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@drawable/ic_baseline_select_all_24"/>
@@ -198,6 +203,7 @@
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true">
             <ImageView
+                app:tint="@color/onSurfaceContrast"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@drawable/ic_baseline_arrow_back_24"/>

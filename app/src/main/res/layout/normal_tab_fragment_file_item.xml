@@ -19,7 +19,9 @@
             android:layout_width="36dp"
             android:layout_height="36dp"
             app:cardCornerRadius="16dp"
-            android:layout_marginStart="4dp">
+            android:layout_marginStart="4dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@color/surface">
             <ImageView
                 android:id="@+id/file_icon"
                 android:layout_width="match_parent"
@@ -51,8 +53,7 @@
             android:text="file name"
             android:paddingEnd="8dp"
             android:textColor="@color/onSurface"
-            android:textSize="10sp"
-            android:alpha="0.7"/>
+            android:textSize="10sp" />
     </LinearLayout>
 
 

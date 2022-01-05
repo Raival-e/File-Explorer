@@ -81,6 +81,11 @@ public class FileUtil {
     }
 
     public static void setFileIcon(ImageView icon, File file){
+        if(!file.isFile()){
+            icon.setImageResource(R.drawable.folder_icon);
+            return;
+        }
+
         final String ext = getFileExtension(file).toLowerCase();
 
         if(ext.equals(FileExtensions.apkType)){
@@ -97,16 +102,12 @@ public class FileUtil {
             icon.setImageResource(R.drawable.pdf_file);
             return;
         }
-        if(!file.isFile()){
-            icon.setImageResource(R.drawable.folder_icon);
-            return;
-        }
         if(isTextFile(ext)){
             icon.setImageResource(R.drawable.text_file);
             return;
         }
         if(isCodeFile(ext)){
-            icon.setImageResource(R.drawable.code_file);
+            icon.setImageResource(R.drawable.java_file);
             return;
         }
         if(isArchiveFile(ext) || ext.equals(FileExtensions.rarType)){
@@ -122,7 +123,7 @@ public class FileUtil {
             return;
         }
         if(isAudioFile(ext)){
-            icon.setImageResource(R.drawable.audio_file);
+            icon.setImageResource(R.drawable.sound_file);
             return;
         }
         if(isImageType(ext)){

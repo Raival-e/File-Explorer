@@ -203,10 +203,19 @@ public class NormalTabFragment extends Fragment {
     }
 
     private void showFileOptions(int position) {
-        ArrayList<File> selectedFiles = new ArrayList<>();
-        selectedFiles.add(tab.getFilesList().get(position).getFile());
+        ArrayList<File> selectedFiles = tab.getSelectedFiles();
+        if(selectedFiles.size() == 0){
+            selectedFiles.add(tab.getFilesList().get(position).getFile());
+        }
 
-        BottomOptionsDialog bottomDialog = new BottomOptionsDialog(tab.getFilesList().get(position).getName());
+        String title = "";
+        if(selectedFiles.size() == 1){
+            title = tab.getFilesList().get(position).getName();
+        } else {
+            title = "" + selectedFiles.size() + " Files selected";
+        }
+
+        BottomOptionsDialog bottomDialog = new BottomOptionsDialog(title);
         bottomDialog.show(getParentFragmentManager(), "FileOptionsDialog");
         if(FileUtil.isSingleFolder(selectedFiles)){
             bottomDialog.addOption("Open in a new tab", R.drawable.ic_round_tab_24, view1 ->{

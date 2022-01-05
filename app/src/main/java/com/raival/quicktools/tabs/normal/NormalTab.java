@@ -266,4 +266,13 @@ public class NormalTab implements QTab {
         if(previousPath == null) return false;
         return file.getAbsolutePath().equals(previousPath.getAbsolutePath());
     }
+
+    public ArrayList<File> getSelectedFiles() {
+        ArrayList<File> list = new ArrayList<>();
+        for(FileItem fileItem : activeFilesList){
+            if(fileItem.isSelected())
+                list.add(fileItem.getFile());
+        }
+        return list;
+    }
 }
