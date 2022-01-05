@@ -51,7 +51,8 @@
             android:text="file name"
             android:paddingEnd="8dp"
             android:textColor="@color/onSurface"
-            android:textSize="10sp"/>
+            android:textSize="10sp"
+            android:alpha="0.7"/>
     </LinearLayout>
 
 

@@ -78,6 +78,10 @@ public class NormalTab implements QTab {
         }
     }
 
+    public File getCurrentPath(){
+        return currentPath;
+    }
+
     public final void addComparators(Comparator<File> comparator) {
         this.comparators.add(comparator);
     }
@@ -241,7 +245,15 @@ public class NormalTab implements QTab {
     }
 
     private String getFileDetails(File file) {
-        return TimeUtil.getLastModifiedDate(file, TimeUtil.REGULAR_DATE_FORMAT);
+        final StringBuilder sb = new StringBuilder();
+        sb.append(TimeUtil.getLastModifiedDate(file, TimeUtil.REGULAR_DATE_FORMAT));
+        sb.append("  |  ");
+        if(file.isFile()){
+            sb.append(FileUtil.getFormattedFileSize(file));
+        } else {
+            sb.append(FileUtil.getFormattedFileCount(file));
+        }
+        return sb.toString();
     }
 
     public void updateTabName() {

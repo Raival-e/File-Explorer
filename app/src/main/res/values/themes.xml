@@ -13,8 +13,13 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">@color/surface</item>
         <item name="android:windowLightStatusBar">true</item>
+        <item name="android:popupMenuStyle">@style/PopupMenu</item>
         <!-- Customize your theme here. -->
         <item name="bottomSheetDialogTheme">@style/CustomBottomSheetDialog</item>
+    </style>
+
+    <style name="PopupMenu" parent="@android:style/Widget.PopupMenu">
+        <item name="android:popupBackground">@color/white</item>
     </style>
 
     <!-- BottomSheetDialog-->

@@ -91,18 +91,28 @@
             app:tabTextAppearance="@style/TabLayoutCustomText"
             app:tabSelectedTextColor="@color/onSurfaceContrast"
             app:tabTextColor="@color/onSurface"
-            app:tabIndicatorColor="@color/onSurface"
+            app:tabIndicatorColor="@color/secondary"
             app:tabMode="scrollable"
-            app:tabIndicatorHeight="1dp"
+            app:tabIndicatorHeight="2dp"
             app:tabPadding="0dp"
             app:tabRippleColor="@color/highlight"/>
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/white"/>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/white"/>
 
     <LinearLayout
         android:layout_width="match_parent"

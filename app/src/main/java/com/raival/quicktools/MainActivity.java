@@ -70,6 +70,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // this doesn't close the app.
+    public void simulateOnBackPressed(){
+        if(!tabs.get(viewPager2.getCurrentItem()).onBackPressed()){
+            if(viewPager2.getCurrentItem() != 0){
+                closeTabAt(viewPager2.getCurrentItem());
+            }
+        }
+    }
+
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -130,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initBottomBar() {
-        findViewById(R.id.option_back).setOnClickListener(view -> onBackPressed());
+        findViewById(R.id.option_back).setOnClickListener(view -> simulateOnBackPressed());
         findViewById(R.id.option_select_all).setOnClickListener(view -> tabs.get(viewPager2.getCurrentItem()).selectAll());
         findViewById(R.id.option_refresh).setOnClickListener(view -> {
             tabs.get(viewPager2.getCurrentItem()).refresh();
@@ -224,9 +233,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showTabsOptionsMenu() {
-        PopupMenu popupMenu = new PopupMenu(this, findViewById(R.id.tabs_options));
+        PopupMenu popupMenu = new PopupMenu(this, (View)findViewById(R.id.tabs_options).getParent());
 
         popupMenu.getMenu().add("Add new tab");
+        if(tabs.get(viewPager2.getCurrentItem()) instanceof NormalTab){
+            popupMenu.getMenu().add("Clone tab");
+        }
 
         if(tabs.size() > 1){
             popupMenu.getMenu().add("Close tab");
@@ -237,6 +249,10 @@ public class MainActivity extends AppCompatActivity {
             switch (menuItem.getTitle().toString()){
                 case "Add new tab":{
                     addNewTab(Environment.getExternalStorageDirectory());
+                    return true;
+                }
+                case "Clone tab":{
+                    addNewTab(((NormalTab)tabs.get(viewPager2.getCurrentItem())).getCurrentPath());
                     return true;
                 }
                 case "Close tab":{

@@ -18,6 +18,7 @@ import androidx.core.content.FileProvider;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.raival.quicktools.App;
+import com.raival.quicktools.MainActivity;
 import com.raival.quicktools.R;
 
 import java.io.File;
@@ -25,6 +26,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Locale;
@@ -80,6 +82,21 @@ public class FileUtil {
 
     public static void setFileIcon(ImageView icon, File file){
         final String ext = getFileExtension(file).toLowerCase();
+
+        if(ext.equals(FileExtensions.apkType)){
+            PackageInfo info = App.appContext.getPackageManager().getPackageArchiveInfo(file.getAbsolutePath(), PackageManager.GET_ACTIVITIES);
+            if(info != null){
+                ApplicationInfo applicationInfo = info.applicationInfo;
+                applicationInfo.sourceDir = file.getAbsolutePath();
+                applicationInfo.publicSourceDir = file.getAbsolutePath();
+                icon.setImageDrawable(applicationInfo.loadIcon(App.appContext.getPackageManager()));
+            }
+            return;
+        }
+        if(ext.equals(FileExtensions.pdfType)){
+            icon.setImageResource(R.drawable.pdf_file);
+            return;
+        }
         if(!file.isFile()){
             icon.setImageResource(R.drawable.folder_icon);
             return;
@@ -116,16 +133,6 @@ public class FileUtil {
                     .into(icon);
             return;
         }
-        if(ext.equals(FileExtensions.apkType)){
-            PackageInfo info = App.appContext.getPackageManager().getPackageArchiveInfo(file.getAbsolutePath(), PackageManager.GET_ACTIVITIES);
-            if(info != null){
-                ApplicationInfo applicationInfo = info.applicationInfo;
-                applicationInfo.sourceDir = file.getAbsolutePath();
-                applicationInfo.publicSourceDir = file.getAbsolutePath();
-                icon.setImageDrawable(applicationInfo.loadIcon(App.appContext.getPackageManager()));
-            }
-            return;
-        }
         icon.setImageResource(R.drawable.unknown_file);
     }
 
@@ -135,6 +142,39 @@ public class FileUtil {
                 return true;
         }
         return false;
+    }
+
+    public static String getFormattedFileCount(File file) {
+        final String noItemsString = "Empty folder";
+        if(file.isFile()){
+         return noItemsString;
+        }
+
+        int files = 0;
+        int folders = 0;
+        final File[] fileList = file.listFiles();
+
+        if(fileList == null){
+            return noItemsString;
+        }
+
+        for(File item : fileList){
+            if(item.isFile()) files++;
+            else folders++;
+        }
+        StringBuilder sb = new StringBuilder();
+        if(folders > 0){
+            sb.append(folders);
+            sb.append(" folder");
+            if(folders > 1) sb.append("s");
+            if(files > 0) sb.append(", ");
+        }
+        if(files > 0){
+            sb.append(files);
+            sb.append(" file");
+            if(files > 1) sb.append("s");
+        }
+        return (folders==0&&files==0)? noItemsString : sb.toString();
     }
 
     private static boolean isAudioFile(String extension) {
@@ -307,5 +347,13 @@ public class FileUtil {
                 && (isArchiveFile(getFileExtension(selectedFiles.get(0)))
                 || getFileExtension(selectedFiles.get(0)).equals(FileExtensions.apkType)
                 ||getFileExtension(selectedFiles.get(0)).equals(FileExtensions.rarType)));
+    }
+
+    public static String getFormattedFileSize(File file) {
+        final long size = file.length();
+        if(size <= 0) return "0 B";
+        final String[] units = new String[] { "B", "kB", "MB", "GB", "TB" };
+        int digitGroups = (int) (Math.log10(size)/Math.log10(1024));
+        return new DecimalFormat("#,##0.#").format(size/Math.pow(1024, digitGroups)) + " " + units[digitGroups];
     }
 }

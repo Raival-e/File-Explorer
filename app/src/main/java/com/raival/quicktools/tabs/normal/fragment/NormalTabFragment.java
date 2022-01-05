@@ -33,6 +33,7 @@ import java.util.ArrayList;
 public class NormalTabFragment extends Fragment {
     NormalTab tab;
     RecyclerView recyclerView;
+    View placeHolder;
     int prevPathHighlight = 0x06ffffff;
     int selectedFileHighlight = 0x320066ff;
 
@@ -47,6 +48,7 @@ public class NormalTabFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.normal_tab_fragment_layout, container, false);
         recyclerView = view.findViewById(R.id.rv);
+        placeHolder = view.findViewById(R.id.place_holder);
         return view;
     }
 
@@ -79,33 +81,35 @@ public class NormalTabFragment extends Fragment {
     }
 
     private void updateFilesCount() {
-        int files = 0;
-        int folders = 0;
+        if(requireActivity() instanceof MainActivity){
+            ((MainActivity)requireActivity()).setPageSubtitle(FileUtil.getFormattedFileCount(tab.getCurrentPath()));
+        }
+    }
 
-        for(FileItem item : tab.getFilesList()){
-            if(item.getFile().isFile()) files++;
-            else folders++;
+    private class RvDataObserver extends RecyclerView.AdapterDataObserver {
+        public RvDataObserver() {
+            checkIfEmpty();
         }
 
-        if(requireActivity() instanceof MainActivity){
-            StringBuilder sb = new StringBuilder();
-            if(folders > 0){
-               sb.append(folders);
-               sb.append(" folder");
-               if(folders > 1) sb.append("s");
-               if(files > 0) sb.append(", ");
+        @Override
+        public void onChanged() {
+            super.onChanged();
+            checkIfEmpty();
+        }
+
+        private void checkIfEmpty() {
+            if(recyclerView.getAdapter() != null && recyclerView.getAdapter().getItemCount() == 0){
+                placeHolder.setVisibility(View.VISIBLE);
+            } else {
+                placeHolder.setVisibility(View.GONE);
             }
-            if(files > 0){
-                sb.append(files);
-                sb.append(" file");
-                if(files > 1) sb.append("s");
-            }
-            ((MainActivity)requireActivity()).setPageSubtitle((folders==0&&files==0)? "No items" : sb.toString());
         }
     }
 
     private class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
-        public RecyclerViewAdapter(){ }
+        public RecyclerViewAdapter(){
+            registerAdapterDataObserver(new RvDataObserver());
+        }
 
         @NonNull
         @Override

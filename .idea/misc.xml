@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/pavnv/Desktop/Android_Projects/Quicktools/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.26614583333333336" />
+        <entry key="..\:/Users/pavnv/Desktop/Android_Projects/Quicktools/app/src/main/res/drawable/fastscroll_thumb.xml" value="0.26205128205128203" />
         <entry key="..\:/Users/pavnv/Desktop/Android_Projects/Quicktools/app/src/main/res/drawable/ic_baseline_assignment_24.xml" value="0.26614583333333336" />
         <entry key="..\:/Users/pavnv/Desktop/Android_Projects/Quicktools/app/src/main/res/drawable/ic_baseline_chevron_right_24.xml" value="0.26614583333333336" />
         <entry key="..\:/Users/pavnv/Desktop/Android_Projects/Quicktools/app/src/main/res/drawable/ic_baseline_more_vert_24.xml" value="0.26614583333333336" />
@@ -13,6 +14,7 @@
         <entry key="..\:/Users/pavnv/Desktop/Android_Projects/Quicktools/app/src/main/res/layout/common_bottom_dialog_item.xml" value="0.25" />
         <entry key="..\:/Users/pavnv/Desktop/Android_Projects/Quicktools/app/src/main/res/layout/common_bottom_dialog_layout.xml" value="0.25" />
         <entry key="..\:/Users/pavnv/Desktop/Android_Projects/Quicktools/app/src/main/res/layout/dialog_container.xml" value="0.25" />
+        <entry key="..\:/Users/pavnv/Desktop/Android_Projects/Quicktools/app/src/main/res/layout/empty_folder_placeholder.xml" value="0.25" />
         <entry key="..\:/Users/pavnv/Desktop/Android_Projects/Quicktools/app/src/main/res/layout/input.xml" value="0.25" />
         <entry key="..\:/Users/pavnv/Desktop/Android_Projects/Quicktools/app/src/main/res/layout/normal_tab_fragment_file_item.xml" value="0.20833333333333334" />
         <entry key="..\:/Users/pavnv/Desktop/Android_Projects/Quicktools/app/src/main/res/layout/normal_tab_fragment_layout.xml" value="0.25" />
