@@ -33,6 +33,7 @@
             android:layout_marginStart="12dp"
             android:layout_marginEnd="8dp">
             <TextView
+                android:id="@+id/subtitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Quick Tools"
@@ -41,7 +42,7 @@
                 android:textSize="15sp"
                 android:maxLines="1"/>
             <TextView
-                android:id="@+id/subtitle"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="24 folders, 6 files"
@@ -66,6 +67,14 @@
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:clickable="true"/>
     </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/path_treeview"
+        android:paddingStart="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:itemCount="2"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

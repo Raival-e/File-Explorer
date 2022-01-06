@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,6 +22,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -31,6 +34,7 @@ import com.pixplicity.easyprefs.library.Prefs;
 import com.raival.quicktools.fragments.QDialogFragment;
 import com.raival.quicktools.interfaces.QTab;
 import com.raival.quicktools.tabs.normal.NormalTab;
+import com.raival.quicktools.utils.FileUtil;
 import com.raival.quicktools.utils.PrefsUtil;
 
 import java.io.File;
@@ -39,6 +43,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     TabLayout tabLayout;
     ViewPager2 viewPager2;
+    RecyclerView pathTreeView;
 
     ArrayList<QTab> tabs = new ArrayList<>();
 
@@ -50,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
 
         tabLayout = findViewById(R.id.tabs);
         viewPager2 = findViewById(R.id.view_pager);
+        pathTreeView = findViewById(R.id.path_treeview);
+
         viewPager2.setUserInputEnabled(false);
 
         initPrefs();
@@ -61,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed(){
-        if(!tabs.get(viewPager2.getCurrentItem()).onBackPressed()){
+        if(!getCurrentTab().onBackPressed()){
             if(viewPager2.getCurrentItem() != 0){
                 closeTabAt(viewPager2.getCurrentItem());
                 return;
@@ -72,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
     // this doesn't close the app.
     public void simulateOnBackPressed(){
-        if(!tabs.get(viewPager2.getCurrentItem()).onBackPressed()){
+        if(!getCurrentTab().onBackPressed()){
             if(viewPager2.getCurrentItem() != 0){
                 closeTabAt(viewPager2.getCurrentItem());
             }
@@ -130,6 +137,20 @@ public class MainActivity extends AppCompatActivity {
         initBottomBar();
     }
 
+    public void updatePathTreeView(){
+        if(pathTreeView.getAdapter() == null){
+            initPathTreeViewRV();
+            return;
+        }
+        pathTreeView.getAdapter().notifyDataSetChanged();
+        pathTreeView.scrollToPosition(pathTreeView.getAdapter().getItemCount()-1);
+    }
+
+    private void initPathTreeViewRV() {
+        pathTreeView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        pathTreeView.setAdapter(new PathTreeViewRvAdapter());
+    }
+
     private void initPrefs() {
         new Prefs.Builder()
                 .setContext(this)
@@ -140,9 +161,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void initBottomBar() {
         findViewById(R.id.option_back).setOnClickListener(view -> simulateOnBackPressed());
-        findViewById(R.id.option_select_all).setOnClickListener(view -> tabs.get(viewPager2.getCurrentItem()).selectAll());
+        findViewById(R.id.option_select_all).setOnClickListener(view -> getCurrentTab().selectAll());
         findViewById(R.id.option_refresh).setOnClickListener(view -> {
-            tabs.get(viewPager2.getCurrentItem()).refresh();
+            getCurrentTab().refresh();
             ObjectAnimator.ofFloat(viewPager2, "alpha", 1.0f, 0.1f, 1f).setDuration(300).start();
         });
         findViewById(R.id.option_sort).setOnClickListener(this::showSortOptionsMenu);
@@ -150,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showAddNewFileDialog() {
-        if(!tabs.get(viewPager2.getCurrentItem()).canCreateFile()){
+        if(!getCurrentTab().canCreateFile()){
             App.showMsg("Creating files isn't possible here");
             return;
         }
@@ -162,10 +183,10 @@ public class MainActivity extends AppCompatActivity {
                 .setTitle("Create new file")
                 .addView(input)
                 .setPositiveButton("File", view ->
-                tabs.get(viewPager2.getCurrentItem())
+                getCurrentTab()
                         .createFile(input.getEditText().getText().toString(), false), true)
                 .setNegativeButton("Folder", view ->
-                tabs.get(viewPager2.getCurrentItem())
+                getCurrentTab()
                         .createFile(input.getEditText().getText().toString(), true), true)
                 .setNeutralButton("Cancel", null, true)
                 .show(getSupportFragmentManager(), "");
@@ -221,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 }
             }
-            tabs.get(viewPager2.getCurrentItem()).refresh();
+            getCurrentTab().refresh();
             return true;
         });
         popupMenu.show();
@@ -236,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
         PopupMenu popupMenu = new PopupMenu(this, (View)findViewById(R.id.tabs_options).getParent());
 
         popupMenu.getMenu().add("Add new tab");
-        if(tabs.get(viewPager2.getCurrentItem()) instanceof NormalTab){
+        if(getCurrentTab() instanceof NormalTab){
             popupMenu.getMenu().add("Clone tab");
         }
 
@@ -252,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
                 case "Clone tab":{
-                    addNewTab(((NormalTab)tabs.get(viewPager2.getCurrentItem())).getCurrentPath());
+                    addNewTab(((NormalTab)getCurrentTab()).getCurrentPath());
                     return true;
                 }
                 case "Close tab":{
@@ -313,6 +334,10 @@ public class MainActivity extends AppCompatActivity {
         }).attach();
         linkTabs();
     }
+    
+    private QTab getCurrentTab(){
+        return tabs.get(viewPager2.getCurrentItem());
+    }
 
     public void setPageSubtitle(String subtitle){
         ((TextView)findViewById(R.id.subtitle)).setText(subtitle);
@@ -333,6 +358,48 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public int getItemCount() {
             return tabs.size();
+        }
+    }
+
+    public class PathTreeViewRvAdapter extends RecyclerView.Adapter<PathTreeViewRvAdapter.ViewHolder>{
+
+        public PathTreeViewRvAdapter(){
+
+        }
+        @NonNull
+        @Override
+        public PathTreeViewRvAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            return new ViewHolder(getLayoutInflater().inflate(R.layout.path_tree_view, null));
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull PathTreeViewRvAdapter.ViewHolder holder, int position) {
+            holder.bind();
+        }
+
+        @Override
+        public int getItemCount() {
+            return getCurrentTab().getTreeViewList().size();
+        }
+
+        private class ViewHolder extends RecyclerView.ViewHolder{
+            TextView label;
+
+            public ViewHolder(@NonNull View itemView) {
+                super(itemView);
+                label = itemView.findViewById(R.id.text);
+            }
+
+            public void bind() {
+                final int position = getAdapterPosition();
+                label.setText(FileUtil.isExternalStorageFolder(getCurrentTab().getTreeViewList().get(position))
+                        ? FileUtil.INTERNAL_STORAGE
+                        : getCurrentTab().getTreeViewList().get(position).getName());
+                label.setTextColor((position==getItemCount()-1)
+                        ?getResources().getColor(R.color.orange, getTheme())
+                        :getResources().getColor(R.color.onSurfaceContrast, getTheme()));
+                itemView.setOnClickListener(view -> getCurrentTab().onTreeViewPathSelected(getCurrentTab().getTreeViewList().get(position)));
+            }
         }
     }
 }

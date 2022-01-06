@@ -26,5 +26,6 @@
     <color name="timeline_card">#575656</color>
 
     <color name="highlight">#434343</color>
+    <color name="orange">#FFC107</color>
 
 </resources>

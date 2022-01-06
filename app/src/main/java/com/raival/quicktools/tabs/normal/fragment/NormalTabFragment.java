@@ -84,6 +84,13 @@ public class NormalTabFragment extends Fragment {
         if(requireActivity() instanceof MainActivity){
             ((MainActivity)requireActivity()).setPageSubtitle(FileUtil.getFormattedFileCount(tab.getCurrentPath()));
         }
+        updatePathTreeView();
+    }
+
+    private void updatePathTreeView() {
+        if(requireActivity() instanceof MainActivity){
+            ((MainActivity)requireActivity()).updatePathTreeView();
+        }
     }
 
     private class RvDataObserver extends RecyclerView.AdapterDataObserver {

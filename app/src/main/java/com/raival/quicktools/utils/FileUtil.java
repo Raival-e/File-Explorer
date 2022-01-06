@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Environment;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 
@@ -32,6 +33,7 @@ import java.util.Comparator;
 import java.util.Locale;
 
 public class FileUtil {
+    public final static String INTERNAL_STORAGE = "Internal Storage";
     public static Comparator<File> sortFoldersFirst(){
         return (file1, file2) -> {
             if (file1.isDirectory() && !file2.isDirectory()) {
@@ -135,6 +137,10 @@ public class FileUtil {
             return;
         }
         icon.setImageResource(R.drawable.unknown_file);
+    }
+
+    public static boolean isExternalStorageFolder(File file){
+        return file.getAbsolutePath().equals(Environment.getExternalStorageDirectory().getAbsolutePath());
     }
 
     private static boolean isImageType(String ext) {

@@ -21,4 +21,7 @@ public interface QTab {
     void refresh();
     boolean canCreateFile();
     void createFile(String name, boolean isFolder);
+
+    ArrayList<File> getTreeViewList();
+    void onTreeViewPathSelected(File path);
 }

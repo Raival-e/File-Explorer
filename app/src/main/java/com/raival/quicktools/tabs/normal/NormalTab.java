@@ -108,7 +108,7 @@ public class NormalTab implements QTab {
     @Override
     public String getName() {
         String name = Uri.parse(currentPath.getAbsolutePath()).getLastPathSegment();
-        if(name.equals("0")){
+        if(FileUtil.isExternalStorageFolder(currentPath)){
             name = "Internal Storage";
         }
         if(name.length() > MAX_NAME_LENGTH.length()){
@@ -195,6 +195,24 @@ public class NormalTab implements QTab {
                 App.log(e);
             }
         }
+    }
+
+    @Override
+    public ArrayList<File> getTreeViewList() {
+        ArrayList<File> list = new ArrayList<>();
+        File file = currentPath;
+        while (!file.getAbsolutePath().equals(Environment.getExternalStorageDirectory().getParentFile().getAbsolutePath())){
+            list.add(file);
+            file = file.getParentFile();
+        }
+        Collections.reverse(list);
+        return list;
+    }
+
+    @Override
+    public void onTreeViewPathSelected(File path) {
+        setCurrentPath(path);
+        fragment.updateFilesList();
     }
 
     private void scrollTo(File file) {
