@@ -210,9 +210,11 @@ public class NormalTab implements QTab {
     }
 
     @Override
-    public void onTreeViewPathSelected(File path) {
-        setCurrentPath(path);
+    public void onTreeViewPathSelected(int position) {
+        setCurrentPath(getTreeViewList().get(position));
         fragment.updateFilesList();
+
+        restoreRecyclerViewState();
     }
 
     private void scrollTo(File file) {
@@ -255,11 +257,15 @@ public class NormalTab implements QTab {
 
         fragment.updateFilesList();
 
+        restoreRecyclerViewState();
+        return true;
+    }
+
+    private void restoreRecyclerViewState(){
         if(pathsStets.containsKey(currentPath.getAbsolutePath())){
             fragment.setRecyclerViewInstance(pathsStets.get(currentPath.getAbsolutePath()));
             pathsStets.remove(currentPath.getAbsolutePath());
         }
-        return true;
     }
 
     private String getFileDetails(File file) {

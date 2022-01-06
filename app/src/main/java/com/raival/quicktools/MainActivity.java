@@ -148,6 +148,14 @@ public class MainActivity extends AppCompatActivity {
         });
 
         initBottomBar();
+
+        setListeners();
+    }
+
+    private void setListeners() {
+        findViewById(R.id.home).setOnClickListener(view -> {
+            getCurrentTab().onTreeViewPathSelected(0);
+        });
     }
 
     public void updatePathTreeView(){
@@ -411,7 +419,7 @@ public class MainActivity extends AppCompatActivity {
                 label.setTextColor((position==getItemCount()-1)
                         ?getResources().getColor(R.color.orange, getTheme())
                         :getResources().getColor(R.color.onSurfaceContrast, getTheme()));
-                itemView.setOnClickListener(view -> getCurrentTab().onTreeViewPathSelected(getCurrentTab().getTreeViewList().get(position)));
+                itemView.setOnClickListener(view -> getCurrentTab().onTreeViewPathSelected(position));
             }
         }
     }
