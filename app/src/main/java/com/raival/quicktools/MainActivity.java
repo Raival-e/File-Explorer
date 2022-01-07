@@ -32,9 +32,13 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pixplicity.easyprefs.library.Prefs;
+import com.raival.quicktools.common.BackgroundTask;
+import com.raival.quicktools.common.TasksDialog;
 import com.raival.quicktools.fragments.QDialogFragment;
 import com.raival.quicktools.interfaces.QTab;
+import com.raival.quicktools.interfaces.QTask;
 import com.raival.quicktools.tabs.normal.NormalTab;
+import com.raival.quicktools.tasks.CopyTask;
 import com.raival.quicktools.utils.FileUtil;
 import com.raival.quicktools.utils.PrefsUtil;
 
@@ -47,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView pathTreeView;
 
     ArrayList<QTab> tabs = new ArrayList<>();
+    ArrayList<QTask> tasks = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,9 +158,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setListeners() {
-        findViewById(R.id.home).setOnClickListener(view -> {
-            getCurrentTab().onTreeViewPathSelected(0);
-        });
+        findViewById(R.id.home).setOnClickListener(view -> getCurrentTab().onTreeViewPathSelected(0));
+        findViewById(R.id.tasks).setOnClickListener(view -> showTasksDialog());
+    }
+
+    private void showTasksDialog() {
+        TasksDialog tasksDialog = new TasksDialog(tasks, getCurrentTab());
+        tasksDialog.show(getSupportFragmentManager(), "tasks_dialog");
     }
 
     public void updatePathTreeView(){
@@ -364,6 +373,10 @@ public class MainActivity extends AppCompatActivity {
         ((TextView)findViewById(R.id.subtitle)).setText(subtitle);
     }
 
+    public void AddTask(QTask task) {
+        tasks.add(task);
+    }
+
     public class TabsFragmentAdapter extends FragmentStateAdapter {
 
         public TabsFragmentAdapter(@NonNull FragmentActivity fragmentActivity) {
@@ -383,10 +396,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public class PathTreeViewRvAdapter extends RecyclerView.Adapter<PathTreeViewRvAdapter.ViewHolder>{
-
-        public PathTreeViewRvAdapter(){
-
-        }
+        public PathTreeViewRvAdapter(){ }
         @NonNull
         @Override
         public PathTreeViewRvAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -417,8 +427,8 @@ public class MainActivity extends AppCompatActivity {
                         ? FileUtil.INTERNAL_STORAGE
                         : getCurrentTab().getTreeViewList().get(position).getName());
                 label.setTextColor((position==getItemCount()-1)
-                        ?getResources().getColor(R.color.orange, getTheme())
-                        :getResources().getColor(R.color.onSurfaceContrast, getTheme()));
+                        ? getResources().getColor(R.color.orange, getTheme())
+                        : getResources().getColor(R.color.onSurfaceContrast, getTheme()));
                 itemView.setOnClickListener(view -> getCurrentTab().onTreeViewPathSelected(position));
             }
         }

@@ -21,11 +21,14 @@ import com.bumptech.glide.Glide;
 import com.raival.quicktools.App;
 import com.raival.quicktools.MainActivity;
 import com.raival.quicktools.R;
-import com.raival.quicktools.common.BottomOptionsDialog;
+
+import com.raival.quicktools.common.BackgroundTask;
+import com.raival.quicktools.common.OptionsDialog;
 import com.raival.quicktools.tabs.normal.NormalTab;
-import com.raival.quicktools.tabs.normal.models.FileItem;
+
+import com.raival.quicktools.tasks.CopyTask;
 import com.raival.quicktools.utils.FileUtil;
-import com.raival.quicktools.utils.PrefsUtil;
+
 
 import java.io.File;
 import java.util.ArrayList;
@@ -222,7 +225,7 @@ public class NormalTabFragment extends Fragment {
             title = "" + selectedFiles.size() + " Files selected";
         }
 
-        BottomOptionsDialog bottomDialog = new BottomOptionsDialog(title);
+        OptionsDialog bottomDialog = new OptionsDialog(title);
         bottomDialog.show(getParentFragmentManager(), "FileOptionsDialog");
         if(FileUtil.isSingleFolder(selectedFiles)){
             bottomDialog.addOption("Open in a new tab", R.drawable.ic_round_tab_24, view1 ->{
@@ -238,7 +241,7 @@ public class NormalTabFragment extends Fragment {
         }
 
         bottomDialog.addOption("Copy", R.drawable.ic_baseline_file_copy_24, view1 ->{
-            //do copy task
+            addCopyTask(selectedFiles);
         }, true);
 
         bottomDialog.addOption("Cut", R.drawable.ic_round_content_cut_24, view1 ->{
@@ -252,7 +255,7 @@ public class NormalTabFragment extends Fragment {
         }
 
         bottomDialog.addOption("Delete", R.drawable.ic_round_delete_forever_24, view1 ->{
-            //do delete task
+            doDelete(selectedFiles);
         }, true);
 
         if(FileUtil.isSingleFile(selectedFiles)){
@@ -282,7 +285,27 @@ public class NormalTabFragment extends Fragment {
         bottomDialog.addOption("Deep search", R.drawable.ic_round_manage_search_24, view1 ->{
             //do search task
         }, true);
+    }
 
+    private void doDelete(ArrayList<File> selectedFiles) {
+        BackgroundTask backgroundTask = new BackgroundTask();
+        backgroundTask.setTasks(()->{
+            backgroundTask.showProgressDialog("Deleting files...", requireActivity());
+        }, ()->{
+            FileUtil.deleteFiles(selectedFiles);
+        }, ()->{
+            backgroundTask.dismiss();
+            App.showMsg("Files has been deleted");
+            tab.refresh();
+        });
+        backgroundTask.run();
+    }
 
+    private void addCopyTask(ArrayList<File> selectedFiles) {
+        CopyTask copyTask = new CopyTask(selectedFiles);
+
+        if(requireActivity() instanceof MainActivity){
+            ((MainActivity)requireActivity()).AddTask(copyTask);
+        }
     }
 }

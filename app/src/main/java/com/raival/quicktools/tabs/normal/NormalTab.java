@@ -2,15 +2,20 @@ package com.raival.quicktools.tabs.normal;
 
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Parcelable;
 
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.tabs.TabLayout;
 import com.raival.quicktools.App;
+import com.raival.quicktools.common.BackgroundTask;
+import com.raival.quicktools.interfaces.QTask;
 import com.raival.quicktools.tabs.normal.fragment.NormalTabFragment;
 import com.raival.quicktools.interfaces.QTab;
 import com.raival.quicktools.tabs.normal.models.FileItem;
+import com.raival.quicktools.tasks.CopyTask;
 import com.raival.quicktools.utils.FileUtil;
 import com.raival.quicktools.utils.PrefsUtil;
 import com.raival.quicktools.utils.TimeUtil;
@@ -211,10 +216,40 @@ public class NormalTab implements QTab {
 
     @Override
     public void onTreeViewPathSelected(int position) {
+        if(getTreeViewList().size() > position+1){
+            previousPath = getTreeViewList().get(position+1);
+        }
+
         setCurrentPath(getTreeViewList().get(position));
         fragment.updateFilesList();
 
         restoreRecyclerViewState();
+    }
+
+    @Override
+    public void handleTask(QTask task) {
+        if(task instanceof CopyTask){
+            handleCopyTask((CopyTask) task);
+        }
+    }
+
+    private void handleCopyTask(CopyTask task) {
+        BackgroundTask backgroundTask = new BackgroundTask();
+        backgroundTask.setTasks(()-> backgroundTask.showProgressDialog("Coping files...", fragment.requireActivity()), ()->{
+            try {
+                FileUtil.copyFiles(task.getFilesToCopy(), getCurrentPath());
+            } catch (IOException e) {
+                e.printStackTrace();
+                App.log(e);
+                new Handler(Looper.getMainLooper()).post(()->App.showMsg("Cannot copy files"));
+            }
+
+        } , ()->{
+            refresh();
+            backgroundTask.dismiss();
+            App.showMsg("Files has been copied");
+        });
+        backgroundTask.run();
     }
 
     private void scrollTo(File file) {

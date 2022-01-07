@@ -24,4 +24,6 @@ public interface QTab {
 
     ArrayList<File> getTreeViewList();
     void onTreeViewPathSelected(int position);
+
+    void handleTask(QTask task);
 }

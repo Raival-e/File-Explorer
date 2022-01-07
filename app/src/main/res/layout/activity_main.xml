@@ -51,6 +51,7 @@
                 android:maxLines="1"/>
         </LinearLayout>
         <ImageView
+            android:id="@+id/tasks"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_baseline_assignment_24"

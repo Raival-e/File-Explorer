@@ -1,23 +1,35 @@
 package com.raival.quicktools.common;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.ContextThemeWrapper;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.raival.quicktools.App;
+import com.raival.quicktools.R;
+
+import java.io.File;
 
 public class BackgroundTask {
     Runnable preTask, task, postTask;
-    String name;
-    String details;
+    AlertDialog alertDialog;
 
-    public BackgroundTask(String name, String details){
-        this.name = name;
-        this.details = details;
+    public BackgroundTask(){
+
     }
 
-    public BackgroundTask setTasks(Runnable preTask, Runnable task, Runnable postTask){
+    public void setTasks(Runnable preTask, Runnable task, Runnable postTask){
         this.preTask = preTask;
         this.task = task;
         this.postTask = postTask;
-        return this;
     }
 
     public BackgroundTask run(){
@@ -27,5 +39,25 @@ public class BackgroundTask {
             new Handler(Looper.getMainLooper()).post(postTask);
         }).start();
         return this;
+    }
+
+    public void dismiss(){
+        if(alertDialog != null)
+            alertDialog.dismiss();
+    }
+
+    @SuppressLint("ResourceType")
+    public void showProgressDialog(String msg, Activity activity){
+        alertDialog = new MaterialAlertDialogBuilder(activity)
+                .setCancelable(false)
+                .setView(getProgressView(msg, activity))
+                .show();
+    }
+
+    private View getProgressView(String msg, Activity activity) {
+        //ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(App.appContext, R.style.Base_Theme_AppCompat);
+        View v = activity.getLayoutInflater().inflate(R.layout.progress_view, null);
+        ((TextView)v.findViewById(R.id.msg)).setText(msg);
+        return v;
     }
 }

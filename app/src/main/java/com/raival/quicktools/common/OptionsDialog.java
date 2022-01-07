@@ -2,7 +2,6 @@ package com.raival.quicktools.common;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.os.strictmode.WebViewMethodCalledOnWrongThreadViolation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +13,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.raival.quicktools.App;
 import com.raival.quicktools.R;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
-public class BottomOptionsDialog extends BottomSheetDialogFragment {
+public class OptionsDialog extends BottomSheetDialogFragment {
     String title;
     String message;
 
@@ -37,10 +34,10 @@ public class BottomOptionsDialog extends BottomSheetDialogFragment {
         public OptionHolder(){ }
     }
 
-    public BottomOptionsDialog(String title) {
+    public OptionsDialog(String title) {
         this.title = title;
     }
-    public BottomOptionsDialog(String title, String msg) {
+    public OptionsDialog(String title, String msg) {
         this.title = title;
         message = msg;
     }
@@ -57,7 +54,7 @@ public class BottomOptionsDialog extends BottomSheetDialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.common_bottom_dialog_layout, container, false);
+        return inflater.inflate(R.layout.common_options_dialog_layout, container, false);
     }
 
     @Override
@@ -77,7 +74,7 @@ public class BottomOptionsDialog extends BottomSheetDialogFragment {
 
     private void addOptions() {
         for (OptionHolder optionHolder : options){
-            View v = getLayoutInflater().inflate(R.layout.common_bottom_dialog_item, container, false);
+            View v = getLayoutInflater().inflate(R.layout.common_options_dialog_item, container, false);
             ((ImageView)v.findViewById(R.id.icon)).setImageResource(optionHolder.res);
             ((TextView)v.findViewById(R.id.label)).setText(optionHolder.label);
             v.findViewById(R.id.background).setOnClickListener(view -> {

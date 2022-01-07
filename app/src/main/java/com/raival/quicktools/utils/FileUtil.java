@@ -11,6 +11,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
+import android.util.Log;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 
@@ -252,43 +253,7 @@ public class FileUtil {
         return name.substring(last + 1);
     }
 
-    /**
-     * Copies an entire directory, recursively.
-     *
-     * @param source   The directory whose contents to copy.
-     * @param copyInto The directory to copy files into.
-     * @throws IOException Thrown when something goes wrong while copying.
-     */
-    public static void copyDirectory(File source, File copyInto) throws IOException {
-        if (!source.isDirectory()) {
-            File parentFile = copyInto.getParentFile();
-            if (parentFile == null || parentFile.exists() || parentFile.mkdirs()) {
-                FileInputStream fileInputStream = new FileInputStream(source);
-                FileOutputStream fileOutputStream = new FileOutputStream(copyInto);
-                byte[] bArr = new byte[2048];
-                while (true) {
-                    int read = fileInputStream.read(bArr);
-                    if (read <= 0) {
-                        fileInputStream.close();
-                        fileOutputStream.close();
-                        return;
-                    }
-                    fileOutputStream.write(bArr, 0, read);
-                }
-            } else {
-                throw new IOException("Cannot create dir " + parentFile.getAbsolutePath());
-            }
-        } else if (copyInto.exists() || copyInto.mkdirs()) {
-            String[] list = source.list();
-            if (list != null) {
-                for (String s : list) {
-                    copyDirectory(new File(source, s), new File(copyInto, s));
-                }
-            }
-        } else {
-            throw new IOException("Cannot create dir " + copyInto.getAbsolutePath());
-        }
-    }
+
 
     public static void writeFile(File file, String content) throws IOException{
         if(!file.createNewFile()){
@@ -362,5 +327,82 @@ public class FileUtil {
         final String[] units = new String[] { "B", "kB", "MB", "GB", "TB" };
         int digitGroups = (int) (Math.log10(size)/Math.log10(1024));
         return new DecimalFormat("#,##0.#").format(size/Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+    }
+
+    public static void copyFiles(ArrayList<File> selectedFiles, File destination) throws IOException{
+        for(File file : selectedFiles){
+            copy(file, destination);
+        }
+    }
+
+    private static void copy(File file, File to) throws IOException{
+        if(file.isFile()){
+            copyFile(file, new File(to, file.getName()));
+        } else {
+            File parent = new File(to, file.getName());
+            if(parent.mkdir()) {
+                final File[] files = file.listFiles();
+                if (files != null) {
+                    for (File child : files) {
+                        copy(child, parent);
+                    }
+                }
+            } else {
+                throw new IOException("Cannot create directory " + parent.getAbsolutePath());
+            }
+        }
+    }
+
+    private static void copyFile(File sourcePath, File destPath) throws IOException {
+        if(!destPath.createNewFile()){
+            throw new IOException("Cannot create file " + destPath.getAbsolutePath());
+        }
+
+        FileInputStream fis = null;
+        FileOutputStream fos = null;
+
+        fis = new FileInputStream(sourcePath);
+        fos = new FileOutputStream(destPath, false);
+
+        byte[] buff = new byte[1024];
+        int length = 0;
+
+        while ((length = fis.read(buff)) > 0) {
+            fos.write(buff, 0, length);
+        }
+
+        fis.close();
+        fos.close();
+    }
+
+    private static void deleteFile(File file) {
+        if (!file.exists()) return;
+
+        if (file.isFile()) {
+            file.delete();
+            return;
+        }
+
+        File[] fileArr = file.listFiles();
+
+        if (fileArr != null) {
+            for (File subFile : fileArr) {
+                if (subFile.isDirectory()) {
+                    deleteFile(subFile);
+                }
+
+                if (subFile.isFile()) {
+                    subFile.delete();
+                }
+            }
+        }
+
+        file.delete();
+    }
+
+    public static void deleteFiles(ArrayList<File> selectedFiles) {
+        for(File file : selectedFiles){
+            deleteFile(file);
+        }
     }
 }
