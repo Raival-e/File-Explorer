@@ -1,11 +1,12 @@
 package com.raival.quicktools.tasks;
 
 import com.raival.quicktools.interfaces.QTask;
+import com.raival.quicktools.interfaces.RegularTask;
 
 import java.io.File;
 import java.util.ArrayList;
 
-public class CutTask implements QTask {
+public class CutTask implements QTask, RegularTask {
     ArrayList<File> filesToCut;
 
     public CutTask(ArrayList<File> selectedFiles) {
@@ -23,9 +24,21 @@ public class CutTask implements QTask {
 
     @Override
     public String getDetails() {
-        if(filesToCut.size() == 1){
-            return "\"" + filesToCut.get(0).getName() + "\"" + " from: " + filesToCut.get(0).getParentFile().getAbsolutePath();
+        StringBuilder sb = new StringBuilder();
+        boolean first = true;
+
+        for(File file : filesToCut){
+            if(!first){
+                sb.append(", ");
+            }
+            sb.append(file.getName());
+            first = false;
         }
-        return filesToCut.size() + " files from: " + filesToCut.get(0).getParentFile().getAbsolutePath();
+        return sb.toString();
+    }
+
+    @Override
+    public ArrayList<File> getFilesList() {
+        return getFilesToCut();
     }
 }

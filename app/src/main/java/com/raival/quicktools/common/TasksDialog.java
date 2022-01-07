@@ -10,10 +10,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.raival.quicktools.App;
 import com.raival.quicktools.R;
 import com.raival.quicktools.interfaces.QTab;
 import com.raival.quicktools.interfaces.QTask;
+import com.raival.quicktools.interfaces.RegularTask;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class TasksDialog extends BottomSheetDialogFragment {
@@ -42,21 +45,37 @@ public class TasksDialog extends BottomSheetDialogFragment {
         }
 
         for(QTask task : tasks){
-            addTask(task);
+            addTask(task, !(task instanceof RegularTask) || validate((RegularTask) task));
         }
 
     }
 
-    private void addTask(QTask task){
+    private boolean validate(RegularTask task) {
+        for(File file : task.getFilesList()){
+            if(!file.exists())
+                return false;
+        }
+        return true;
+    }
+
+    private void addTask(QTask task, boolean valid){
         View v = getLayoutInflater().inflate(R.layout.common_tasks_dialog_item, container, false);
 
         ((TextView)v.findViewById(R.id.label)).setText(task.getName());
         ((TextView)v.findViewById(R.id.task_details)).setText(task.getDetails());
 
         v.findViewById(R.id.background).setOnClickListener(view -> {
+            if(!valid){
+                App.showMsg("This task is invalid, some files are missing");
+                return;
+            }
             tab.handleTask(task);
             tasks.remove(task);
             dismiss();
+        });
+        v.findViewById(R.id.remove).setOnClickListener(view -> {
+            tasks.remove(task);
+            container.removeView(v);
         });
 
         container.addView(v);

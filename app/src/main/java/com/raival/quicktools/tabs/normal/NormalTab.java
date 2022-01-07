@@ -1,5 +1,6 @@
 package com.raival.quicktools.tabs.normal;
 
+import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
@@ -9,17 +10,23 @@ import android.os.Parcelable;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.textfield.TextInputLayout;
 import com.raival.quicktools.App;
+import com.raival.quicktools.R;
 import com.raival.quicktools.common.BackgroundTask;
+import com.raival.quicktools.common.QDialogFragment;
 import com.raival.quicktools.interfaces.QTask;
 import com.raival.quicktools.tabs.normal.fragment.NormalTabFragment;
 import com.raival.quicktools.interfaces.QTab;
 import com.raival.quicktools.tabs.normal.models.FileItem;
+import com.raival.quicktools.tasks.CompressTask;
 import com.raival.quicktools.tasks.CopyTask;
 import com.raival.quicktools.tasks.CutTask;
+import com.raival.quicktools.tasks.ExtractTask;
 import com.raival.quicktools.utils.FileUtil;
 import com.raival.quicktools.utils.PrefsUtil;
 import com.raival.quicktools.utils.TimeUtil;
+import com.raival.quicktools.utils.ZipUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -231,16 +238,77 @@ public class NormalTab implements QTab {
     public void handleTask(QTask task) {
         if(task instanceof CopyTask){
             handleCopyTask((CopyTask)task);
-        } else if(task instanceof CutTask){
-            handleCutTask((CutTask)task);
+        } else if(task instanceof CutTask) {
+            handleCutTask((CutTask) task);
+        } else if(task instanceof CompressTask) {
+            handleCompressTask((CompressTask) task);
+        } else if(task instanceof ExtractTask){
+            handleExtractTask((ExtractTask)task);
         } else {
             App.showMsg("Cannot execute this task here");
         }
     }
 
+    private void handleExtractTask(ExtractTask task) {
+        BackgroundTask backgroundTask = new BackgroundTask();
+        backgroundTask.setTasks(()-> backgroundTask.showProgressDialog("Extracting files...", getFragment().requireActivity()), ()->{
+            try {
+                ZipUtil.extract(task.getFilesToExtract(), currentPath);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+                App.log(exception);
+                new Handler(Looper.getMainLooper()).post(()-> App.showMsg("Cannot extract files"));
+            }
+        }, ()-> {
+            refresh();
+            backgroundTask.dismiss();
+            App.showMsg("Files have been extracted successfully");
+        });
+        backgroundTask.run();
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void handleCompressTask(CompressTask task) {
+        TextInputLayout input = (TextInputLayout) getFragment().requireActivity().getLayoutInflater().inflate(R.layout.input, null, false);
+        input.setHint("Archive name");
+        input.getEditText().setText(".zip");
+        FileUtil.setFileInvalidator(input, currentPath);
+
+        new QDialogFragment()
+                .setTitle("Compress")
+                .addView(input)
+                .setPositiveButton("Save", view -> {
+                    if(input.getError() == null){
+                        executeCompressTask(task.getFilesToCompress(), new File(currentPath, input.getEditText().getText().toString()));
+                    } else {
+                        App.showMsg("Compress canceled");
+                    }
+                }, true)
+                .showDialog(getFragment().getChildFragmentManager(), "");
+    }
+
+    private void executeCompressTask(ArrayList<File> filesToCompress, File zip) {
+        BackgroundTask backgroundTask = new BackgroundTask();
+        backgroundTask.setTasks(()-> backgroundTask.showProgressDialog("Compressing files...", getFragment().requireActivity()), ()->{
+            try {
+                ZipUtil.archive(filesToCompress, zip);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+                App.log(exception);
+                new Handler(Looper.getMainLooper()).post(()-> App.showMsg("Cannot compress files"));
+            }
+        }, ()-> {
+            refresh();
+            backgroundTask.dismiss();
+            App.showMsg("Files have been compressed successfully");
+        });
+        backgroundTask.run();
+    }
+
+
     private void handleCutTask(CutTask task) {
         BackgroundTask backgroundTask = new BackgroundTask();
-        backgroundTask.setTasks(()-> backgroundTask.showProgressDialog("Moving files...", fragment.requireActivity()), ()->{
+        backgroundTask.setTasks(()-> backgroundTask.showProgressDialog("Moving files...", getFragment().requireActivity()), ()->{
             try {
                 FileUtil.MoveFiles(task.getFilesToCut(), getCurrentPath());
             } catch (IOException e) {
@@ -252,7 +320,7 @@ public class NormalTab implements QTab {
         } , ()->{
             refresh();
             backgroundTask.dismiss();
-            App.showMsg("Files has been moved successfully");
+            App.showMsg("Files have been moved successfully");
         });
         backgroundTask.run();
     }

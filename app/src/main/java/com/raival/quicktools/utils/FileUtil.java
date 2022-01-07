@@ -1,5 +1,6 @@
 package com.raival.quicktools.utils;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -18,6 +19,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.FragmentActivity;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -317,11 +319,12 @@ public class FileUtil {
         return true;
     }
 
-    public static boolean isSingleArchive(ArrayList<File> selectedFiles) {
-        return (selectedFiles.size() == 1
-                && (isArchiveFile(getFileExtension(selectedFiles.get(0)))
-                || getFileExtension(selectedFiles.get(0)).equals(FileExtensions.apkType)
-                ||getFileExtension(selectedFiles.get(0)).equals(FileExtensions.rarType)));
+    public static boolean isArchiveFiles(ArrayList<File> selectedFiles) {
+        for(File file : selectedFiles){
+            if(!isArchiveFile(getFileExtension(file)))
+                return false;
+        }
+        return true;
     }
 
     public static String getFormattedFileSize(File file) {
@@ -438,7 +441,11 @@ public class FileUtil {
         }
     }
 
-    public static void setFileInvalidator(TextInputLayout input, File file) {
+    public static void setFileInvalidator(TextInputLayout input, File directory) {
+        setFileInvalidator(input, null, directory);
+    }
+
+    public static void setFileInvalidator(TextInputLayout input, File file, File directory) {
         input.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
@@ -449,9 +456,9 @@ public class FileUtil {
             @Override
             public void afterTextChanged(Editable editable) {
                 if(isValidFileName(editable.toString())){
-                    if(!new File(file.getParentFile(), editable.toString()).exists()) {
+                    if(!new File(directory, editable.toString()).exists()) {
                         input.setError(null);
-                    } else if(editable.toString().equals(file.getName())){
+                    } else if(file != null && editable.toString().equals(file.getName())){
                         input.setError("This name is the same as before");
                     } else {
                         input.setError("This name is in use");
@@ -498,5 +505,40 @@ public class FileUtil {
 
     public static boolean rename(File file, String newName) {
         return file.renameTo(new File(file.getParentFile(), newName));
+    }
+
+    public static void shareFiles(ArrayList<File> filesToShare, Activity activity) {
+        if(filesToShare.size() == 1){
+            File file = filesToShare.get(0);
+            if(file.isDirectory()){
+                App.showMsg("Folders cannot be shared");
+                return;
+            }
+            Uri uri = FileProvider.getUriForFile(App.appContext,
+                    App.appContext.getPackageName() + ".provider",
+                    file);
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            intent.setType(MimeTypeMap.getSingleton().getMimeTypeFromExtension(getFileExtension(file)));
+            intent.putExtra(Intent.EXTRA_STREAM, uri);
+            activity.startActivity(Intent.createChooser(intent, "Share file"));
+            return;
+        }
+        Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        intent.setType("*/*");
+        ArrayList<Uri> uriList = new ArrayList<>();
+        for(File file : filesToShare){
+            if(file.isFile()){
+                Uri uri = FileProvider.getUriForFile(App.appContext,
+                        App.appContext.getPackageName() + ".provider",
+                        file);
+                uriList.add(uri);
+            }
+        }
+        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uriList);
+        activity.startActivity(Intent.createChooser(intent, "Share files"));
     }
 }

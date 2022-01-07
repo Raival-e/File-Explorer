@@ -29,8 +29,10 @@ import com.raival.quicktools.common.QDialogFragment;
 import com.raival.quicktools.tabs.normal.NormalTab;
 
 import com.raival.quicktools.tabs.normal.models.FileItem;
+import com.raival.quicktools.tasks.CompressTask;
 import com.raival.quicktools.tasks.CopyTask;
 import com.raival.quicktools.tasks.CutTask;
+import com.raival.quicktools.tasks.ExtractTask;
 import com.raival.quicktools.utils.FileUtil;
 
 
@@ -84,6 +86,7 @@ public class NormalTabFragment extends Fragment {
     public void updateFilesList(){
         tab.updateTabName();
         recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.scrollToPosition(0);
         updateFilesCount();
     }
 
@@ -204,6 +207,11 @@ public class NormalTabFragment extends Fragment {
                     }
                 });
 
+                itemView.findViewById(R.id.icon_container).setOnLongClickListener(view -> {
+                    showFileOptions(position);
+                    return true;
+                });
+
                 itemView.setOnLongClickListener(view -> {
                     showFileOptions(position);
                     return true;
@@ -240,7 +248,8 @@ public class NormalTabFragment extends Fragment {
         }
         if (FileUtil.isOnlyFiles(selectedFiles)) {
             bottomDialog.addOption("Share", R.drawable.ic_round_share_24, view1 ->{
-                //do share task
+                shareFiles(selectedFiles);
+                unSelectAndUpdateList();
             }, true);
         }
 
@@ -272,14 +281,18 @@ public class NormalTabFragment extends Fragment {
             }, true);
         }
 
-        if(FileUtil.isSingleArchive(selectedFiles)){
+        if(FileUtil.isArchiveFiles(selectedFiles)){
             bottomDialog.addOption("Extract", R.drawable.ic_baseline_open_in_new_24, view1 ->{
-                //do extract task
+                addExtractTask(selectedFiles);
+                unSelectAndUpdateList();
+                App.showMsg("New task has been added");
             }, true);
         }
 
         bottomDialog.addOption("Compress", R.drawable.ic_round_compress_24, view1 ->{
-            //do compress task
+            addCompressTask(selectedFiles);
+            unSelectAndUpdateList();
+            App.showMsg("New task has been added");
         }, true);
 
         bottomDialog.addOption("Details", R.drawable.ic_baseline_info_24, view1 ->{
@@ -295,11 +308,27 @@ public class NormalTabFragment extends Fragment {
         }, true);
     }
 
+    private void addExtractTask(ArrayList<File> selectedFiles) {
+        if(requireActivity() instanceof MainActivity){
+            ((MainActivity)requireActivity()).AddTask(new ExtractTask(selectedFiles));
+        }
+    }
+
+    private void addCompressTask(ArrayList<File> selectedFiles) {
+        if(requireActivity() instanceof MainActivity){
+            ((MainActivity)requireActivity()).AddTask(new CompressTask(selectedFiles));
+        }
+    }
+
+    private void shareFiles(ArrayList<File> selectedFiles) {
+        FileUtil.shareFiles(selectedFiles, requireActivity());
+    }
+
     private void showRenameDialog(ArrayList<File> selectedFiles) {
         TextInputLayout input = (TextInputLayout) getLayoutInflater().inflate(R.layout.input, null, false);
         input.setHint("File name");
         input.getEditText().setText(selectedFiles.get(0).getName());
-        FileUtil.setFileInvalidator(input, selectedFiles.get(0));
+        FileUtil.setFileInvalidator(input, selectedFiles.get(0), selectedFiles.get(0).getParentFile());
 
         new QDialogFragment()
                 .setTitle("Rename")
@@ -320,10 +349,8 @@ public class NormalTabFragment extends Fragment {
     }
 
     private void addCutTask(ArrayList<File> selectedFiles) {
-        CutTask cutTask = new CutTask(selectedFiles);
-
         if(requireActivity() instanceof MainActivity){
-            ((MainActivity)requireActivity()).AddTask(cutTask);
+            ((MainActivity)requireActivity()).AddTask(new CutTask(selectedFiles));
         }
     }
 

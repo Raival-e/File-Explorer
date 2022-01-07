@@ -1,28 +1,26 @@
 package com.raival.quicktools.tasks;
 
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.raival.quicktools.common.BackgroundTask;
 import com.raival.quicktools.interfaces.QTask;
 import com.raival.quicktools.interfaces.RegularTask;
+import com.raival.quicktools.utils.FileUtil;
 
 import java.io.File;
 import java.util.ArrayList;
 
-public class CopyTask  implements QTask, RegularTask {
-    ArrayList<File> filesToCopy;
+public class CompressTask implements QTask, RegularTask {
+    ArrayList<File> filesToCompress;
 
-    public CopyTask(ArrayList<File> filesToCopy) {
-        this.filesToCopy = filesToCopy;
+    public ArrayList<File> getFilesToCompress() {
+        return filesToCompress;
     }
 
-    public ArrayList<File> getFilesToCopy() {
-        return filesToCopy;
+    public CompressTask(ArrayList<File> filesToCompress) {
+        this.filesToCompress = filesToCompress;
     }
 
     @Override
     public String getName() {
-        return "Copy";
+        return "Compress";
     }
 
     @Override
@@ -30,7 +28,7 @@ public class CopyTask  implements QTask, RegularTask {
         StringBuilder sb = new StringBuilder();
         boolean first = true;
 
-        for(File file : filesToCopy){
+        for(File file : filesToCompress){
             if(!first){
                 sb.append(", ");
             }
@@ -42,6 +40,6 @@ public class CopyTask  implements QTask, RegularTask {
 
     @Override
     public ArrayList<File> getFilesList() {
-        return getFilesToCopy();
+        return getFilesToCompress();
     }
 }
