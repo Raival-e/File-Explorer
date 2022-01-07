@@ -1,4 +1,4 @@
-package com.raival.quicktools.fragments;
+package com.raival.quicktools.common;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,8 +9,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.button.MaterialButton;
 import com.raival.quicktools.R;
@@ -108,6 +108,11 @@ public class QDialogFragment extends DialogFragment {
                 if(neutralListener.dismiss) dismiss();
             });
         }
+    }
+
+    public QDialogFragment showDialog(@NonNull FragmentManager fragmentManager, String tag){
+        super.show(fragmentManager, tag);
+        return this;
     }
 
     public String getTitle() {

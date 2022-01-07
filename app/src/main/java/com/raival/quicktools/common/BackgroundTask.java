@@ -55,7 +55,6 @@ public class BackgroundTask {
     }
 
     private View getProgressView(String msg, Activity activity) {
-        //ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(App.appContext, R.style.Base_Theme_AppCompat);
         View v = activity.getLayoutInflater().inflate(R.layout.progress_view, null);
         ((TextView)v.findViewById(R.id.msg)).setText(msg);
         return v;

@@ -11,6 +11,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
@@ -19,6 +21,7 @@ import androidx.core.content.FileProvider;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.material.textfield.TextInputLayout;
 import com.raival.quicktools.App;
 import com.raival.quicktools.MainActivity;
 import com.raival.quicktools.R;
@@ -404,5 +407,96 @@ public class FileUtil {
         for(File file : selectedFiles){
             deleteFile(file);
         }
+    }
+
+    public static void MoveFiles(ArrayList<File> filesToCut, File destination) throws IOException {
+        for (File file : filesToCut){
+            move(file, destination);
+        }
+    }
+
+    private static void move(File file, File destination) throws IOException{
+        if (file.isFile()){
+            if(!file.renameTo(new File(destination, file.getName()))){
+                throw new IOException("Cannot move file " + file.getAbsolutePath());
+            }
+        } else {
+            File parent = new File(destination, file.getName());
+            if(parent.mkdir()){
+                File[] files = file.listFiles();
+                if(files != null){
+                    for(File child : files){
+                        move(child, parent);
+                    }
+                }
+                if(!file.delete()){
+                    throw new IOException("Cannot delete file " + file.getAbsolutePath());
+                }
+            } else {
+                throw new IOException("Cannot create folder " + parent);
+            }
+        }
+    }
+
+    public static void setFileInvalidator(TextInputLayout input, File file) {
+        input.getEditText().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if(isValidFileName(editable.toString())){
+                    if(!new File(file.getParentFile(), editable.toString()).exists()) {
+                        input.setError(null);
+                    } else if(editable.toString().equals(file.getName())){
+                        input.setError("This name is the same as before");
+                    } else {
+                        input.setError("This name is in use");
+                    }
+                } else {
+                    input.setError("Invalid file name");
+                }
+            }
+        });
+    }
+
+    public static boolean isValidFileName(String name) {
+        if(isEmpty(name)) return false;
+        return !hasInvalidChar(name);
+    }
+
+    private static boolean hasInvalidChar(String name) {
+        for(char ch : name.toCharArray()){
+            switch (ch){
+                case '"':
+                case '*':
+                case '/':
+                case ':':
+                case '>':
+                case '<':
+                case '?':
+                case '\\':
+                case '|':
+                case '\n':
+                case '\t':
+                case 0x7f:{
+                    return true;
+                }
+                default:
+            }
+            if(ch <= 0x1f) return true;
+        }
+        return false;
+    }
+
+    public static boolean isEmpty(String str){
+        return str.equals("");
+    }
+
+    public static boolean rename(File file, String newName) {
+        return file.renameTo(new File(file.getParentFile(), newName));
     }
 }

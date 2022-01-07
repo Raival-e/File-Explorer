@@ -18,15 +18,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.textfield.TextInputLayout;
 import com.raival.quicktools.App;
 import com.raival.quicktools.MainActivity;
 import com.raival.quicktools.R;
 
 import com.raival.quicktools.common.BackgroundTask;
 import com.raival.quicktools.common.OptionsDialog;
+import com.raival.quicktools.common.QDialogFragment;
 import com.raival.quicktools.tabs.normal.NormalTab;
 
+import com.raival.quicktools.tabs.normal.models.FileItem;
 import com.raival.quicktools.tasks.CopyTask;
+import com.raival.quicktools.tasks.CutTask;
 import com.raival.quicktools.utils.FileUtil;
 
 
@@ -242,20 +246,24 @@ public class NormalTabFragment extends Fragment {
 
         bottomDialog.addOption("Copy", R.drawable.ic_baseline_file_copy_24, view1 ->{
             addCopyTask(selectedFiles);
+            unSelectAndUpdateList();
+            App.showMsg("New task has been added");
         }, true);
 
         bottomDialog.addOption("Cut", R.drawable.ic_round_content_cut_24, view1 ->{
-            //do cut task
+            addCutTask(selectedFiles);
+            unSelectAndUpdateList();
+            App.showMsg("New task has been added");
         }, true);
 
         if(selectedFiles.size() == 1){
             bottomDialog.addOption("Rename", R.drawable.ic_round_edit_24, view1 ->{
-                //do rename task
+                showRenameDialog(selectedFiles);
             }, true);
         }
 
         bottomDialog.addOption("Delete", R.drawable.ic_round_delete_forever_24, view1 ->{
-            doDelete(selectedFiles);
+            confirmDeletion(selectedFiles);
         }, true);
 
         if(FileUtil.isSingleFile(selectedFiles)){
@@ -285,6 +293,54 @@ public class NormalTabFragment extends Fragment {
         bottomDialog.addOption("Deep search", R.drawable.ic_round_manage_search_24, view1 ->{
             //do search task
         }, true);
+    }
+
+    private void showRenameDialog(ArrayList<File> selectedFiles) {
+        TextInputLayout input = (TextInputLayout) getLayoutInflater().inflate(R.layout.input, null, false);
+        input.setHint("File name");
+        input.getEditText().setText(selectedFiles.get(0).getName());
+        FileUtil.setFileInvalidator(input, selectedFiles.get(0));
+
+        new QDialogFragment()
+                .setTitle("Rename")
+                .addView(input)
+                .setPositiveButton("Save", view -> {
+                    if(input.getError() == null){
+                        if(!FileUtil.rename(selectedFiles.get(0), input.getEditText().getText().toString())){
+                            App.showMsg("Cannot rename this file");
+                        } else {
+                            App.showMsg("File has been renamed");
+                            tab.refresh();
+                        }
+                    } else {
+                        App.showMsg("Rename canceled");
+                    }
+                }, true)
+                .showDialog(getParentFragmentManager(), "");
+    }
+
+    private void addCutTask(ArrayList<File> selectedFiles) {
+        CutTask cutTask = new CutTask(selectedFiles);
+
+        if(requireActivity() instanceof MainActivity){
+            ((MainActivity)requireActivity()).AddTask(cutTask);
+        }
+    }
+
+    private void unSelectAndUpdateList() {
+        for(FileItem item : tab.getFilesList()){
+            item.setSelected(false);
+        }
+        updateFilesList();
+    }
+
+    private void confirmDeletion(ArrayList<File> selectedFiles) {
+        new QDialogFragment()
+                .setTitle("Delete")
+                .setMsg("Do you want to delete selected files? this action cannot be redone.")
+                .setPositiveButton("Confirm", (view -> doDelete(selectedFiles)), true)
+                .setNegativeButton("Cancel", null, true)
+                .showDialog(getParentFragmentManager(), "");
     }
 
     private void doDelete(ArrayList<File> selectedFiles) {

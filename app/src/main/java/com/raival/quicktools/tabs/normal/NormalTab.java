@@ -16,6 +16,7 @@ import com.raival.quicktools.tabs.normal.fragment.NormalTabFragment;
 import com.raival.quicktools.interfaces.QTab;
 import com.raival.quicktools.tabs.normal.models.FileItem;
 import com.raival.quicktools.tasks.CopyTask;
+import com.raival.quicktools.tasks.CutTask;
 import com.raival.quicktools.utils.FileUtil;
 import com.raival.quicktools.utils.PrefsUtil;
 import com.raival.quicktools.utils.TimeUtil;
@@ -229,8 +230,31 @@ public class NormalTab implements QTab {
     @Override
     public void handleTask(QTask task) {
         if(task instanceof CopyTask){
-            handleCopyTask((CopyTask) task);
+            handleCopyTask((CopyTask)task);
+        } else if(task instanceof CutTask){
+            handleCutTask((CutTask)task);
+        } else {
+            App.showMsg("Cannot execute this task here");
         }
+    }
+
+    private void handleCutTask(CutTask task) {
+        BackgroundTask backgroundTask = new BackgroundTask();
+        backgroundTask.setTasks(()-> backgroundTask.showProgressDialog("Moving files...", fragment.requireActivity()), ()->{
+            try {
+                FileUtil.MoveFiles(task.getFilesToCut(), getCurrentPath());
+            } catch (IOException e) {
+                e.printStackTrace();
+                App.log(e);
+                new Handler(Looper.getMainLooper()).post(()->App.showMsg("Cannot move files"));
+            }
+
+        } , ()->{
+            refresh();
+            backgroundTask.dismiss();
+            App.showMsg("Files has been moved successfully");
+        });
+        backgroundTask.run();
     }
 
     private void handleCopyTask(CopyTask task) {
@@ -247,7 +271,7 @@ public class NormalTab implements QTab {
         } , ()->{
             refresh();
             backgroundTask.dismiss();
-            App.showMsg("Files has been copied");
+            App.showMsg("Files has been copied successfully");
         });
         backgroundTask.run();
     }
