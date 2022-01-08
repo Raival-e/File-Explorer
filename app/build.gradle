@@ -38,6 +38,16 @@ dependencies {
     implementation 'com.pixplicity.easyprefs:EasyPrefs:1.10.0'
     implementation 'net.lingala.zip4j:zip4j:2.9.1'
 
+    implementation 'io.github.Rosemoe.sora-editor:editor:0.8.4'
+    implementation 'io.github.Rosemoe.sora-editor:language-base:0.8.4'
+
+    implementation 'io.github.Rosemoe.sora-editor:language-java:0.8.4'
+    //implementation 'io.github.Rosemoe.sora-editor:language-html:0.8.4'
+    //implementation 'io.github.Rosemoe.sora-editor:language-python:0.8.4'
+    //implementation 'io.github.Rosemoe.sora-editor:language-css3:0.8.4'
+    //implementation 'io.github.Rosemoe.sora-editor:language-universal:0.8.4'
+    //implementation 'io.github.Rosemoe.sora-editor:language-xml:0.8.4'
+
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/text_wordwrap"
+        android:checkable="true"
+        android:title="Word wrap" />
+    <item
+        android:id="@+id/editor_line_number"
+        android:checkable="true"
+        android:checked="true"
+        android:title="Show line number" />
+    <item
+        android:id="@+id/pin_line_number"
+        android:checkable="true"
+        android:title="Pin line number"/>
+    <item
+        android:id="@+id/magnifier"
+        android:checkable="true"
+        android:checked="true"
+        android:title="Magnifier"/>
+    <item
+        android:id="@+id/light_mode"
+        android:checkable="true"
+        android:checked="false"
+        android:title="Light theme"/>
+
+    <item
+        android:id="@+id/text_undo"
+        android:title="Undo"
+        android:icon="@drawable/ic_round_undo_24"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/text_redo"
+        android:title="Redo"
+        android:icon="@drawable/ic_round_redo_24"
+        app:showAsAction="always"/>
+</menu>

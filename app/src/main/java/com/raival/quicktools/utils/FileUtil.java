@@ -31,6 +31,7 @@ import com.raival.quicktools.R;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -259,10 +260,38 @@ public class FileUtil {
     }
 
 
+    public static String readFile(File file) throws Exception {
+        if(!file.exists()){
+            throw new Exception("file " + file.getAbsolutePath() + " doesn't exist");
+        }
+        if(file.isDirectory()){
+            throw new Exception("file " + file.getAbsolutePath() + " is invalid");
+        }
+
+        StringBuilder sb = new StringBuilder();
+        FileReader fr = null;
+
+        fr = new FileReader(file);
+
+        char[] buff = new char[1024];
+        int length = 0;
+
+        while ((length = fr.read(buff)) > 0) {
+            sb.append(new String(buff, 0, length));
+        }
+
+        fr.close();
+
+        return sb.toString();
+    }
+
 
     public static void writeFile(File file, String content) throws IOException{
-        if(!file.createNewFile()){
-            throw new IOException("Cannot create file " + file.getAbsolutePath());
+        if(!file.getParentFile().exists() && !file.getParentFile().mkdir()){
+            throw new IOException("file " + file.getAbsolutePath() + " doesn't exist");
+        }
+        if(!file.exists() && !file.createNewFile()){
+            throw new IOException("file " + file.getAbsolutePath()  + " cannot be created");
         }
         FileWriter fileWriter = new FileWriter(file, false);
         fileWriter.write(content);

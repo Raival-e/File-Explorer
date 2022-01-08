@@ -1,6 +1,8 @@
 package com.raival.quicktools;
 
 import android.app.Application;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Handler;
 import android.widget.Toast;
@@ -41,6 +43,10 @@ public class App extends Application {
         Toast.makeText(appContext, s, Toast.LENGTH_SHORT).show();
     }
 
+    public static void copyString(String txt){
+        ((ClipboardManager)appContext.getSystemService(CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText("clipboard", txt));
+    }
+
     public static void log(Throwable exception) {
         log(getStackTrace(exception));
     }
@@ -49,9 +55,8 @@ public class App extends Application {
         final File logFile = new File(appContext.getExternalFilesDir(null).getAbsolutePath() + "/debug/log.txt");
         try {
             FileUtil.writeFile(logFile, exception);
-        } catch (Exception ignored){
-
+        } catch (Exception e){
+            showMsg(e.toString());
         }
-
     }
 }

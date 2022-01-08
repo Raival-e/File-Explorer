@@ -2,6 +2,7 @@ package com.raival.quicktools.tabs.normal.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -23,7 +24,9 @@ import com.raival.quicktools.App;
 import com.raival.quicktools.MainActivity;
 import com.raival.quicktools.R;
 
+import com.raival.quicktools.activities.TextEditorActivity;
 import com.raival.quicktools.common.BackgroundTask;
+import com.raival.quicktools.common.FileInfoDialog;
 import com.raival.quicktools.common.OptionsDialog;
 import com.raival.quicktools.common.QDialogFragment;
 import com.raival.quicktools.tabs.normal.NormalTab;
@@ -34,6 +37,7 @@ import com.raival.quicktools.tasks.CopyTask;
 import com.raival.quicktools.tasks.CutTask;
 import com.raival.quicktools.tasks.ExtractTask;
 import com.raival.quicktools.utils.FileUtil;
+import com.raival.quicktools.utils.TimeUtil;
 
 
 import java.io.File;
@@ -277,7 +281,7 @@ public class NormalTabFragment extends Fragment {
 
         if(FileUtil.isSingleFile(selectedFiles)){
             bottomDialog.addOption("Edit with code editor", R.drawable.ic_round_edit_note_24, view1 ->{
-                //do edit task
+                openWithTextEditor(selectedFiles.get(0));
             }, true);
         }
 
@@ -295,9 +299,11 @@ public class NormalTabFragment extends Fragment {
             App.showMsg("New task has been added");
         }, true);
 
-        bottomDialog.addOption("Details", R.drawable.ic_baseline_info_24, view1 ->{
-            //do compress task
-        }, true);
+        if(selectedFiles.size() == 1){
+            bottomDialog.addOption("Details", R.drawable.ic_baseline_info_24, view1 ->{
+                showFileInfoDialog(selectedFiles.get(0));
+            }, true);
+        }
 
         bottomDialog.addOption("Find & Replace", R.drawable.ic_round_search_24, view1 ->{
             //do find&replace task
@@ -306,6 +312,17 @@ public class NormalTabFragment extends Fragment {
         bottomDialog.addOption("Deep search", R.drawable.ic_round_manage_search_24, view1 ->{
             //do search task
         }, true);
+    }
+
+    private void openWithTextEditor(File file) {
+        Intent intent = new Intent();
+        intent.setClass(requireActivity(), TextEditorActivity.class);
+        intent.putExtra("file", file.getAbsolutePath());
+        requireActivity().startActivity(intent);
+    }
+
+    private void showFileInfoDialog(File file) {
+        new FileInfoDialog(file).setUseDefaultFileInfo(true).show(getParentFragmentManager(), "");
     }
 
     private void addExtractTask(ArrayList<File> selectedFiles) {
