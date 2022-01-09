@@ -100,15 +100,13 @@ public class FileUtil {
         final String ext = getFileExtension(file).toLowerCase();
 
         if(ext.equals(FileExtensions.apkType)){
-            new Thread(()->{
-                PackageInfo info = App.appContext.getPackageManager().getPackageArchiveInfo(file.getAbsolutePath(), PackageManager.GET_ACTIVITIES);
-                if(info != null){
-                    ApplicationInfo applicationInfo = info.applicationInfo;
-                    applicationInfo.sourceDir = file.getAbsolutePath();
-                    applicationInfo.publicSourceDir = file.getAbsolutePath();
-                    new Handler(Looper.getMainLooper()).post(()->icon.setImageDrawable(applicationInfo.loadIcon(App.appContext.getPackageManager())));
-                }
-            }).start();
+            PackageInfo info = App.appContext.getPackageManager().getPackageArchiveInfo(file.getAbsolutePath(), PackageManager.GET_ACTIVITIES);
+            if(info != null){
+                ApplicationInfo applicationInfo = info.applicationInfo;
+                applicationInfo.sourceDir = file.getAbsolutePath();
+                applicationInfo.publicSourceDir = file.getAbsolutePath();
+                icon.setImageDrawable(applicationInfo.loadIcon(App.appContext.getPackageManager()));
+            }
             return;
         }
         if(ext.equals(FileExtensions.pdfType)){
@@ -353,7 +351,7 @@ public class FileUtil {
         long size = 0;
         for(File child : file.listFiles()){
             if(child.isFile()){
-                size = size + file.length();
+                size = size + child.length();
             } else {
                 size = size + getFolderSize(child);
             }

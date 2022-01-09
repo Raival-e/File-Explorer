@@ -51,6 +51,12 @@ public class FileItem {
         this.details = details;
     }
 
+    public FileItem(File file, String details, Drawable icon) {
+        this.file = file;
+        this.details = details;
+        this.icon = icon;
+    }
+
     public void changeSelection() {
         setSelected(!isSelected);
     }

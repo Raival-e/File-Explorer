@@ -3,6 +3,9 @@ package com.raival.quicktools.tabs.normal.fragment;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -36,6 +39,7 @@ import com.raival.quicktools.tasks.CompressTask;
 import com.raival.quicktools.tasks.CopyTask;
 import com.raival.quicktools.tasks.CutTask;
 import com.raival.quicktools.tasks.ExtractTask;
+import com.raival.quicktools.utils.FileExtensions;
 import com.raival.quicktools.utils.FileUtil;
 import com.raival.quicktools.utils.TimeUtil;
 
@@ -168,45 +172,47 @@ public class NormalTabFragment extends Fragment {
 
             public void bind(){
                 final int position = getAdapterPosition();
+                final FileItem fileItem = tab.getFilesList().get(position);
 
-                name.setText(tab.getFilesList().get(position).getName());
-                details.setText(tab.getFilesList().get(position).getDetails());
+                name.setText(fileItem.getName());
+                details.setText(fileItem.getDetails());
 
-                if(tab.getFilesList().get(position).isSelected()) {
+                if(fileItem.isSelected()) {
                     background.setForeground(new ColorDrawable(selectedFileHighlight));
-                } else if(tab.shouldHighlightFile(tab.getFilesList().get(position).getFile())){
+                } else if(tab.shouldHighlightFile(fileItem.getFile())){
                     background.setForeground(new ColorDrawable(prevPathHighlight));
                 } else {
                     background.setForeground(null);
                 }
 
-
-                if(tab.getFilesList().get(position).getIcon() == null){
-                    FileUtil.setFileIcon(icon, tab.getFilesList().get(position).getFile());
-                    tab.getFilesList().get(position).setIcon(icon.getDrawable());
+                if(FileUtil.getFileExtension(fileItem.getFile()).toLowerCase().equals(FileExtensions.apkType)){
+                    loadApkIcon(fileItem.getFile(), icon);
+                } else if(fileItem.getIcon() == null){
+                    FileUtil.setFileIcon(icon, fileItem.getFile());
+                    fileItem.setIcon(icon.getDrawable());
                 } else {
                     Glide.with(App.appContext)
                             .load(tab.getFilesList().get(position).getIcon())
                             .into(icon);
                 }
 
-                icon.setAlpha(tab.getFilesList().get(position).getFile().isHidden()? 0.5f : 1f);
+                icon.setAlpha(fileItem.getFile().isHidden()? 0.5f : 1f);
 
                 itemView.findViewById(R.id.icon_container).setOnClickListener(view -> {
-                    tab.getFilesList().get(position).changeSelection();
+                    fileItem.changeSelection();
                     notifyItemChanged(position);
                 });
 
                 itemView.setOnClickListener(view -> {
                     if(tab.hasSelectedFiles()){
-                        tab.getFilesList().get(position).changeSelection();
+                        fileItem.changeSelection();
                         notifyItemChanged(position);
                         return;
                     }
-                    if(tab.getFilesList().get(position).getFile().isFile()){
-                        FileUtil.openFileWith(tab.getFilesList().get(position).getFile(), false);
+                    if(fileItem.getFile().isFile()){
+                        FileUtil.openFileWith(fileItem.getFile(), false);
                     } else {
-                        tab.setCurrentPath(tab.getFilesList().get(position).getFile());
+                        tab.setCurrentPath(fileItem.getFile());
                         updateFilesList();
                     }
                 });
@@ -220,6 +226,19 @@ public class NormalTabFragment extends Fragment {
                     showFileOptions(position);
                     return true;
                 });
+            }
+
+            private void loadApkIcon(File file, ImageView icon) {
+                new Thread(()->{
+                    PackageInfo info = App.appContext.getPackageManager().getPackageArchiveInfo(file.getAbsolutePath(),
+                            PackageManager.GET_ACTIVITIES);
+                    if(info != null){
+                        ApplicationInfo applicationInfo = info.applicationInfo;
+                        applicationInfo.sourceDir = file.getAbsolutePath();
+                        applicationInfo.publicSourceDir = file.getAbsolutePath();
+                        recyclerView.post(()->icon.setImageDrawable(applicationInfo.loadIcon(App.appContext.getPackageManager())));
+                    }
+                }).start();
             }
         }
     }
