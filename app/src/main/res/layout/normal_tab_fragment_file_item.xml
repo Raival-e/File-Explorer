@@ -26,7 +26,7 @@
                 android:id="@+id/file_icon"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/folder_icon"
+                android:src="@drawable/unknown_file"
                 android:scaleType="fitXY"/>
         </com.google.android.material.card.MaterialCardView>
     </LinearLayout>

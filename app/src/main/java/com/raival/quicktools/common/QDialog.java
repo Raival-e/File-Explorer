@@ -17,7 +17,7 @@ import com.raival.quicktools.R;
 
 import java.util.ArrayList;
 
-public class QDialogFragment extends DialogFragment {
+public class QDialog extends DialogFragment {
     String title;
     String msg;
 
@@ -110,7 +110,7 @@ public class QDialogFragment extends DialogFragment {
         }
     }
 
-    public QDialogFragment showDialog(@NonNull FragmentManager fragmentManager, String tag){
+    public QDialog showDialog(@NonNull FragmentManager fragmentManager, String tag){
         super.show(fragmentManager, tag);
         return this;
     }
@@ -119,7 +119,7 @@ public class QDialogFragment extends DialogFragment {
         return title;
     }
 
-    public QDialogFragment setTitle(String title) {
+    public QDialog setTitle(String title) {
         this.title = title;
         return this;
     }
@@ -128,29 +128,29 @@ public class QDialogFragment extends DialogFragment {
         return msg;
     }
 
-    public QDialogFragment setMsg(String msg) {
+    public QDialog setMsg(String msg) {
         this.msg = msg;
         return this;
     }
 
-    public QDialogFragment addView(View view){
+    public QDialog addView(View view){
         views.add(view);
         return this;
     }
 
-    public QDialogFragment setPositiveButton(String label, View.OnClickListener listener, boolean dismiss){
+    public QDialog setPositiveButton(String label, View.OnClickListener listener, boolean dismiss){
         positiveButton = label;
         positiveListener = new Listener(listener, dismiss);
         return this;
     }
 
-    public QDialogFragment setNegativeButton(String label, View.OnClickListener listener, boolean dismiss){
+    public QDialog setNegativeButton(String label, View.OnClickListener listener, boolean dismiss){
         negativeButton = label;
         negativeListener = new Listener(listener, dismiss);
         return this;
     }
 
-    public QDialogFragment setNeutralButton(String label, View.OnClickListener listener, boolean dismiss){
+    public QDialog setNeutralButton(String label, View.OnClickListener listener, boolean dismiss){
         neutralButton = label;
         neutralListener = new Listener(listener, dismiss);
         return this;

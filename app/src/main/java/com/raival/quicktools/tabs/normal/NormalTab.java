@@ -14,10 +14,10 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.raival.quicktools.App;
 import com.raival.quicktools.R;
 import com.raival.quicktools.common.BackgroundTask;
-import com.raival.quicktools.common.QDialogFragment;
+import com.raival.quicktools.common.QDialog;
+import com.raival.quicktools.interfaces.QTab;
 import com.raival.quicktools.interfaces.QTask;
 import com.raival.quicktools.tabs.normal.fragment.NormalTabFragment;
-import com.raival.quicktools.interfaces.QTab;
 import com.raival.quicktools.tabs.normal.models.FileItem;
 import com.raival.quicktools.tasks.CompressTask;
 import com.raival.quicktools.tasks.CopyTask;
@@ -36,7 +36,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class NormalTab implements QTab {
     public final static String MAX_NAME_LENGTH = "maximum name length";
@@ -274,7 +273,7 @@ public class NormalTab implements QTab {
         input.getEditText().setText(".zip");
         FileUtil.setFileInvalidator(input, currentPath);
 
-        new QDialogFragment()
+        new QDialog()
                 .setTitle("Compress")
                 .addView(input)
                 .setPositiveButton("Save", view -> {

@@ -4,19 +4,13 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Looper;
-import android.view.ContextThemeWrapper;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.raival.quicktools.App;
 import com.raival.quicktools.R;
-
-import java.io.File;
 
 public class BackgroundTask {
     Runnable preTask, task, postTask;

@@ -26,14 +26,12 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.raival.quicktools.App;
 import com.raival.quicktools.MainActivity;
 import com.raival.quicktools.R;
-
 import com.raival.quicktools.activities.TextEditorActivity;
 import com.raival.quicktools.common.BackgroundTask;
 import com.raival.quicktools.common.FileInfoDialog;
 import com.raival.quicktools.common.OptionsDialog;
-import com.raival.quicktools.common.QDialogFragment;
+import com.raival.quicktools.common.QDialog;
 import com.raival.quicktools.tabs.normal.NormalTab;
-
 import com.raival.quicktools.tabs.normal.models.FileItem;
 import com.raival.quicktools.tasks.CompressTask;
 import com.raival.quicktools.tasks.CopyTask;
@@ -41,8 +39,6 @@ import com.raival.quicktools.tasks.CutTask;
 import com.raival.quicktools.tasks.ExtractTask;
 import com.raival.quicktools.utils.FileExtensions;
 import com.raival.quicktools.utils.FileUtil;
-import com.raival.quicktools.utils.TimeUtil;
-
 
 import java.io.File;
 import java.util.ArrayList;
@@ -94,7 +90,6 @@ public class NormalTabFragment extends Fragment {
     public void updateFilesList(){
         tab.updateTabName();
         recyclerView.getAdapter().notifyDataSetChanged();
-        recyclerView.scrollToPosition(0);
         updateFilesCount();
     }
 
@@ -185,8 +180,8 @@ public class NormalTabFragment extends Fragment {
                     background.setForeground(null);
                 }
 
-                if(FileUtil.getFileExtension(fileItem.getFile()).toLowerCase().equals(FileExtensions.apkType)){
-                    loadApkIcon(fileItem.getFile(), icon);
+                if(FileUtil.getFileExtension(fileItem.getFile()).equalsIgnoreCase(FileExtensions.apkType)){
+                    loadApkIcon(fileItem, icon);
                 } else if(fileItem.getIcon() == null){
                     FileUtil.setFileIcon(icon, fileItem.getFile());
                     fileItem.setIcon(icon.getDrawable());
@@ -214,6 +209,7 @@ public class NormalTabFragment extends Fragment {
                     } else {
                         tab.setCurrentPath(fileItem.getFile());
                         updateFilesList();
+                        recyclerView.scrollToPosition(0);
                     }
                 });
 
@@ -228,15 +224,18 @@ public class NormalTabFragment extends Fragment {
                 });
             }
 
-            private void loadApkIcon(File file, ImageView icon) {
+            private void loadApkIcon(FileItem fileItem, ImageView icon) {
                 new Thread(()->{
-                    PackageInfo info = App.appContext.getPackageManager().getPackageArchiveInfo(file.getAbsolutePath(),
+                    PackageInfo info = App.appContext.getPackageManager().getPackageArchiveInfo(fileItem.getFile().getAbsolutePath(),
                             PackageManager.GET_ACTIVITIES);
                     if(info != null){
                         ApplicationInfo applicationInfo = info.applicationInfo;
-                        applicationInfo.sourceDir = file.getAbsolutePath();
-                        applicationInfo.publicSourceDir = file.getAbsolutePath();
-                        recyclerView.post(()->icon.setImageDrawable(applicationInfo.loadIcon(App.appContext.getPackageManager())));
+                        applicationInfo.sourceDir = fileItem.getFile().getAbsolutePath();
+                        applicationInfo.publicSourceDir = fileItem.getFile().getAbsolutePath();
+                        recyclerView.post(()->{
+                            icon.setImageDrawable(applicationInfo.loadIcon(App.appContext.getPackageManager()));
+                            fileItem.setIcon(icon.getDrawable());
+                        });
                     }
                 }).start();
             }
@@ -366,7 +365,7 @@ public class NormalTabFragment extends Fragment {
         input.getEditText().setText(selectedFiles.get(0).getName());
         FileUtil.setFileInvalidator(input, selectedFiles.get(0), selectedFiles.get(0).getParentFile());
 
-        new QDialogFragment()
+        new QDialog()
                 .setTitle("Rename")
                 .addView(input)
                 .setPositiveButton("Save", view -> {
@@ -398,7 +397,7 @@ public class NormalTabFragment extends Fragment {
     }
 
     private void confirmDeletion(ArrayList<File> selectedFiles) {
-        new QDialogFragment()
+        new QDialog()
                 .setTitle("Delete")
                 .setMsg("Do you want to delete selected files? this action cannot be redone.")
                 .setPositiveButton("Confirm", (view -> doDelete(selectedFiles)), true)

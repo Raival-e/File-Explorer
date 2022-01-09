@@ -30,8 +30,8 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pixplicity.easyprefs.library.Prefs;
+import com.raival.quicktools.common.QDialog;
 import com.raival.quicktools.common.TasksDialog;
-import com.raival.quicktools.common.QDialogFragment;
 import com.raival.quicktools.interfaces.QTab;
 import com.raival.quicktools.interfaces.QTask;
 import com.raival.quicktools.tabs.normal.NormalTab;
@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
         TextInputLayout input = (TextInputLayout) getLayoutInflater().inflate(R.layout.input, null, false);
         input.setHint("File name");
 
-        new QDialogFragment()
+        new QDialog()
                 .setTitle("Create new file")
                 .addView(input)
                 .setPositiveButton("File", view ->

@@ -1,7 +1,5 @@
 package com.raival.quicktools.activities;
 
-import android.content.res.Resources;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,11 +10,10 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.raival.quicktools.App;
 import com.raival.quicktools.R;
-import com.raival.quicktools.common.QDialogFragment;
+import com.raival.quicktools.common.QDialog;
 import com.raival.quicktools.utils.FileUtil;
 
 import java.io.File;
@@ -27,7 +24,6 @@ import io.github.rosemoe.sora.langs.html.HTMLLanguage;
 import io.github.rosemoe.sora.langs.java.JavaLanguage;
 import io.github.rosemoe.sora.langs.python.PythonLanguage;
 import io.github.rosemoe.sora.widget.CodeEditor;
-import io.github.rosemoe.sora.widget.EditorColorScheme;
 import io.github.rosemoe.sora.widget.schemes.SchemeDarcula;
 import io.github.rosemoe.sora.widget.schemes.SchemeGitHub;
 
@@ -122,7 +118,7 @@ public class TextEditorActivity extends AppCompatActivity {
         }
         try {
             if(!FileUtil.readFile(file).equals(editor.getText().toString())){
-                new QDialogFragment()
+                new QDialog()
                         .setTitle("Save File")
                         .setMsg("Do you want to save this file before exit?")
                         .setPositiveButton("Yes", view -> {

@@ -1,8 +1,5 @@
 package com.raival.quicktools.tasks;
 
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.raival.quicktools.common.BackgroundTask;
 import com.raival.quicktools.interfaces.QTask;
 import com.raival.quicktools.interfaces.RegularTask;
 

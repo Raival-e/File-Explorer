@@ -2,7 +2,6 @@ package com.raival.quicktools.tasks;
 
 import com.raival.quicktools.interfaces.QTask;
 import com.raival.quicktools.interfaces.RegularTask;
-import com.raival.quicktools.utils.FileUtil;
 
 import java.io.File;
 import java.util.ArrayList;

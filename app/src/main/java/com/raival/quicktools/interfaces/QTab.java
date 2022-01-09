@@ -7,7 +7,6 @@ import com.raival.quicktools.tabs.normal.models.FileItem;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Comparator;
 
 public interface QTab {
     void setTab(TabLayout.Tab tab);
