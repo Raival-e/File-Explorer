@@ -2,36 +2,74 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/text_wordwrap"
-        android:checkable="true"
-        android:title="Word wrap" />
+        android:id="@+id/editor_option_save"
+        android:title="Save"/>
     <item
-        android:id="@+id/editor_line_number"
-        android:checkable="true"
-        android:checked="true"
-        android:title="Show line number" />
-    <item
-        android:id="@+id/pin_line_number"
-        android:checkable="true"
-        android:title="Pin line number"/>
-    <item
-        android:id="@+id/magnifier"
-        android:checkable="true"
-        android:checked="true"
-        android:title="Magnifier"/>
-    <item
-        android:id="@+id/light_mode"
-        android:checkable="true"
-        android:checked="false"
-        android:title="Light theme"/>
+        android:id="@+id/editor_option_search"
+        android:title="Search"/>
 
+    <item android:title="Languages">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/editor_language_def"
+                    android:checked="true"
+                    android:title="Default" />
+                <item
+                    android:id="@+id/editor_language_java"
+                    android:title="Java" />
+                <item
+                    android:id="@+id/editor_language_python"
+                    android:title="Python" />
+                <item
+                    android:id="@+id/editor_language_html"
+                    android:title="HTML" />
+                <item
+                    android:id="@+id/editor_language_css3"
+                    android:title="CSS3" />
+            </group>
+        </menu>
+    </item>
+
+    <item android:title="Configuration">
+        <menu>
+            <item
+                android:id="@+id/editor_option_wordwrap"
+                android:checkable="true"
+                android:title="Word wrap" />
+            <item
+                android:id="@+id/editor_option_line_number"
+                android:checkable="true"
+                android:checked="true"
+                android:title="Show line number" />
+            <item
+                android:id="@+id/editor_option_pin_line_number"
+                android:checkable="true"
+                android:title="Pin line number"/>
+            <item
+                android:id="@+id/editor_option_magnifier"
+                android:checkable="true"
+                android:checked="true"
+                android:title="Magnifier"/>
+            <item
+                android:id="@+id/editor_option_light_mode"
+                android:checkable="true"
+                android:checked="false"
+                android:title="Light theme"/>
+            <item
+                android:id="@+id/editor_option_read_only"
+                android:checkable="true"
+                android:checked="false"
+                android:title="Read only"/>
+        </menu>
+    </item>
     <item
-        android:id="@+id/text_undo"
+        android:id="@+id/editor_option_text_undo"
         android:title="Undo"
         android:icon="@drawable/ic_round_undo_24"
         app:showAsAction="always"/>
     <item
-        android:id="@+id/text_redo"
+        android:id="@+id/editor_option_text_redo"
         android:title="Redo"
         android:icon="@drawable/ic_round_redo_24"
         app:showAsAction="always"/>

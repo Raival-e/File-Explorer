@@ -19,7 +19,8 @@
         android:theme="@style/Theme.QuickTools">
         <activity
             android:name=".activities.TextEditorActivity"
-            android:exported="true"/>
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".MainActivity"
             android:exported="true">

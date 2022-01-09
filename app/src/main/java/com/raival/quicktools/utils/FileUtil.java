@@ -12,6 +12,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -98,13 +100,15 @@ public class FileUtil {
         final String ext = getFileExtension(file).toLowerCase();
 
         if(ext.equals(FileExtensions.apkType)){
-            PackageInfo info = App.appContext.getPackageManager().getPackageArchiveInfo(file.getAbsolutePath(), PackageManager.GET_ACTIVITIES);
-            if(info != null){
-                ApplicationInfo applicationInfo = info.applicationInfo;
-                applicationInfo.sourceDir = file.getAbsolutePath();
-                applicationInfo.publicSourceDir = file.getAbsolutePath();
-                icon.setImageDrawable(applicationInfo.loadIcon(App.appContext.getPackageManager()));
-            }
+            new Thread(()->{
+                PackageInfo info = App.appContext.getPackageManager().getPackageArchiveInfo(file.getAbsolutePath(), PackageManager.GET_ACTIVITIES);
+                if(info != null){
+                    ApplicationInfo applicationInfo = info.applicationInfo;
+                    applicationInfo.sourceDir = file.getAbsolutePath();
+                    applicationInfo.publicSourceDir = file.getAbsolutePath();
+                    new Handler(Looper.getMainLooper()).post(()->icon.setImageDrawable(applicationInfo.loadIcon(App.appContext.getPackageManager())));
+                }
+            }).start();
             return;
         }
         if(ext.equals(FileExtensions.pdfType)){
@@ -231,25 +235,6 @@ public class FileUtil {
         return false;
     }
 
-    /**
-     * @return A filename without its extension,
-     * e.g. "FileUtil" for "FileUtil.java", or "FileUtil" for "/sdcard/Documents/FileUtil.java"
-     */
-    public static String getFileNameNoExtension(File file) {
-        String filePath = file.getAbsolutePath();
-        if (filePath.trim().isEmpty()) return "";
-
-        int lastPos = filePath.lastIndexOf('.');
-        int lastSep = filePath.lastIndexOf(File.separator);
-
-        if (lastSep == -1) {
-            return (lastPos == -1 ? filePath : filePath.substring(0, lastPos));
-        } else if (lastPos == -1 || lastSep > lastPos) {
-            return filePath.substring(lastSep + 1);
-        }
-        return filePath.substring(lastSep + 1, lastPos);
-    }
-
     public static String getFileExtension(File file){
         final String name = file.getName();
         final int last = name.lastIndexOf(".");
@@ -357,11 +342,23 @@ public class FileUtil {
     }
 
     public static String getFormattedFileSize(File file) {
-        final long size = file.length();
+        final long size = file.isFile()? file.length() : getFolderSize(file);
         if(size <= 0) return "0 B";
         final String[] units = new String[] { "B", "kB", "MB", "GB", "TB" };
         int digitGroups = (int) (Math.log10(size)/Math.log10(1024));
         return new DecimalFormat("#,##0.#").format(size/Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+    }
+
+    private static long getFolderSize(File file) {
+        long size = 0;
+        for(File child : file.listFiles()){
+            if(child.isFile()){
+                size = size + file.length();
+            } else {
+                size = size + getFolderSize(child);
+            }
+        }
+        return size;
     }
 
     public static void copyFiles(ArrayList<File> selectedFiles, File destination) throws IOException{

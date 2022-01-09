@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:text="Dialog Title"
         android:textSize="16sp"
-        android:textColor="@color/onSurface"
+        android:textColor="@color/onSurfaceContrast"
         android:textStyle="normal"
         android:padding="8dp"/>
 
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:text="this is the content\nof something.\nnice work lol"
         android:textSize="14sp"
-        android:textColor="@color/onSurface"
+        android:textColor="@color/onSurfaceContrast"
         android:textStyle="normal"
         android:padding="8dp"/>
 
