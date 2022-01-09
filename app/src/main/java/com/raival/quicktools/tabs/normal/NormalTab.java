@@ -18,6 +18,7 @@ import com.raival.quicktools.common.QDialog;
 import com.raival.quicktools.interfaces.QTab;
 import com.raival.quicktools.interfaces.QTask;
 import com.raival.quicktools.tabs.normal.fragment.NormalTabFragment;
+import com.raival.quicktools.tabs.normal.fragment.SearchFragment;
 import com.raival.quicktools.tabs.normal.models.FileItem;
 import com.raival.quicktools.tasks.CompressTask;
 import com.raival.quicktools.tasks.CopyTask;
@@ -46,6 +47,8 @@ public class NormalTab implements QTab {
     File previousPath;
 
     NormalTabFragment fragment;
+    SearchFragment searchFragment;
+
     ArrayList<FileItem> activeFilesList;
     ArrayList<Comparator<File>> comparators = new ArrayList<>();
 
@@ -246,6 +249,16 @@ public class NormalTab implements QTab {
         } else {
             App.showMsg("Cannot execute this task here");
         }
+    }
+
+    @Override
+    public void handleSearch() {
+        if(searchFragment == null){
+            searchFragment = new SearchFragment(this, new ArrayList<File>(){{add(currentPath);}});
+            searchFragment.show(fragment.getParentFragmentManager(), "");
+            return;
+        }
+        searchFragment.show(fragment.getParentFragmentManager(), "");
     }
 
     private void handleExtractTask(ExtractTask task) {

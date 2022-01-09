@@ -25,4 +25,5 @@ public interface QTab {
     void onTreeViewPathSelected(int position);
 
     void handleTask(QTask task);
+    void handleSearch();
 }

@@ -194,6 +194,7 @@ public class MainActivity extends AppCompatActivity {
         });
         findViewById(R.id.option_sort).setOnClickListener(this::showSortOptionsMenu);
         findViewById(R.id.option_add).setOnClickListener(view -> showAddNewFileDialog());
+        findViewById(R.id.option_search).setOnClickListener(view -> getCurrentTab().handleSearch());
     }
 
     private void showAddNewFileDialog() {
