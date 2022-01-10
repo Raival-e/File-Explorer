@@ -39,7 +39,6 @@ import java.util.regex.Pattern;
 public class SearchFragment extends BottomSheetDialogFragment {
     NormalTab tab;
     ArrayList<File> filesToSearchIn;
-    ArrayList<FileItem> searchResult = new ArrayList<>();
     RecyclerView recyclerView;
 
     TextInputLayout input;
@@ -49,6 +48,7 @@ public class SearchFragment extends BottomSheetDialogFragment {
     CheckBox prefix;
     Button searchButton;
     ProgressBar progress;
+    TextView fileCount;
 
     Thread searchThread;
     boolean active = false;
@@ -71,6 +71,7 @@ public class SearchFragment extends BottomSheetDialogFragment {
         return inflater.inflate(R.layout.search_fragment_layout, container, false);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -83,6 +84,7 @@ public class SearchFragment extends BottomSheetDialogFragment {
         prefix = view.findViewById(R.id.search_option_prefix);
         searchButton = view.findViewById(R.id.search_button);
         progress = view.findViewById(R.id.progress);
+        fileCount = view.findViewById(R.id.file_count);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setAdapter(new RecyclerViewAdapter());
@@ -97,7 +99,7 @@ public class SearchFragment extends BottomSheetDialogFragment {
                 active = false;
             } else {
                 searchButton.setText("Stop");
-                searchResult.clear();
+                tab.getSearchList().clear();
                 recyclerView.getAdapter().notifyDataSetChanged();
                 progress.setVisibility(View.VISIBLE);
                 loseFocus(input);
@@ -117,6 +119,16 @@ public class SearchFragment extends BottomSheetDialogFragment {
                 searchThread.start();
             }
         });
+
+        if(tab.getSearchList().size() > 0){
+            fileCount.setVisibility(View.VISIBLE);
+            updateFileCount();
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void updateFileCount() {
+        fileCount.setText(tab.getSearchList().size() + " results found");
     }
 
     private void searchIn(File file, boolean isDeepSearch, boolean useRegex, boolean startWith, boolean endWith) {
@@ -160,8 +172,11 @@ public class SearchFragment extends BottomSheetDialogFragment {
     }
 
     private void addFileItem(File file) {
-        searchResult.add(new FileItem(file, file.getAbsolutePath()));
-        recyclerView.post(()-> recyclerView.getAdapter().notifyDataSetChanged());
+        tab.getSearchList().add(new FileItem(file, file.getAbsolutePath()));
+        recyclerView.post(()-> {
+            updateFileCount();
+            recyclerView.getAdapter().notifyDataSetChanged();
+        });
     }
 
     private void loseFocus(View view) {
@@ -188,7 +203,7 @@ public class SearchFragment extends BottomSheetDialogFragment {
 
         @Override
         public int getItemCount() {
-            return searchResult.size();
+            return tab.getSearchList().size();
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
@@ -207,7 +222,7 @@ public class SearchFragment extends BottomSheetDialogFragment {
 
             public void bind(){
                 final int position = getAdapterPosition();
-                final FileItem fileItem = searchResult.get(position);
+                final FileItem fileItem = tab.getSearchList().get(position);
 
                 name.setText(fileItem.getName());
                 details.setText(fileItem.getDetails());
@@ -219,11 +234,17 @@ public class SearchFragment extends BottomSheetDialogFragment {
                     fileItem.setIcon(icon.getDrawable());
                 } else {
                     Glide.with(App.appContext)
-                            .load(tab.getFilesList().get(position).getIcon())
+                            .load(fileItem.getIcon())
                             .into(icon);
                 }
 
                 icon.setAlpha(fileItem.getFile().isHidden()? 0.5f : 1f);
+
+                background.setOnClickListener((v)->{
+                    tab.setCurrentPath(fileItem.getFile().getParentFile());
+                    tab.refresh();
+                    dismiss();
+                });
             }
 
             private void loadApkIcon(FileItem fileItem, ImageView icon) {

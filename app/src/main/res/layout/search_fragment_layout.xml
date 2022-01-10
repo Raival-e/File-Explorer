@@ -74,6 +74,15 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:padding="8dp"
+        android:id="@+id/file_count"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="found 0 item"
+        android:textColor="@color/onSurface"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv"
         android:layout_width="match_parent"

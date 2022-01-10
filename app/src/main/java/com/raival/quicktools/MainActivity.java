@@ -23,6 +23,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -30,6 +31,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pixplicity.easyprefs.library.Prefs;
+import com.raival.quicktools.activities.TextEditorActivity;
 import com.raival.quicktools.common.QDialog;
 import com.raival.quicktools.common.TasksDialog;
 import com.raival.quicktools.interfaces.QTab;
@@ -156,6 +158,19 @@ public class MainActivity extends AppCompatActivity {
     private void setListeners() {
         findViewById(R.id.home).setOnClickListener(view -> getCurrentTab().onTreeViewPathSelected(0));
         findViewById(R.id.tasks).setOnClickListener(view -> showTasksDialog());
+        findViewById(R.id.show_debug).setOnClickListener(view -> showLogFile());
+    }
+
+    private void showLogFile() {
+        final File logFile = new File(getExternalFilesDir(null).getAbsolutePath() + "/debug/log.txt");
+        if(logFile.exists() && logFile.isFile()){
+            Intent intent = new Intent();
+            intent.setClass(this, TextEditorActivity.class);
+            intent.putExtra("file", logFile.getAbsolutePath());
+            startActivity(intent);
+            return;
+        }
+        App.showMsg("No logs found");
     }
 
     private void showTasksDialog() {
@@ -375,7 +390,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public class TabsFragmentAdapter extends FragmentStateAdapter {
-
         public TabsFragmentAdapter(@NonNull FragmentActivity fragmentActivity) {
             super(fragmentActivity);
         }

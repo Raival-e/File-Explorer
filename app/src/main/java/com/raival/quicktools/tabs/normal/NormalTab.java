@@ -47,9 +47,18 @@ public class NormalTab implements QTab {
     File previousPath;
 
     NormalTabFragment fragment;
-    SearchFragment searchFragment;
 
     ArrayList<FileItem> activeFilesList;
+    ArrayList<FileItem> searchList = new ArrayList<>();
+
+    public ArrayList<FileItem> getSearchList() {
+        return searchList;
+    }
+
+    public void setSearchList(ArrayList<FileItem> searchList) {
+        this.searchList = searchList;
+    }
+
     ArrayList<Comparator<File>> comparators = new ArrayList<>();
 
     Map<String, Parcelable> pathsStets = new HashMap<>();
@@ -253,11 +262,7 @@ public class NormalTab implements QTab {
 
     @Override
     public void handleSearch() {
-        if(searchFragment == null){
-            searchFragment = new SearchFragment(this, new ArrayList<File>(){{add(currentPath);}});
-            searchFragment.show(fragment.getParentFragmentManager(), "");
-            return;
-        }
+        SearchFragment searchFragment = new SearchFragment(this, new ArrayList<File>(){{add(currentPath);}});
         searchFragment.show(fragment.getParentFragmentManager(), "");
     }
 
