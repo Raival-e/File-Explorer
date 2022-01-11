@@ -27,4 +27,6 @@
 
     <color name="highlight">#FF848498</color>
     <color name="orange">#FF9800</color>
+
+    <color name="toast">@color/white</color>
 </resources>

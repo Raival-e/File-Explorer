@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.widget.Toast;
 
 import com.raival.quicktools.utils.FileUtil;
+import com.raival.quicktools.utils.ToastUtil;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -40,7 +41,11 @@ public class App extends Application {
     }
 
     public static void showMsg(String s){
-        Toast.makeText(appContext, s, Toast.LENGTH_SHORT).show();
+        ToastUtil.makeToast(appContext, s, Toast.LENGTH_SHORT).show();
+    }
+
+    public static void showWarning(String s){
+        ToastUtil.makeWarningToast(appContext, s, Toast.LENGTH_SHORT).show();
     }
 
     public static void copyString(String txt){

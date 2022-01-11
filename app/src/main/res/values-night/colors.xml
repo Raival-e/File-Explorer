@@ -2,7 +2,7 @@
 <resources>
     <color name="black">#CACADC</color>
     <color name="white">#2A2936</color>
-    <color name="red">#F6F6F6</color>
+    <color name="red">#ED6E6E</color>
 
     <color name="onSurfaceShade">#FFE7E7F8</color>
 
@@ -28,4 +28,5 @@
     <color name="highlight">#434343</color>
     <color name="orange">#FFC107</color>
 
+    <color name="toast">@color/white</color>
 </resources>

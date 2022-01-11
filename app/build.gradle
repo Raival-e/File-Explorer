@@ -45,8 +45,6 @@ dependencies {
     implementation 'io.github.Rosemoe.sora-editor:language-html:0.8.4'
     implementation 'io.github.Rosemoe.sora-editor:language-python:0.8.4'
     implementation 'io.github.Rosemoe.sora-editor:language-css3:0.8.4'
-    //implementation 'io.github.Rosemoe.sora-editor:language-universal:0.8.4'
-    //implementation 'io.github.Rosemoe.sora-editor:language-xml:0.8.4'
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

@@ -66,7 +66,7 @@ public class TasksDialog extends BottomSheetDialogFragment {
 
         v.findViewById(R.id.background).setOnClickListener(view -> {
             if(!valid){
-                App.showMsg("This task is invalid, some files are missing, long click to execute it");
+                App.showWarning("This task is invalid, some files are missing, long click to execute it");
                 return;
             }
             execute(task);
