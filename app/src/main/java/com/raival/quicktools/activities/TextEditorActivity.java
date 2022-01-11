@@ -1,8 +1,10 @@
 package com.raival.quicktools.activities;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -50,6 +52,7 @@ public class TextEditorActivity extends AppCompatActivity {
         editor.setTextSize(14);
 
         file = new File(getIntent().getStringExtra("file"));
+        detectLanguage(file);
 
         materialToolbar.setTitle(file.getName());
 
@@ -72,9 +75,28 @@ public class TextEditorActivity extends AppCompatActivity {
             editor.setText(FileUtil.readFile(file));
         } catch (Exception exception) {
             exception.printStackTrace();
-            App.showMsg("couldn't read file " + file.getAbsolutePath());
+            App.showMsg("Failed to read file: " + file.getAbsolutePath());
             App.log(exception);
             finish();
+        }
+    }
+
+    private void detectLanguage(File file) {
+        String ext = FileUtil.getFileExtension(file).toLowerCase();
+        switch (ext){
+            case "java":
+                editor.setEditorLanguage(new JavaLanguage());
+                editor.setTypefaceText(Typeface.MONOSPACE);
+                break;
+            case "py":
+            case "python":
+                editor.setEditorLanguage(new PythonLanguage());
+                editor.setTypefaceText(Typeface.MONOSPACE);
+                break;
+            case "html":
+                editor.setEditorLanguage(new HTMLLanguage());
+                editor.setTypefaceText(Typeface.MONOSPACE);
+                break;
         }
     }
 

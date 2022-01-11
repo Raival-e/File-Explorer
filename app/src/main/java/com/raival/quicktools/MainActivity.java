@@ -16,6 +16,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -50,6 +51,15 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayList<QTab> tabs = new ArrayList<>();
     ArrayList<QTask> tasks = new ArrayList<>();
+    boolean confirmExit = false;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1449){
+            init();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,8 +87,15 @@ public class MainActivity extends AppCompatActivity {
                 closeTabAt(viewPager2.getCurrentItem());
                 return;
             }
-            super.onBackPressed();
+            if(!confirmExit){
+                confirmExit = true;
+                App.showMsg("Press again to exit");
+                tabLayout.postDelayed(()-> confirmExit = false, 1500);
+            } else {
+                super.onBackPressed();
+            }
         }
+
     }
 
     // this doesn't close the app.
@@ -100,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
             if(!Environment.isExternalStorageManager()){
                 Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
                 intent.setData(Uri.fromParts("package", getPackageName(), null));
-                startActivity(intent);
+                startActivityForResult(intent, 1449);
                 return false;
             }
         } else {
@@ -151,7 +168,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         initBottomBar();
-
         setListeners();
     }
 

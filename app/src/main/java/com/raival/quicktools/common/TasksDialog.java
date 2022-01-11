@@ -66,19 +66,30 @@ public class TasksDialog extends BottomSheetDialogFragment {
 
         v.findViewById(R.id.background).setOnClickListener(view -> {
             if(!valid){
-                App.showMsg("This task is invalid, some files are missing");
+                App.showMsg("This task is invalid, some files are missing, long click to execute it");
                 return;
             }
-            tab.handleTask(task);
-            tasks.remove(task);
-            dismiss();
+            execute(task);
         });
         v.findViewById(R.id.remove).setOnClickListener(view -> {
             tasks.remove(task);
             container.removeView(v);
         });
 
+        v.setOnLongClickListener((view -> {
+            if(!valid){
+                execute(task);
+                return true;
+            }
+            return false;
+        }));
+
         container.addView(v);
     }
 
+    private void execute(QTask task){
+        tab.handleTask(task);
+        tasks.remove(task);
+        dismiss();
+    }
 }

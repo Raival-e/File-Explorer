@@ -14,7 +14,7 @@
                 <item
                     android:id="@+id/editor_language_def"
                     android:checked="true"
-                    android:title="Default" />
+                    android:title="Auto" />
                 <item
                     android:id="@+id/editor_language_java"
                     android:title="Java" />

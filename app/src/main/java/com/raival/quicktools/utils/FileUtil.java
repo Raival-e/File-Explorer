@@ -128,7 +128,7 @@ public class FileUtil {
             icon.setImageResource(R.drawable.sound_file);
             return;
         }
-        if(isImageType(ext)){
+        if(isImageFile(ext)){
             Glide.with(App.appContext)
                     .applyDefaultRequestOptions(new RequestOptions().override(65).encodeQuality(30))
                     .load(file)
@@ -143,7 +143,7 @@ public class FileUtil {
         return file.getAbsolutePath().equals(Environment.getExternalStorageDirectory().getAbsolutePath());
     }
 
-    private static boolean isImageType(String ext) {
+    private static boolean isImageFile(String ext) {
         for(String extension : FileExtensions.imageType){
             if(extension.equals(ext))
                 return true;
@@ -184,7 +184,7 @@ public class FileUtil {
         return (folders==0&&files==0)? noItemsString : sb.toString();
     }
 
-    private static boolean isAudioFile(String extension) {
+    public static boolean isAudioFile(String extension) {
         for(String ext : FileExtensions.audioType){
             if(extension.equals(ext))
                 return true;
@@ -192,7 +192,7 @@ public class FileUtil {
         return false;
     }
 
-    private static boolean isVideoFile(String ext) {
+    public static boolean isVideoFile(String ext) {
         for(String extension : FileExtensions.videoType){
             if(extension.equals(ext))
                 return true;
@@ -200,7 +200,7 @@ public class FileUtil {
         return false;
     }
 
-    private static boolean isArchiveFile(String ext) {
+    public static boolean isArchiveFile(String ext) {
         for(String extension : FileExtensions.archiveType){
             if(extension.equals(ext))
                 return true;
@@ -208,7 +208,7 @@ public class FileUtil {
         return false;
     }
 
-    private static boolean isCodeFile(String ext) {
+    public static boolean isCodeFile(String ext) {
         for(String extension : FileExtensions.codeType){
             if(extension.equals(ext))
                 return true;
@@ -216,7 +216,7 @@ public class FileUtil {
         return false;
     }
 
-    private static boolean isTextFile(String ext) {
+    public static boolean isTextFile(String ext) {
         for(String extension : FileExtensions.textType){
             if(extension.equals(ext))
                 return true;
@@ -236,10 +236,10 @@ public class FileUtil {
 
     public static String readFile(File file) throws Exception {
         if(!file.exists()){
-            throw new Exception("file " + file.getAbsolutePath() + " doesn't exist");
+            throw new Exception(file.getAbsolutePath() + " doesn't exist");
         }
         if(file.isDirectory()){
-            throw new Exception("file " + file.getAbsolutePath() + " is invalid");
+            throw new Exception(file.getAbsolutePath() + " is invalid file");
         }
 
         StringBuilder sb = new StringBuilder();
@@ -262,10 +262,10 @@ public class FileUtil {
 
     public static void writeFile(File file, String content) throws IOException{
         if(!file.getParentFile().exists() && !file.getParentFile().mkdir()){
-            throw new IOException("file " + file.getAbsolutePath() + " doesn't exist");
+            throw new IOException(file.getAbsolutePath() + " doesn't exist");
         }
         if(!file.exists() && !file.createNewFile()){
-            throw new IOException("file " + file.getAbsolutePath()  + " cannot be created");
+            throw new IOException("Failed to create file: " + file.getAbsolutePath());
         }
         FileWriter fileWriter = new FileWriter(file, false);
         fileWriter.write(content);
@@ -293,7 +293,7 @@ public class FileUtil {
                 App.showMsg("Couldn't find any app that can open this type of files");
             }
         } catch (Exception e){
-            App.showMsg("Cannot open this file");
+            App.showMsg("Failed to open this file");
         }
     }
 
@@ -369,14 +369,14 @@ public class FileUtil {
                     }
                 }
             } else {
-                throw new IOException("Cannot create directory " + parent.getAbsolutePath());
+                throw new IOException("Failed to create directory: " + parent.getAbsolutePath());
             }
         }
     }
 
     private static void copyFile(File sourcePath, File destPath) throws IOException {
         if(!destPath.createNewFile()){
-            throw new IOException("Cannot create file " + destPath.getAbsolutePath());
+            throw new IOException("Failed to create file: " + destPath.getAbsolutePath());
         }
 
         FileInputStream fis = null;
@@ -436,7 +436,7 @@ public class FileUtil {
     private static void move(File file, File destination) throws IOException{
         if (file.isFile()){
             if(!file.renameTo(new File(destination, file.getName()))){
-                throw new IOException("Cannot move file " + file.getAbsolutePath());
+                throw new IOException("Failed to move file: " + file.getAbsolutePath());
             }
         } else {
             File parent = new File(destination, file.getName());
@@ -448,10 +448,10 @@ public class FileUtil {
                     }
                 }
                 if(!file.delete()){
-                    throw new IOException("Cannot delete file " + file.getAbsolutePath());
+                    throw new IOException("Failed to delete file: " + file.getAbsolutePath());
                 }
             } else {
-                throw new IOException("Cannot create folder " + parent);
+                throw new IOException("Failed to create folder: " + parent);
             }
         }
     }

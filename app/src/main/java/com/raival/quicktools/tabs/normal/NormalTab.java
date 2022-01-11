@@ -133,7 +133,7 @@ public class NormalTab implements QTab {
     public String getName() {
         String name = Uri.parse(currentPath.getAbsolutePath()).getLastPathSegment();
         if(FileUtil.isExternalStorageFolder(currentPath)){
-            name = "Internal Storage";
+            name = FileUtil.INTERNAL_STORAGE;
         }
         if(name.length() > MAX_NAME_LENGTH.length()){
             name = name.substring(0, MAX_NAME_LENGTH.length() - 3) + "...";
@@ -201,7 +201,7 @@ public class NormalTab implements QTab {
         File file = new File(currentPath, name);
         if(isFolder){
             if(!file.mkdir()){
-                App.showMsg("Unable to create folder " + file.getAbsolutePath());
+                App.showMsg("Unable to create folder: " + file.getAbsolutePath());
             } else {
                 refresh();
                 scrollTo(file);
@@ -209,7 +209,7 @@ public class NormalTab implements QTab {
         } else {
             try {
                 if(!file.createNewFile()){
-                    App.showMsg("Unable to create file " + file.getAbsolutePath());
+                    App.showMsg("Unable to create file: " + file.getAbsolutePath());
                 } else {
                     refresh();
                     scrollTo(file);
@@ -256,7 +256,7 @@ public class NormalTab implements QTab {
         } else if(task instanceof ExtractTask){
             handleExtractTask((ExtractTask)task);
         } else {
-            App.showMsg("Cannot execute this task here");
+            App.showMsg("This task cannot be executed here");
         }
     }
 
@@ -274,7 +274,7 @@ public class NormalTab implements QTab {
             } catch (Exception exception) {
                 exception.printStackTrace();
                 App.log(exception);
-                new Handler(Looper.getMainLooper()).post(()-> App.showMsg("Cannot extract files"));
+                new Handler(Looper.getMainLooper()).post(()-> App.showMsg("Failed to extract files"));
             }
         }, ()-> {
             refresh();
@@ -312,7 +312,7 @@ public class NormalTab implements QTab {
             } catch (Exception exception) {
                 exception.printStackTrace();
                 App.log(exception);
-                new Handler(Looper.getMainLooper()).post(()-> App.showMsg("Cannot compress files"));
+                new Handler(Looper.getMainLooper()).post(()-> App.showMsg("Failed to compress files"));
             }
         }, ()-> {
             refresh();
@@ -331,7 +331,7 @@ public class NormalTab implements QTab {
             } catch (IOException e) {
                 e.printStackTrace();
                 App.log(e);
-                new Handler(Looper.getMainLooper()).post(()->App.showMsg("Cannot move files"));
+                new Handler(Looper.getMainLooper()).post(()->App.showMsg("Failed to move files"));
             }
 
         } , ()->{
@@ -350,7 +350,7 @@ public class NormalTab implements QTab {
             } catch (IOException e) {
                 e.printStackTrace();
                 App.log(e);
-                new Handler(Looper.getMainLooper()).post(()->App.showMsg("Cannot copy files"));
+                new Handler(Looper.getMainLooper()).post(()->App.showMsg("Failed to copy files"));
             }
 
         } , ()->{

@@ -97,7 +97,9 @@ public class SearchFragment extends BottomSheetDialogFragment {
                 progress.setVisibility(View.GONE);
                 recyclerView.getAdapter().notifyDataSetChanged();
                 active = false;
+                setCancelable(true);
             } else {
+                setCancelable(false);
                 searchButton.setText("Stop");
                 tab.getSearchList().clear();
                 recyclerView.getAdapter().notifyDataSetChanged();
@@ -114,6 +116,7 @@ public class SearchFragment extends BottomSheetDialogFragment {
                         progress.setVisibility(View.GONE);
                         recyclerView.getAdapter().notifyDataSetChanged();
                         active = false;
+                        setCancelable(true);
                     });
                 });
                 searchThread.start();

@@ -205,7 +205,7 @@ public class NormalTabFragment extends Fragment {
                         return;
                     }
                     if(fileItem.getFile().isFile()){
-                        FileUtil.openFileWith(fileItem.getFile(), false);
+                        openFile(fileItem.getFile());
                     } else {
                         tab.setCurrentPath(fileItem.getFile());
                         updateFilesList();
@@ -268,9 +268,17 @@ public class NormalTabFragment extends Fragment {
                 }
             }, true);
         }
+
         if (FileUtil.isOnlyFiles(selectedFiles)) {
             bottomDialog.addOption("Share", R.drawable.ic_round_share_24, view1 ->{
                 shareFiles(selectedFiles);
+                unSelectAndUpdateList();
+            }, true);
+        }
+
+        if(FileUtil.isSingleFile(selectedFiles)){
+            bottomDialog.addOption("Open with", R.drawable.ic_baseline_open_in_new_24, view1 ->{
+                openFileWith(selectedFiles.get(0));
                 unSelectAndUpdateList();
             }, true);
         }
@@ -304,7 +312,7 @@ public class NormalTabFragment extends Fragment {
         }
 
         if(FileUtil.isArchiveFiles(selectedFiles)){
-            bottomDialog.addOption("Extract", R.drawable.ic_baseline_open_in_new_24, view1 ->{
+            bottomDialog.addOption("Extract", R.drawable.ic_baseline_logout_24, view1 ->{
                 addExtractTask(selectedFiles);
                 unSelectAndUpdateList();
                 App.showMsg("New task has been added");
@@ -323,13 +331,24 @@ public class NormalTabFragment extends Fragment {
             }, true);
         }
 
-        bottomDialog.addOption("Find & Replace", R.drawable.ic_round_search_24, view1 ->{
-            //do find&replace task
+        bottomDialog.addOption("Search", R.drawable.ic_round_manage_search_24, view1 ->{
+            SearchFragment searchFragment = new SearchFragment(tab, selectedFiles);
+            searchFragment.show(getParentFragmentManager(), "");
+            unSelectAndUpdateList();
         }, true);
+    }
 
-        bottomDialog.addOption("Deep search", R.drawable.ic_round_manage_search_24, view1 ->{
-            //do search task
-        }, true);
+    private void openFile(File file) {
+        final String ext = FileUtil.getFileExtension(file).toLowerCase();
+        if(FileUtil.isTextFile(ext) || FileUtil.isCodeFile(ext)){
+            openWithTextEditor(file);
+        } else {
+            openFileWith(file);
+        }
+    }
+
+    private void openFileWith(File file){
+        FileUtil.openFileWith(file, false);
     }
 
     private void openWithTextEditor(File file) {
@@ -413,7 +432,7 @@ public class NormalTabFragment extends Fragment {
             FileUtil.deleteFiles(selectedFiles);
         }, ()->{
             backgroundTask.dismiss();
-            App.showMsg("Files has been deleted");
+            App.showMsg("Files have been deleted");
             tab.refresh();
         });
         backgroundTask.run();
