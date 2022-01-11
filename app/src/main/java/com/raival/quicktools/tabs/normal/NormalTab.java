@@ -9,21 +9,32 @@ import android.os.Parcelable;
 
 import androidx.fragment.app.Fragment;
 
+import com.android.apksigner.ApkSignerTool;
+import com.android.tools.r8.CompilationMode;
+import com.android.tools.r8.D8;
+import com.android.tools.r8.D8Command;
+import com.android.tools.r8.OutputMode;
+import com.android.tools.r8.graph.E;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.textfield.TextInputLayout;
 import com.raival.quicktools.App;
 import com.raival.quicktools.R;
 import com.raival.quicktools.common.BackgroundTask;
 import com.raival.quicktools.common.QDialog;
+import com.raival.quicktools.d8.DexDiagnosticHandler;
 import com.raival.quicktools.interfaces.QTab;
 import com.raival.quicktools.interfaces.QTask;
 import com.raival.quicktools.tabs.normal.fragment.NormalTabFragment;
 import com.raival.quicktools.tabs.normal.fragment.SearchFragment;
 import com.raival.quicktools.tabs.normal.models.FileItem;
+import com.raival.quicktools.tasks.APKSignerTask;
 import com.raival.quicktools.tasks.CompressTask;
 import com.raival.quicktools.tasks.CopyTask;
 import com.raival.quicktools.tasks.CutTask;
 import com.raival.quicktools.tasks.ExtractTask;
+import com.raival.quicktools.tasks.Jar2DexTask;
+import com.raival.quicktools.utils.APKSignerUtil;
+import com.raival.quicktools.utils.D8Util;
 import com.raival.quicktools.utils.FileUtil;
 import com.raival.quicktools.utils.PrefsUtil;
 import com.raival.quicktools.utils.TimeUtil;
@@ -31,12 +42,16 @@ import com.raival.quicktools.utils.ZipUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class NormalTab implements QTab {
     public final static String MAX_NAME_LENGTH = "maximum name length";
@@ -255,9 +270,83 @@ public class NormalTab implements QTab {
             handleCompressTask((CompressTask) task);
         } else if(task instanceof ExtractTask){
             handleExtractTask((ExtractTask)task);
+        } else if(task instanceof Jar2DexTask) {
+            handleJar2DexTask((Jar2DexTask) task);
+        } else if(task instanceof APKSignerTask){
+            handleAPKSignerTask((APKSignerTask)task);
         } else {
             App.showMsg("This task cannot be executed here");
         }
+    }
+
+    private void handleJar2DexTask(Jar2DexTask task) {
+        BackgroundTask backgroundTask = new BackgroundTask();
+        backgroundTask.setTasks(()-> backgroundTask.showProgressDialog("Running D8...", getFragment().requireActivity()), ()->{
+            try {
+                runD8(task.getFilesList().get(0), currentPath);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+                App.log(exception);
+                new Handler(Looper.getMainLooper()).post(()-> App.showMsg("Failed to convert file"));
+            }
+        }, ()-> {
+            refresh();
+            backgroundTask.dismiss();
+            App.showMsg("Done");
+        });
+        backgroundTask.run();
+    }
+
+    private void handleAPKSignerTask(APKSignerTask task) {
+        BackgroundTask backgroundTask = new BackgroundTask();
+        backgroundTask.setTasks(()-> backgroundTask.showProgressDialog("Signing...", getFragment().requireActivity()), ()->{
+            try {
+                signAPK(task.getFilesList().get(0), currentPath);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+                App.log(exception);
+                new Handler(Looper.getMainLooper()).post(()-> App.showMsg("Failed to sign"));
+            }
+        }, ()-> {
+            refresh();
+            backgroundTask.dismiss();
+            App.showMsg("Done");
+        });
+        backgroundTask.run();
+    }
+
+    private void signAPK(File unsignedAPK, File currentPath) throws Exception {
+        File signedAPK = new File(currentPath,
+                unsignedAPK.getName()
+                        .toLowerCase()
+                        .substring(0, unsignedAPK.getName().toLowerCase().lastIndexOf(".apk"))
+                        + "_signed.apk");
+
+        ArrayList<String> args = new ArrayList<>();
+        args.add("sign");
+        args.add("--in");
+        args.add(unsignedAPK.getAbsolutePath());
+        args.add("--out");
+        args.add(signedAPK.getAbsolutePath());
+        args.add("--key");
+        args.add(APKSignerUtil.getPk8().getAbsolutePath());
+        args.add("--cert");
+        args.add(APKSignerUtil.getPem().getAbsolutePath());
+        ApkSignerTool.main(args.toArray(new String[0]));
+    }
+
+    private void runD8(File file, File currentPath) throws Exception{
+        List<Path> path = new ArrayList<>();
+        path.add(D8Util.getLambdaStubsJarFile().toPath());
+        path.add(D8Util.getBootstrapJarFile().toPath());
+
+        D8Command command = D8Command.builder(new DexDiagnosticHandler())
+                .addLibraryFiles(path)
+                .addProgramFiles(file.toPath())
+                .setMode(CompilationMode.RELEASE)
+                .setOutput(currentPath.toPath(), OutputMode.DexIndexed)
+                .build();
+        D8.run(command);
     }
 
     @Override

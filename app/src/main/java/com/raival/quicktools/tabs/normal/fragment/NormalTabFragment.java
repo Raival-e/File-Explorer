@@ -33,10 +33,12 @@ import com.raival.quicktools.common.OptionsDialog;
 import com.raival.quicktools.common.QDialog;
 import com.raival.quicktools.tabs.normal.NormalTab;
 import com.raival.quicktools.tabs.normal.models.FileItem;
+import com.raival.quicktools.tasks.APKSignerTask;
 import com.raival.quicktools.tasks.CompressTask;
 import com.raival.quicktools.tasks.CopyTask;
 import com.raival.quicktools.tasks.CutTask;
 import com.raival.quicktools.tasks.ExtractTask;
+import com.raival.quicktools.tasks.Jar2DexTask;
 import com.raival.quicktools.utils.FileExtensions;
 import com.raival.quicktools.utils.FileUtil;
 
@@ -286,13 +288,13 @@ public class NormalTabFragment extends Fragment {
         bottomDialog.addOption("Copy", R.drawable.ic_baseline_file_copy_24, view1 ->{
             addCopyTask(selectedFiles);
             unSelectAndUpdateList();
-            App.showMsg("New task has been added");
+            notifyNewTask();
         }, true);
 
         bottomDialog.addOption("Cut", R.drawable.ic_round_content_cut_24, view1 ->{
             addCutTask(selectedFiles);
             unSelectAndUpdateList();
-            App.showMsg("New task has been added");
+            notifyNewTask();
         }, true);
 
         if(selectedFiles.size() == 1){
@@ -315,15 +317,35 @@ public class NormalTabFragment extends Fragment {
             bottomDialog.addOption("Extract", R.drawable.ic_baseline_logout_24, view1 ->{
                 addExtractTask(selectedFiles);
                 unSelectAndUpdateList();
-                App.showMsg("New task has been added");
+                notifyNewTask();
             }, true);
         }
 
         bottomDialog.addOption("Compress", R.drawable.ic_round_compress_24, view1 ->{
             addCompressTask(selectedFiles);
             unSelectAndUpdateList();
-            App.showMsg("New task has been added");
+            notifyNewTask();
         }, true);
+
+        if(FileUtil.isSingleFile(selectedFiles)){
+            if(FileUtil.getFileExtension(selectedFiles.get(0)).toLowerCase().equals("jar")){
+                bottomDialog.addOption("Jar2Dex", R.drawable.ic_round_code_24, view1 ->{
+                    addJar2DexTask(selectedFiles.get(0));
+                    unSelectAndUpdateList();
+                    notifyNewTask();
+                }, true);
+            }
+        }
+
+        if(FileUtil.isSingleFile(selectedFiles)){
+            if(FileUtil.getFileExtension(selectedFiles.get(0)).equalsIgnoreCase("apk")){
+                bottomDialog.addOption("Sign with test key", R.drawable.ic_round_key_24, view1 ->{
+                    addSignTask(selectedFiles.get(0));
+                    unSelectAndUpdateList();
+                    notifyNewTask();
+                }, true);
+            }
+        }
 
         if(selectedFiles.size() == 1){
             bottomDialog.addOption("Details", R.drawable.ic_baseline_info_24, view1 ->{
@@ -336,6 +358,22 @@ public class NormalTabFragment extends Fragment {
             searchFragment.show(getParentFragmentManager(), "");
             unSelectAndUpdateList();
         }, true);
+    }
+
+    private void addJar2DexTask(File file) {
+        if(requireActivity() instanceof MainActivity){
+            ((MainActivity)requireActivity()).AddTask(new Jar2DexTask(file));
+        }
+    }
+
+    private void addSignTask(File file) {
+        if(requireActivity() instanceof MainActivity){
+            ((MainActivity)requireActivity()).AddTask(new APKSignerTask(file));
+        }
+    }
+
+    private void notifyNewTask() {
+        App.showMsg("A new task has been added");
     }
 
     private void openFile(File file) {

@@ -46,7 +46,16 @@ dependencies {
     implementation 'io.github.Rosemoe.sora-editor:language-python:0.8.4'
     implementation 'io.github.Rosemoe.sora-editor:language-css3:0.8.4'
 
+    api 'com.android.tools:r8:3.0.73'
+
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+
+    implementation files (
+            'libs/apksigner.jar',
+            'libs/javax.jar',
+            'libs/ecj_320.jar',
+            'libs/sdk_lib.jar'
+    )
 }
