@@ -99,10 +99,10 @@ public class JavaExecutor {
 
         final StringBuilder sb = new StringBuilder();
         for(File jar : jarFiles)
-      	sb.append(":" + jar.getAbsolutePath());
-        sb.add(":" + D8Util.getLambdaStubsJarFile().getAbsolutePath()
-                    + ":"
-                    + D8Util.getBootstrapJarFile().getAbsolutePath());
+      	    sb.append(":" + jar.getAbsolutePath());
+        sb.append(":" + D8Util.getLambdaStubsJarFile().getAbsolutePath()
+                   + ":"
+                   + D8Util.getBootstrapJarFile().getAbsolutePath());
 
         opt.add(sb.substring(1));
 
