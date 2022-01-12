@@ -20,7 +20,7 @@
             android:id="@+id/show_debug"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/ic_baseline_bug_report_24"
+            android:src="@drawable/ic_baseline_info_24"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             app:tint="@color/onSurfaceContrast" />
@@ -61,6 +61,7 @@
             android:clickable="true"
             android:layout_marginEnd="12dp"/>
         <ImageView
+            android:id="@+id/more_options"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_baseline_more_vert_24"

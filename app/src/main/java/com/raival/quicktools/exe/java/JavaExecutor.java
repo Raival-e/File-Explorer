@@ -8,7 +8,6 @@ import com.raival.quicktools.utils.D8Util;
 import com.raival.quicktools.utils.FileUtil;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -45,29 +44,40 @@ public class JavaExecutor {
     public void invoke() throws Exception{
         final String optimizedDir = App.appContext.getCodeCacheDir().getAbsolutePath();
         DexClassLoader dexClassLoader = new DexClassLoader(
-                output.getAbsolutePath() + "/classes.dex",
+                getDexFiles(),
                 optimizedDir,
                 null,
                 App.appContext.getClassLoader());
         Class clazz = dexClassLoader.loadClass("com.main.Main");
         java.lang.reflect.Method method = clazz.getDeclaredMethod("main", Context.class);
-        Object result = method.invoke(null, App.appContext);
+        method.invoke(null, App.appContext);
+    }
+
+    private String getDexFiles() {
+        ArrayList<File> list = new ArrayList<>(dexFiles);
+        for(File file : output.listFiles()){
+            if(file.getName().endsWith(".dex"))
+                list.add(file);
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        for(File file : list){
+            stringBuilder.append(":");
+            stringBuilder.append(file.getAbsolutePath());
+        }
+        return stringBuilder.substring(1);
     }
 
     private void runD8() throws Exception {
         ArrayList<String> opt = new ArrayList<>();
-
-        new JarPackager(
-               output.getAbsolutePath() + "/classes/" ,
-                output.getAbsolutePath() + "/classes.jar"
-        ).create();
 
         opt.add("--intermediate");
         opt.add("--lib");
         opt.add(D8Util.getBootstrapJarFile().getAbsolutePath());
         opt.add("--output");
         opt.add(output.getAbsolutePath());
-        opt.add(output.getAbsolutePath() + "/classes.jar");
+        ArrayList<String> classes = FileUtil.getAllFilesInDir(new File(output, "classes"), "class");
+        if(classes != null && classes.size() > 0)
+            opt.addAll(classes);
         if(jarFiles.size() > 0)
             for (File jar : jarFiles)
                 opt.add(jar.getAbsolutePath());
@@ -105,14 +115,14 @@ public class JavaExecutor {
 
         PrintWriter printWriter = new PrintWriter(new OutputStream() {
             @Override
-            public void write(int i) throws IOException {
+            public void write(int i) {
 
             }
         });
         final StringBuilder errors = new StringBuilder();
         PrintWriter printWriter1 = new PrintWriter(new OutputStream() {
             @Override
-            public void write(int i) throws IOException {
+            public void write(int i) {
                 errors.append((char)i);
             }
         });

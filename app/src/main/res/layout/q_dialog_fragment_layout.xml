@@ -16,15 +16,20 @@
         android:textStyle="normal"
         android:padding="8dp"/>
 
-    <TextView
-        android:id="@+id/dialog_msg"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="this is the content\nof something.\nnice work lol"
-        android:textSize="14sp"
-        android:textColor="@color/onSurfaceContrast"
-        android:textStyle="normal"
-        android:padding="8dp"/>
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/dialog_msg"
+            android:textIsSelectable="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="this is the content\nof something.\nnice work lol"
+            android:textSize="14sp"
+            android:textColor="@color/onSurfaceContrast"
+            android:textStyle="normal"
+            android:padding="8dp"/>
+    </ScrollView>
 
     <LinearLayout
         android:id="@+id/dialog_container"

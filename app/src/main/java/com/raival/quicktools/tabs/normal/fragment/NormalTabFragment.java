@@ -494,7 +494,7 @@ public class NormalTabFragment extends Fragment {
                     backgroundTask.dismiss();
                     tab.refresh();
                     App.log(error.get());
-                    //TODO: show error dialog
+                    showDialog("Error", error.get());
                     return;
                 }
                 javaExecutor.invoke();
@@ -504,10 +504,18 @@ public class NormalTabFragment extends Fragment {
                 backgroundTask.dismiss();
                 tab.refresh();
                 App.log(exception);
-                //TODO: show error dialog
+                showDialog("Error", App.getStackTrace(exception));
             }
         });
         backgroundTask.run();
+    }
+
+    private void showDialog(String title, String msg){
+        new QDialog()
+                .setTitle(title)
+                .setMsg(msg)
+                .setPositiveButton("Ok", null, true)
+                .showDialog(getParentFragmentManager(), "");
     }
 
     private void doDelete(ArrayList<File> selectedFiles) {

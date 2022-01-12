@@ -21,14 +21,17 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.raival.quicktools.App;
 import com.raival.quicktools.R;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Locale;
 
@@ -555,5 +558,34 @@ public class FileUtil {
         }
         intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uriList);
         activity.startActivity(Intent.createChooser(intent, "Share files"));
+    }
+
+    public static ArrayList<String> getAllFilesInDir(File dir, String extension) {
+        if(!dir.exists() || dir.isFile()) return null;
+        ArrayList<String> list = new ArrayList<>();
+        for(File file : dir.listFiles()){
+            if(file.isFile() && file.getName().endsWith("." + extension)) {
+                list.add(file.getAbsolutePath());
+            } else {
+                list.addAll(getAllFilesInDir(file, extension));
+            }
+        }
+        return list;
+    }
+
+    public static String copyFromInputStream(InputStream inputStream) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        byte[] buf = new byte[1024];
+        int i;
+        try {
+            while ((i = inputStream.read(buf)) != -1) {
+                outputStream.write(buf, 0, i);
+            }
+            outputStream.close();
+            inputStream.close();
+        } catch (IOException ignored) {
+
+        }
+        return outputStream.toString();
     }
 }

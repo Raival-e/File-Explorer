@@ -4,7 +4,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,11 +14,14 @@ import androidx.appcompat.widget.Toolbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.raival.quicktools.App;
 import com.raival.quicktools.R;
+import com.raival.quicktools.common.BackgroundTask;
 import com.raival.quicktools.common.QDialog;
+import com.raival.quicktools.exe.java.JavaExecutor;
 import com.raival.quicktools.utils.FileUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicReference;
 
 import io.github.rosemoe.sora.langs.css3.CSS3Language;
 import io.github.rosemoe.sora.langs.html.HTMLLanguage;
@@ -86,6 +88,34 @@ public class TextEditorActivity extends AppCompatActivity {
             App.showMsg("Failed to read file: " + file.getAbsolutePath());
             App.log(exception);
             finish();
+        }
+
+        editor.post(()->{
+            if(FileUtil.isEmpty(editor.getText().toString())){
+                if(file.getName().equals("Main.java") || file.getName().equals("Main.kt")){
+                    askToLoadCodeSample();
+                }
+            }
+
+        });
+    }
+
+    private void askToLoadCodeSample() {
+        new QDialog()
+                .setTitle("Help")
+                .setMsg("Do you want to use an executable code sample in this file?")
+                .setPositiveButton("Yes", (v)->editor.setText(getCodeSample()), true)
+                .setNegativeButton("No", null, true)
+                .showDialog(getSupportFragmentManager(), "");
+    }
+
+    private String getCodeSample() {
+        try {
+           return FileUtil.copyFromInputStream(getAssets().open("java_exe_sample_code.txt"));
+        } catch (IOException e) {
+            App.log(e);
+            App.showWarning("Failed to load sample code");
+            return "";
         }
     }
 
@@ -167,6 +197,8 @@ public class TextEditorActivity extends AppCompatActivity {
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.text_editor_menu, menu);
+        if(file.getName().equalsIgnoreCase("Main.java") || file.getName().equalsIgnoreCase("Main.kt"))
+            menu.add("Execute");
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -174,7 +206,10 @@ public class TextEditorActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.editor_language_def) {
+        if(item.getTitle().equals("Execute")){
+            saveFile(editor.getText().toString());
+            executeFile();
+        } else if (id == R.id.editor_language_def) {
             item.setChecked(true);
             editor.setEditorLanguage(null);
         } else if (id == R.id.editor_language_java) {
@@ -228,6 +263,47 @@ public class TextEditorActivity extends AppCompatActivity {
             }
         }
             return super.onOptionsItemSelected(item);
+    }
+
+    private void executeFile() {
+        JavaExecutor javaExecutor = new JavaExecutor(file.getParentFile());
+        BackgroundTask backgroundTask = new BackgroundTask();
+
+        AtomicReference<String> error = new AtomicReference<>("");
+
+        backgroundTask.setTasks(()->{
+            backgroundTask.showProgressDialog("compiling files...", this);
+        }, ()->{
+            try {
+                javaExecutor.execute();
+            } catch (Exception exception) {
+                error.set(App.getStackTrace(exception));
+            }
+        }, ()->{
+            try {
+                if(!error.get().equals("")){
+                    backgroundTask.dismiss();
+                    App.log(error.get());
+                    showDialog("Error", error.get());
+                    return;
+                }
+                javaExecutor.invoke();
+                backgroundTask.dismiss();
+            } catch (Exception exception){
+                backgroundTask.dismiss();
+                App.log(exception);
+                showDialog("Error", App.getStackTrace(exception));
+            }
+        });
+        backgroundTask.run();
+    }
+
+    private void showDialog(String title, String msg){
+        new QDialog()
+                .setTitle(title)
+                .setMsg(msg)
+                .setPositiveButton("Ok", null, true)
+                .showDialog(getSupportFragmentManager(), "");
     }
 
     private void saveFile(String content) {
