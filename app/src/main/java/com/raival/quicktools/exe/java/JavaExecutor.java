@@ -96,17 +96,16 @@ public class JavaExecutor {
         opt.add("-d");
         opt.add(classes.getAbsolutePath());
         opt.add("-cp");
-        if(jarFiles.size() == 0){
-            opt.add(D8Util.getLambdaStubsJarFile().getAbsolutePath()
+
+        final StringBuilder sb = new StringBuilder();
+        for(File jar : jarFiles)
+      	sb.append(":" + jar.getAbsolutePath());
+        sb.add(":" + D8Util.getLambdaStubsJarFile().getAbsolutePath()
                     + ":"
                     + D8Util.getBootstrapJarFile().getAbsolutePath());
-        } else {
-            final StringBuilder sb = new StringBuilder();
-            for(File jar : jarFiles)
-                sb.append(":" + jar.getAbsolutePath());
 
-            opt.add(sb.substring(1));
-        }
+        opt.add(sb.substring(1));
+
         opt.add("-proc:none");
         opt.add("-sourcepath");
         opt.add(" ");
