@@ -26,6 +26,7 @@ import io.github.rosemoe.sora.langs.html.HTMLLanguage;
 import io.github.rosemoe.sora.langs.java.JavaLanguage;
 import io.github.rosemoe.sora.langs.python.PythonLanguage;
 import io.github.rosemoe.sora.widget.CodeEditor;
+import io.github.rosemoe.sora.widget.SymbolInputView;
 import io.github.rosemoe.sora.widget.schemes.SchemeDarcula;
 import io.github.rosemoe.sora.widget.schemes.SchemeGitHub;
 
@@ -43,6 +44,13 @@ public class TextEditorActivity extends AppCompatActivity {
         Toolbar materialToolbar = findViewById(R.id.toolbar);
         searchPanel = findViewById(R.id.search_panel);
         setupSearchPanel();
+
+        SymbolInputView inputView = findViewById(R.id.symbol_input);
+        inputView.bindEditor(editor);
+        inputView.setBackgroundColor(getColor(R.color.surface));
+        inputView.setTextColor(getColor(R.color.onSurfaceContrast));
+        inputView.addSymbols(new String[]{"->", "{", "}", "(", ")", ",", ".", ";", "\"", "?", "+", "-", "*", "/"},
+                new String[]{"\t", "{", "}", "(", ")", ",", ".", ";", "\"", "?", "+", "-", "*", "/"});
 
         editor.setAutoCompletionEnabled(false);
         editor.setAutoIndentEnabled(false);

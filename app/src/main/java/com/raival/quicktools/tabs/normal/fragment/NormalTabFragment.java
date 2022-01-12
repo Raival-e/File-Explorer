@@ -31,6 +31,7 @@ import com.raival.quicktools.common.BackgroundTask;
 import com.raival.quicktools.common.FileInfoDialog;
 import com.raival.quicktools.common.OptionsDialog;
 import com.raival.quicktools.common.QDialog;
+import com.raival.quicktools.exe.java.JavaExecutor;
 import com.raival.quicktools.tabs.normal.NormalTab;
 import com.raival.quicktools.tabs.normal.models.FileItem;
 import com.raival.quicktools.tasks.APKSignerTask;
@@ -44,6 +45,7 @@ import com.raival.quicktools.utils.FileUtil;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class NormalTabFragment extends Fragment {
     NormalTab tab;
@@ -263,6 +265,16 @@ public class NormalTabFragment extends Fragment {
 
         OptionsDialog bottomDialog = new OptionsDialog(title);
         bottomDialog.show(getParentFragmentManager(), "FileOptionsDialog");
+
+
+        if(FileUtil.isSingleFile(selectedFiles)){
+            if(selectedFiles.get(0).getName().toLowerCase().endsWith(".java")){
+                bottomDialog.addOption("Execute", R.drawable.ic_round_code_24, view1 ->{
+                    exeJava(selectedFiles.get(0).getParentFile());
+                }, true);
+            }
+        }
+
         if(FileUtil.isSingleFolder(selectedFiles)){
             bottomDialog.addOption("Open in a new tab", R.drawable.ic_round_tab_24, view1 ->{
                 if(requireActivity() instanceof MainActivity){
@@ -328,7 +340,7 @@ public class NormalTabFragment extends Fragment {
         }, true);
 
         if(FileUtil.isSingleFile(selectedFiles)){
-            if(FileUtil.getFileExtension(selectedFiles.get(0)).toLowerCase().equals("jar")){
+            if(FileUtil.getFileExtension(selectedFiles.get(0)).equalsIgnoreCase("jar")){
                 bottomDialog.addOption("Jar2Dex", R.drawable.ic_round_code_24, view1 ->{
                     addJar2DexTask(selectedFiles.get(0));
                     unSelectAndUpdateList();
@@ -460,6 +472,42 @@ public class NormalTabFragment extends Fragment {
                 .setPositiveButton("Confirm", (view -> doDelete(selectedFiles)), true)
                 .setNegativeButton("Cancel", null, true)
                 .showDialog(getParentFragmentManager(), "");
+    }
+
+    private void exeJava(File file){
+        JavaExecutor javaExecutor = new JavaExecutor(file);
+        BackgroundTask backgroundTask = new BackgroundTask();
+
+        AtomicReference<String> error = new AtomicReference<>("");
+
+        backgroundTask.setTasks(()->{
+            backgroundTask.showProgressDialog("compiling files...", requireActivity());
+        }, ()->{
+            try {
+                javaExecutor.execute();
+            } catch (Exception exception) {
+                error.set(App.getStackTrace(exception));
+            }
+        }, ()->{
+            try {
+                if(!error.get().equals("")){
+                    backgroundTask.dismiss();
+                    tab.refresh();
+                    App.log(error.get());
+                    //TODO: show error dialog
+                    return;
+                }
+                javaExecutor.invoke();
+                backgroundTask.dismiss();
+                tab.refresh();
+            } catch (Exception exception){
+                backgroundTask.dismiss();
+                tab.refresh();
+                App.log(exception);
+                //TODO: show error dialog
+            }
+        });
+        backgroundTask.run();
     }
 
     private void doDelete(ArrayList<File> selectedFiles) {

@@ -396,7 +396,7 @@ public class FileUtil {
         fos.close();
     }
 
-    private static void deleteFile(File file) {
+    public static void deleteFile(File file) {
         if (!file.exists()) return;
 
         if (file.isFile()) {

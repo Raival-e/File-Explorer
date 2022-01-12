@@ -16,6 +16,19 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"/>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginTop="-36dp"
+        android:scrollbars="none">
+        <io.github.rosemoe.sora.widget.SymbolInputView
+            android:id="@+id/symbol_input"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:background="@color/surface"/>
+    </HorizontalScrollView>
+
     <LinearLayout
         tools:ignore="HardcodedText"
         android:id="@+id/search_panel"

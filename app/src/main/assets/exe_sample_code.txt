@@ -1,0 +1,59 @@
+package com.main;
+
+import android.app.*;
+import android.os.*;
+import android.view.*;
+import android.view.View.*;
+import android.widget.*;
+import android.content.*;
+import android.content.res.*;
+import android.graphics.*;
+import android.graphics.drawable.*;
+import android.media.*;
+import android.net.*;
+import android.text.*;
+import android.text.style.*;
+import android.util.*;
+import android.webkit.*;
+import android.animation.*;
+import android.view.animation.*;
+import java.util.*;
+import java.util.regex.*;
+import java.text.*;
+import org.json.*;
+import java.io.*;
+
+public class Main {
+    static Context context;
+	public static void main(Context ctx) {
+		context = ctx;
+		init();
+	}
+
+	public static void showMsg(String s){
+		Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
+	}
+
+	private static int Dp(int i){
+		return (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,i, context.getResources().getDisplayMetrics());
+	}
+
+	private static void showDialog(String title, String msg){
+		AlertDialog dialog = new AlertDialog.Builder(context).create();
+		dialog.setTitle(title);
+		dialog.setMessage(msg);
+		dialog.setButton(-1, "OK", (v,i)->{
+			//ignored
+		});
+		dialog.show();
+	}
+
+
+	/////////////////////////////
+	//// put your  code Here ////
+	/////////////////////////////
+
+	private static void init(){
+		showMsg("test");
+	}
+}
