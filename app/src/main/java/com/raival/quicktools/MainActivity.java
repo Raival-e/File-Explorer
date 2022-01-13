@@ -56,8 +56,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 1449){
-            init();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(getCurrentTab() != null){
+            getCurrentTab().refresh();
         }
     }
 
@@ -117,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
             if(!Environment.isExternalStorageManager()){
                 Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
                 intent.setData(Uri.fromParts("package", getPackageName(), null));
-                startActivityForResult(intent, 1449);
+                startActivity(intent);
                 return false;
             }
         } else {

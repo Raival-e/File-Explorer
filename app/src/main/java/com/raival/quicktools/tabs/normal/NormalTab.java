@@ -134,8 +134,10 @@ public class NormalTab implements QTab {
     }
 
     private void addPathState(File currentPath) {
-        if(fragment.getRecyclerViewInstance() != null){
-            pathsStets.put(currentPath.getAbsolutePath(), fragment.getRecyclerViewInstance());
+        if(fragment != null){
+            if(fragment.getRecyclerViewInstance() != null){
+                pathsStets.put(currentPath.getAbsolutePath(), fragment.getRecyclerViewInstance());
+            }
         }
     }
 
@@ -208,7 +210,9 @@ public class NormalTab implements QTab {
     @Override
     public void refresh() {
         setCurrentPath(currentPath);
-        fragment.updateFilesList();
+        if(fragment != null){
+            fragment.updateFilesList();
+        }
     }
 
     @Override

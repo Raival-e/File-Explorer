@@ -99,11 +99,12 @@ public class JavaExecutor {
 
         final StringBuilder sb = new StringBuilder();
         for(File jar : jarFiles)
-      	    sb.append(":" + jar.getAbsolutePath());
-        sb.append(":" + D8Util.getLambdaStubsJarFile().getAbsolutePath()
-                   + ":"
-                   + D8Util.getBootstrapJarFile().getAbsolutePath());
+      	    sb.append(":").append(jar.getAbsolutePath());
 
+        sb.append(":")
+                .append(D8Util.getLambdaStubsJarFile().getAbsolutePath())
+                .append(":")
+                .append(D8Util.getBootstrapJarFile().getAbsolutePath());
         opt.add(sb.substring(1));
 
         opt.add("-proc:none");
@@ -114,9 +115,7 @@ public class JavaExecutor {
 
         PrintWriter printWriter = new PrintWriter(new OutputStream() {
             @Override
-            public void write(int i) {
-
-            }
+            public void write(int i) { }
         });
         final StringBuilder errors = new StringBuilder();
         PrintWriter printWriter1 = new PrintWriter(new OutputStream() {
