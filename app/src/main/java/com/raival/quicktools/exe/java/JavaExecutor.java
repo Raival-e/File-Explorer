@@ -49,8 +49,8 @@ public class JavaExecutor {
                 null,
                 App.appContext.getClassLoader());
         Class clazz = dexClassLoader.loadClass("com.main.Main");
-        java.lang.reflect.Method method = clazz.getDeclaredMethod("main", Context.class);
-        method.invoke(null, App.appContext);
+        java.lang.reflect.Method method = clazz.getDeclaredMethod("main", Context.class, File.class);
+        method.invoke(null, App.appContext, project);
     }
 
     private String getDexFiles() {

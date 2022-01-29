@@ -123,15 +123,19 @@ public class TextEditorActivity extends AppCompatActivity {
         String ext = FileUtil.getFileExtension(file).toLowerCase();
         switch (ext){
             case "java":
+            case "kt":
+                editor.setAutoIndentEnabled(true);
                 editor.setEditorLanguage(new JavaLanguage());
                 editor.setTypefaceText(Typeface.MONOSPACE);
                 break;
             case "py":
             case "python":
+                editor.setAutoIndentEnabled(true);
                 editor.setEditorLanguage(new PythonLanguage());
                 editor.setTypefaceText(Typeface.MONOSPACE);
                 break;
             case "html":
+                editor.setAutoIndentEnabled(true);
                 editor.setEditorLanguage(new HTMLLanguage());
                 editor.setTypefaceText(Typeface.MONOSPACE);
                 break;
@@ -208,7 +212,11 @@ public class TextEditorActivity extends AppCompatActivity {
 
         if(item.getTitle().equals("Execute")){
             saveFile(editor.getText().toString());
-            executeFile();
+            if(file.getName().endsWith(".kt")){
+                //exeKotlin();
+            } else {
+                executeFile();
+            }
         } else if (id == R.id.editor_language_def) {
             item.setChecked(true);
             editor.setEditorLanguage(null);
@@ -264,6 +272,39 @@ public class TextEditorActivity extends AppCompatActivity {
         }
             return super.onOptionsItemSelected(item);
     }
+
+    /*private void exeKotlin(){
+        KotlinExecutor kotlinExecutor = new KotlinExecutor(file.getParentFile());
+        BackgroundTask backgroundTask = new BackgroundTask();
+
+        AtomicReference<String> error = new AtomicReference<>("");
+
+        backgroundTask.setTasks(()->{
+            backgroundTask.showProgressDialog("compiling files...", this);
+        }, ()->{
+            try {
+                kotlinExecutor.execute();
+            } catch (Exception exception) {
+                error.set(App.getStackTrace(exception));
+            }
+        }, ()->{
+            try {
+                if(!error.get().equals("")){
+                    backgroundTask.dismiss();
+                    App.log(error.get());
+                    showDialog("Error", error.get());
+                    return;
+                }
+                kotlinExecutor.invoke();
+                backgroundTask.dismiss();
+            } catch (Exception exception){
+                App.log(exception);
+                showDialog("Error", App.getStackTrace(exception));
+                backgroundTask.dismiss();
+            }
+        });
+        backgroundTask.run();
+    }*/
 
     private void executeFile() {
         JavaExecutor javaExecutor = new JavaExecutor(file.getParentFile());

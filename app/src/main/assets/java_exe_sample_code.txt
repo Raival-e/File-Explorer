@@ -25,8 +25,11 @@ import java.io.*;
 
 public class Main {
     static Context context;
-	public static void main(Context ctx) {
+    static File projectDir;
+
+	public static void main(Context ctx, File file) {
 		context = ctx;
+		projectDir = file;
 		init();
 	}
 

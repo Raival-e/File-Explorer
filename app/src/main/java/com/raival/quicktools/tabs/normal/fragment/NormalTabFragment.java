@@ -275,6 +275,14 @@ public class NormalTabFragment extends Fragment {
             }
         }
 
+        /*if(FileUtil.isSingleFile(selectedFiles)){
+            if(selectedFiles.get(0).getName().toLowerCase().endsWith(".kt")){
+                bottomDialog.addOption("Execute", R.drawable.ic_round_code_24, view1 ->{
+                    exeKotlin(selectedFiles.get(0).getParentFile());
+                }, true);
+            }
+        }*/
+
         if(FileUtil.isSingleFolder(selectedFiles)){
             bottomDialog.addOption("Open in a new tab", R.drawable.ic_round_tab_24, view1 ->{
                 if(requireActivity() instanceof MainActivity){
@@ -473,6 +481,42 @@ public class NormalTabFragment extends Fragment {
                 .setNegativeButton("Cancel", null, true)
                 .showDialog(getParentFragmentManager(), "");
     }
+
+    /*private void exeKotlin(File file){
+        KotlinExecutor kotlinExecutor = new KotlinExecutor(file);
+        BackgroundTask backgroundTask = new BackgroundTask();
+
+        AtomicReference<String> error = new AtomicReference<>("");
+
+        backgroundTask.setTasks(()->{
+            backgroundTask.showProgressDialog("compiling files...", requireActivity());
+        }, ()->{
+            try {
+                kotlinExecutor.execute();
+            } catch (Exception exception) {
+                error.set(App.getStackTrace(exception));
+            }
+        }, ()->{
+            try {
+                if(!error.get().equals("")){
+                    backgroundTask.dismiss();
+                    tab.refresh();
+                    App.log(error.get());
+                    showDialog("Error", error.get());
+                    return;
+                }
+                kotlinExecutor.invoke();
+                backgroundTask.dismiss();
+                tab.refresh();
+            } catch (Exception exception){
+                backgroundTask.dismiss();
+                tab.refresh();
+                App.log(exception);
+                showDialog("Error", App.getStackTrace(exception));
+            }
+        });
+        backgroundTask.run();
+    }*/
 
     private void exeJava(File file){
         JavaExecutor javaExecutor = new JavaExecutor(file);

@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        init();
     }
 
     @Override
@@ -399,7 +400,9 @@ public class MainActivity extends AppCompatActivity {
     }
     
     private QTab getCurrentTab(){
-        return tabs.get(viewPager2.getCurrentItem());
+        final int i = viewPager2.getCurrentItem();
+        if(tabs.size() > i) return tabs.get(i);
+        return null;
     }
 
     public void setPageSubtitle(String subtitle){
