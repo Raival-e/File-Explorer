@@ -19,14 +19,8 @@
                     android:id="@+id/editor_language_java"
                     android:title="Java" />
                 <item
-                    android:id="@+id/editor_language_python"
-                    android:title="Python" />
-                <item
-                    android:id="@+id/editor_language_html"
-                    android:title="HTML" />
-                <item
-                    android:id="@+id/editor_language_css3"
-                    android:title="CSS3" />
+                    android:id="@+id/editor_language_kotlin"
+                    android:title="Kotlin" />
             </group>
         </menu>
     </item>

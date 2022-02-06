@@ -23,12 +23,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.github.rosemoe.sora.langs.css3.CSS3Language;
-import io.github.rosemoe.sora.langs.html.HTMLLanguage;
 import io.github.rosemoe.sora.langs.java.JavaLanguage;
-import io.github.rosemoe.sora.langs.python.PythonLanguage;
 import io.github.rosemoe.sora.widget.CodeEditor;
+import io.github.rosemoe.sora.widget.EditorSearcher;
 import io.github.rosemoe.sora.widget.SymbolInputView;
+import io.github.rosemoe.sora.widget.component.EditorAutoCompletion;
+import io.github.rosemoe.sora.widget.component.Magnifier;
 import io.github.rosemoe.sora.widget.schemes.SchemeDarcula;
 import io.github.rosemoe.sora.widget.schemes.SchemeGitHub;
 
@@ -54,10 +54,9 @@ public class TextEditorActivity extends AppCompatActivity {
         inputView.addSymbols(new String[]{"->", "{", "}", "(", ")", ",", ".", ";", "\"", "?", "+", "-", "*", "/"},
                 new String[]{"\t", "{", "}", "(", ")", ",", ".", ";", "\"", "?", "+", "-", "*", "/"});
 
-        editor.setAutoCompletionEnabled(false);
-        editor.setAutoIndentEnabled(false);
         editor.setHardwareAcceleratedDrawAllowed(true);
-        editor.setSymbolCompletionEnabled(false);
+        editor.setPinLineNumber(true);
+        editor.getComponent(EditorAutoCompletion.class).setEnabled(false);
         editor.setColorScheme(new SchemeDarcula());
         editor.setTextSize(14);
 
@@ -124,19 +123,8 @@ public class TextEditorActivity extends AppCompatActivity {
         switch (ext){
             case "java":
             case "kt":
-                editor.setAutoIndentEnabled(true);
+                //editor.setAutoIndentEnabled(true);
                 editor.setEditorLanguage(new JavaLanguage());
-                editor.setTypefaceText(Typeface.MONOSPACE);
-                break;
-            case "py":
-            case "python":
-                editor.setAutoIndentEnabled(true);
-                editor.setEditorLanguage(new PythonLanguage());
-                editor.setTypefaceText(Typeface.MONOSPACE);
-                break;
-            case "html":
-                editor.setAutoIndentEnabled(true);
-                editor.setEditorLanguage(new HTMLLanguage());
                 editor.setTypefaceText(Typeface.MONOSPACE);
                 break;
         }
@@ -157,12 +145,12 @@ public class TextEditorActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                editor.getSearcher().search(editable.toString());
+                editor.getSearcher().search(editable.toString(), new EditorSearcher.SearchOptions(false,false));
             }
         });
 
         searchPanel.findViewById(R.id.next).setOnClickListener(view -> editor.getSearcher().gotoNext());
-        searchPanel.findViewById(R.id.previous).setOnClickListener(view -> editor.getSearcher().gotoLast());
+        searchPanel.findViewById(R.id.previous).setOnClickListener(view -> editor.getSearcher().gotoPrevious());
 
         searchPanel.findViewById(R.id.replace).setOnClickListener(view -> editor.getSearcher().replaceThis(
                 replaceInput.getEditText().getText().toString()
@@ -223,16 +211,10 @@ public class TextEditorActivity extends AppCompatActivity {
         } else if (id == R.id.editor_language_java) {
             item.setChecked(true);
             editor.setEditorLanguage(new JavaLanguage());
-        } else if (id == R.id.editor_language_python) {
+        } else if (id == R.id.editor_language_kotlin) {
             item.setChecked(true);
-            editor.setEditorLanguage(new PythonLanguage());
+            editor.setEditorLanguage(new JavaLanguage());
             item.setChecked(true);
-        } else if (id == R.id.editor_language_css3) {
-            item.setChecked(true);
-            editor.setEditorLanguage(new CSS3Language());
-        } else if (id == R.id.editor_language_html) {
-            item.setChecked(true);
-            editor.setEditorLanguage(new HTMLLanguage());
         } else if (id == R.id.editor_option_read_only) {
             item.setChecked(!item.isChecked());
             editor.setEditable(!item.isChecked());
@@ -254,8 +236,8 @@ public class TextEditorActivity extends AppCompatActivity {
             item.setChecked(!item.isChecked());
             editor.setWordwrap(item.isChecked());
         } else if (id == R.id.editor_option_magnifier) {
-            editor.setMagnifierEnabled(!editor.isMagnifierEnabled());
-            item.setChecked(editor.isMagnifierEnabled());
+            editor.getComponent(Magnifier.class).setEnabled(editor.getComponent(Magnifier.class).isEnabled());
+            item.setChecked(editor.getComponent(Magnifier.class).isEnabled());
         } else if (id == R.id.editor_option_line_number) {
             item.setChecked(!item.isChecked());
             editor.setLineNumberEnabled(item.isChecked());
