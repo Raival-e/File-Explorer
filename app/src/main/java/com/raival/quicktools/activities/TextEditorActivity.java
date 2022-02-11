@@ -118,18 +118,17 @@ public class TextEditorActivity extends AppCompatActivity {
         }
     }
 
-    private void detectLanguage(File file) {
+private void detectLanguage(File file) {
         String ext = FileUtil.getFileExtension(file).toLowerCase();
         switch (ext){
             case "java":
             case "kt":
-                //editor.setAutoIndentEnabled(true);
                 editor.setEditorLanguage(new JavaLanguage());
                 editor.setTypefaceText(Typeface.MONOSPACE);
                 break;
         }
-    }
-
+  }
+  
     private void setupSearchPanel() {
         TextInputLayout findInput = searchPanel.findViewById(R.id.find_input);
         findInput.setHint("Find text");
@@ -254,39 +253,6 @@ public class TextEditorActivity extends AppCompatActivity {
         }
             return super.onOptionsItemSelected(item);
     }
-
-    /*private void exeKotlin(){
-        KotlinExecutor kotlinExecutor = new KotlinExecutor(file.getParentFile());
-        BackgroundTask backgroundTask = new BackgroundTask();
-
-        AtomicReference<String> error = new AtomicReference<>("");
-
-        backgroundTask.setTasks(()->{
-            backgroundTask.showProgressDialog("compiling files...", this);
-        }, ()->{
-            try {
-                kotlinExecutor.execute();
-            } catch (Exception exception) {
-                error.set(App.getStackTrace(exception));
-            }
-        }, ()->{
-            try {
-                if(!error.get().equals("")){
-                    backgroundTask.dismiss();
-                    App.log(error.get());
-                    showDialog("Error", error.get());
-                    return;
-                }
-                kotlinExecutor.invoke();
-                backgroundTask.dismiss();
-            } catch (Exception exception){
-                App.log(exception);
-                showDialog("Error", App.getStackTrace(exception));
-                backgroundTask.dismiss();
-            }
-        });
-        backgroundTask.run();
-    }*/
 
     private void executeFile() {
         JavaExecutor javaExecutor = new JavaExecutor(file.getParentFile());
