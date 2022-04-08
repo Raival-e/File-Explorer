@@ -3,10 +3,12 @@ package com.raival.quicktools.activities;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -59,6 +61,14 @@ public class TextEditorActivity extends AppCompatActivity {
         editor.getComponent(EditorAutoCompletion.class).setEnabled(false);
         editor.setColorScheme(new SchemeDarcula());
         editor.setTextSize(14);
+        editor.setLigatureEnabled(true);
+        editor.setHighlightCurrentBlock(true);
+
+        editor.getProps().symbolPairAutoCompletion = false;
+        editor.getProps().deleteMultiSpaces = -1;
+        editor.getProps().deleteEmptyLineFast = false;
+        editor.setInputType(EditorInfo.TYPE_CLASS_TEXT|EditorInfo.TYPE_TEXT_FLAG_MULTI_LINE);
+        editor.setImportantForAutofill(View.IMPORTANT_FOR_AUTOFILL_NO);
 
         file = new File(getIntent().getStringExtra("file"));
         detectLanguage(file);
@@ -123,7 +133,6 @@ public class TextEditorActivity extends AppCompatActivity {
         switch (ext){
             case "java":
             case "kt":
-                //editor.setAutoIndentEnabled(true);
                 editor.setEditorLanguage(new JavaLanguage());
                 editor.setTypefaceText(Typeface.MONOSPACE);
                 break;
@@ -201,7 +210,7 @@ public class TextEditorActivity extends AppCompatActivity {
         if(item.getTitle().equals("Execute")){
             saveFile(editor.getText().toString());
             if(file.getName().endsWith(".kt")){
-                //exeKotlin();
+                //TODO: kotlin executor
             } else {
                 executeFile();
             }
@@ -211,6 +220,7 @@ public class TextEditorActivity extends AppCompatActivity {
         } else if (id == R.id.editor_language_java) {
             item.setChecked(true);
             editor.setEditorLanguage(new JavaLanguage());
+
         } else if (id == R.id.editor_language_kotlin) {
             item.setChecked(true);
             editor.setEditorLanguage(new JavaLanguage());
@@ -255,41 +265,8 @@ public class TextEditorActivity extends AppCompatActivity {
             return super.onOptionsItemSelected(item);
     }
 
-    /*private void exeKotlin(){
-        KotlinExecutor kotlinExecutor = new KotlinExecutor(file.getParentFile());
-        BackgroundTask backgroundTask = new BackgroundTask();
-
-        AtomicReference<String> error = new AtomicReference<>("");
-
-        backgroundTask.setTasks(()->{
-            backgroundTask.showProgressDialog("compiling files...", this);
-        }, ()->{
-            try {
-                kotlinExecutor.execute();
-            } catch (Exception exception) {
-                error.set(App.getStackTrace(exception));
-            }
-        }, ()->{
-            try {
-                if(!error.get().equals("")){
-                    backgroundTask.dismiss();
-                    App.log(error.get());
-                    showDialog("Error", error.get());
-                    return;
-                }
-                kotlinExecutor.invoke();
-                backgroundTask.dismiss();
-            } catch (Exception exception){
-                App.log(exception);
-                showDialog("Error", App.getStackTrace(exception));
-                backgroundTask.dismiss();
-            }
-        });
-        backgroundTask.run();
-    }*/
-
     private void executeFile() {
-        JavaExecutor javaExecutor = new JavaExecutor(file.getParentFile());
+        JavaExecutor javaExecutor = new JavaExecutor(file.getParentFile(), this);
         BackgroundTask backgroundTask = new BackgroundTask();
 
         AtomicReference<String> error = new AtomicReference<>("");

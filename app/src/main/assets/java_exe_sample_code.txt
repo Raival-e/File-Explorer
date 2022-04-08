@@ -22,13 +22,16 @@ import java.util.regex.*;
 import java.text.*;
 import org.json.*;
 import java.io.*;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class Main {
+    static AppCompatActivity activity;
     static Context context;
     static File projectDir;
 
-	public static void main(Context ctx, File file) {
+	public static void main(AppCompatActivity ac, Context ctx, File file) {
 		context = ctx;
+		activity = ac;
 		projectDir = file;
 		init();
 	}

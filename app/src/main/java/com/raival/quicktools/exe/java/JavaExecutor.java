@@ -2,6 +2,8 @@ package com.raival.quicktools.exe.java;
 
 import android.content.Context;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.android.tools.r8.D8;
 import com.raival.quicktools.App;
 import com.raival.quicktools.utils.D8Util;
@@ -24,11 +26,14 @@ public class JavaExecutor {
 
     boolean isValidProject = false;
 
-    public JavaExecutor(File folder) {
+    AppCompatActivity activity;
+
+    public JavaExecutor(File folder, AppCompatActivity activity) {
         if(folder.isFile()){
             isValidProject = false;
             return;
         }
+        this.activity = activity;
         project = folder;
         parseInputFolder(project);
     }
@@ -48,9 +53,9 @@ public class JavaExecutor {
                 optimizedDir,
                 null,
                 App.appContext.getClassLoader());
-        Class clazz = dexClassLoader.loadClass("com.main.Main");
-        java.lang.reflect.Method method = clazz.getDeclaredMethod("main", Context.class, File.class);
-        method.invoke(null, App.appContext, project);
+        Class<?> clazz = dexClassLoader.loadClass("com.main.Main");
+        java.lang.reflect.Method method = clazz.getDeclaredMethod("main", AppCompatActivity.class, Context.class, File.class);
+        method.invoke(null, activity, activity, project);
     }
 
     private String getDexFiles() {
