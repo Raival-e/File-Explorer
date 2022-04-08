@@ -34,15 +34,6 @@ public class D8Util {
         return check;
     }
 
-    /*public static File getKotlinStdLibs() {
-        File check = new File(App.appContext.getFilesDir() + "/build/kotlin-stdlib.jar");
-        if (check.exists()) {
-            return check;
-        }
-        unzipFromAssets(App.appContext, "kotlin-stdlib.zip", check.getParentFile().getAbsolutePath());
-        return check;
-    }*/
-
     public static void unzipFromAssets(Context context, String zipFile, String destination) {
         try {
             if (destination == null || destination.length() == 0)

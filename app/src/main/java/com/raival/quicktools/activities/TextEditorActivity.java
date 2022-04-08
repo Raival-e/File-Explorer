@@ -128,7 +128,7 @@ public class TextEditorActivity extends AppCompatActivity {
         }
     }
 
-    private void detectLanguage(File file) {
+private void detectLanguage(File file) {
         String ext = FileUtil.getFileExtension(file).toLowerCase();
         switch (ext){
             case "java":
@@ -137,8 +137,8 @@ public class TextEditorActivity extends AppCompatActivity {
                 editor.setTypefaceText(Typeface.MONOSPACE);
                 break;
         }
-    }
-
+  }
+  
     private void setupSearchPanel() {
         TextInputLayout findInput = searchPanel.findViewById(R.id.find_input);
         findInput.setHint("Find text");
