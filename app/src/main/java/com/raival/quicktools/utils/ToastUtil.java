@@ -8,7 +8,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.raival.quicktools.App;
 import com.raival.quicktools.R;
 
 public class ToastUtil {

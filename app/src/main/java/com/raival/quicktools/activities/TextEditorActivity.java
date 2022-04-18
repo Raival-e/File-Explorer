@@ -3,7 +3,6 @@ package com.raival.quicktools.activities;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -198,16 +197,19 @@ private void detectLanguage(File file) {
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.text_editor_menu, menu);
-        if(file.getName().equalsIgnoreCase("Main.java") || file.getName().equalsIgnoreCase("Main.kt"))
+        if(file.getName().equalsIgnoreCase("Main.java")){
+            menu.add("Format");
             menu.add("Execute");
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
-        if(item.getTitle().equals("Execute")){
+        if(item.getTitle().equals("Format")){
+           editor.formatCodeAsync();
+        } else if(item.getTitle().equals("Execute")){
             saveFile(editor.getText().toString());
             if(file.getName().endsWith(".kt")){
                 //TODO: kotlin executor

@@ -22,8 +22,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 }
 
@@ -39,7 +39,6 @@ dependencies {
     implementation 'net.lingala.zip4j:zip4j:2.9.1'
 
     implementation 'io.github.Rosemoe.sora-editor:editor:0.10.11'
-    implementation 'io.github.Rosemoe.sora-editor:language-java:0.10.11'
 
     api 'com.android.tools:r8:3.1.51'
 

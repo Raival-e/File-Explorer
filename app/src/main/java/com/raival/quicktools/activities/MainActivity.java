@@ -1,4 +1,4 @@
-package com.raival.quicktools;
+package com.raival.quicktools.activities;
 
 import android.Manifest;
 import android.animation.ObjectAnimator;
@@ -31,7 +31,8 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pixplicity.easyprefs.library.Prefs;
-import com.raival.quicktools.activities.TextEditorActivity;
+import com.raival.quicktools.App;
+import com.raival.quicktools.R;
 import com.raival.quicktools.common.QDialog;
 import com.raival.quicktools.common.TasksDialog;
 import com.raival.quicktools.interfaces.QTab;
@@ -180,6 +181,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.home).setOnClickListener(view -> getCurrentTab().onTreeViewPathSelected(0));
         findViewById(R.id.tasks).setOnClickListener(view -> showTasksDialog());
         findViewById(R.id.show_debug).setOnClickListener(view -> showLogFile());
+        findViewById(R.id.more_options).setOnClickListener(view -> showMoreOptions(view));
     }
 
     private void showLogFile() {
@@ -253,6 +255,14 @@ public class MainActivity extends AppCompatActivity {
                         .createFile(input.getEditText().getText().toString(), true), true)
                 .setNeutralButton("Cancel", null, true)
                 .show(getSupportFragmentManager(), "");
+    }
+
+    private void showMoreOptions(View v) {
+        PopupMenu popupMenu = new PopupMenu(this, v);
+        popupMenu.setOnMenuItemClickListener(menuItem -> {
+            menuItem.setChecked(!menuItem.isChecked());
+            return true;
+        });
     }
 
     private void showSortOptionsMenu(View view) {
