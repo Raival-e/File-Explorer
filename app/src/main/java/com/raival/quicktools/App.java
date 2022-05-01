@@ -21,8 +21,8 @@ public class App extends Application {
 
     @Override
     public void onCreate() {
-        Thread.setDefaultUncaughtExceptionHandler((thread, ex) -> {
-            log(ex);
+        Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
+            log(throwable);
             android.os.Process.killProcess(android.os.Process.myPid());
             System.exit(2);
         });
@@ -31,25 +31,25 @@ public class App extends Application {
         appHandler = new Handler(appContext.getMainLooper());
     }
 
-    public static String getStackTrace(Throwable th) {
+    public static String getStackTrace(Throwable throwable) {
         final Writer result = new StringWriter();
         final PrintWriter printWriter = new PrintWriter(result);
-        th.printStackTrace(printWriter);
+        throwable.printStackTrace(printWriter);
         final String stacktraceAsString = result.toString();
         printWriter.close();
         return stacktraceAsString;
     }
 
-    public static void showMsg(String s){
-        ToastUtil.makeToast(appContext, s, Toast.LENGTH_SHORT).show();
+    public static void showMsg(String message){
+        ToastUtil.makeToast(appContext, message, Toast.LENGTH_SHORT).show();
     }
 
-    public static void showWarning(String s){
-        ToastUtil.makeWarningToast(appContext, s, Toast.LENGTH_SHORT).show();
+    public static void showWarning(String message){
+        ToastUtil.makeWarningToast(appContext, message, Toast.LENGTH_SHORT).show();
     }
 
-    public static void copyString(String txt){
-        ((ClipboardManager)appContext.getSystemService(CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText("clipboard", txt));
+    public static void copyString(String string){
+        ((ClipboardManager)appContext.getSystemService(CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText("clipboard", string));
     }
 
     public static void log(Throwable exception) {
