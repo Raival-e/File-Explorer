@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
                 if(Environment.isExternalStorageManager()){
                     init();
                 } else {
-                    ToastUtil.makeToast(this, "Storage permission is required", Toast.LENGTH_SHORT).show();
+                    App.showMsg("Storage permission is required");
                     finish();
                 }
             }
