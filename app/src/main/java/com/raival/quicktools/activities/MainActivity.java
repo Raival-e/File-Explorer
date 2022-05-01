@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,6 +41,7 @@ import com.raival.quicktools.interfaces.QTask;
 import com.raival.quicktools.tabs.normal.NormalTab;
 import com.raival.quicktools.utils.FileUtil;
 import com.raival.quicktools.utils.PrefsUtil;
+import com.raival.quicktools.utils.ToastUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -56,7 +58,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        init();
+        if(requestCode == 121121){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                if(Environment.isExternalStorageManager()){
+                    init();
+                } else {
+                    ToastUtil.makeToast(this, "Storage permission is required", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            }
+        }
     }
 
     @Override
@@ -123,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
             if(!Environment.isExternalStorageManager()){
                 Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
                 intent.setData(Uri.fromParts("package", getPackageName(), null));
-                startActivity(intent);
+                startActivityForResult(intent, 121121);
                 return false;
             }
         } else {
