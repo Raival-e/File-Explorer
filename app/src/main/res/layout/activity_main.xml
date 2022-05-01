@@ -17,10 +17,10 @@
         android:paddingEnd="16dp"
         android:paddingBottom="8dp">
         <ImageView
-            android:id="@+id/show_debug"
+            android:id="@+id/menu"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/ic_baseline_info_24"
+            android:src="@drawable/ic_round_menu_24"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             app:tint="@color/onSurfaceContrast" />

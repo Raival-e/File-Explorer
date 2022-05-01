@@ -191,8 +191,12 @@ public class MainActivity extends AppCompatActivity {
     private void setListeners() {
         findViewById(R.id.home).setOnClickListener(view -> getCurrentTab().onTreeViewPathSelected(0));
         findViewById(R.id.tasks).setOnClickListener(view -> showTasksDialog());
-        findViewById(R.id.show_debug).setOnClickListener(view -> showLogFile());
-        findViewById(R.id.more_options).setOnClickListener(view -> showMoreOptions(view));
+        findViewById(R.id.menu).setOnClickListener(view -> showMenu());
+        findViewById(R.id.more_options).setOnClickListener(this::showMoreOptions);
+    }
+
+    private void showMenu() {
+        App.showMsg("Not implemented yet");
     }
 
     private void showLogFile() {
@@ -270,10 +274,16 @@ public class MainActivity extends AppCompatActivity {
 
     private void showMoreOptions(View v) {
         PopupMenu popupMenu = new PopupMenu(this, v);
+        popupMenu.getMenu().add("Logs");
         popupMenu.setOnMenuItemClickListener(menuItem -> {
-            menuItem.setChecked(!menuItem.isChecked());
-            return true;
+            final String title = menuItem.getTitle().toString();
+            if("Logs".equals(title)){
+                showLogFile();
+                return true;
+            }
+            return false;
         });
+        popupMenu.show();
     }
 
     private void showSortOptionsMenu(View view) {
