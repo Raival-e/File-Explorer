@@ -19,6 +19,11 @@
         android:largeHeap="true"
         android:theme="@style/Theme.QuickTools">
         <activity
+            android:name=".activities.CheckListActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".activities.TextEditorActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize"

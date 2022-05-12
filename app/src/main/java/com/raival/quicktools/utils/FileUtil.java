@@ -572,6 +572,10 @@ public class FileUtil {
         return list;
     }
 
+    public static String getFileNameWithoutExtension(File file){
+        return file.getName().substring(0, file.getName().lastIndexOf(FileUtil.getFileExtension(file)) - 1);
+    }
+
     public static String copyFromInputStream(InputStream inputStream) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         byte[] buf = new byte[1024];

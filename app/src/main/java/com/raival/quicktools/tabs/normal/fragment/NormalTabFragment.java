@@ -26,6 +26,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.textfield.TextInputLayout;
 import com.raival.quicktools.App;
 import com.raival.quicktools.R;
+import com.raival.quicktools.activities.CheckListActivity;
 import com.raival.quicktools.activities.MainActivity;
 import com.raival.quicktools.activities.TextEditorActivity;
 import com.raival.quicktools.common.BackgroundTask;
@@ -391,11 +392,20 @@ public class NormalTabFragment extends Fragment {
 
     private void openFile(File file) {
         final String ext = FileUtil.getFileExtension(file).toLowerCase();
-        if(FileUtil.isTextFile(ext) || FileUtil.isCodeFile(ext)){
+        if(FileUtil.isTextFile(ext) || FileUtil.isCodeFile(ext)) {
             openWithTextEditor(file);
+        } else if("checklist".equals(FileUtil.getFileExtension(file))){
+            openAsChecklist(file);
         } else {
             openFileWith(file);
         }
+    }
+
+    private void openAsChecklist(File file) {
+        Intent intent = new Intent();
+        intent.putExtra("file", file.getAbsolutePath());
+        intent.setClass(getContext(), CheckListActivity.class);
+        startActivity(intent);
     }
 
     private void openFileWith(File file){

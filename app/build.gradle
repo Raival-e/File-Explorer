@@ -39,6 +39,7 @@ dependencies {
     implementation 'net.lingala.zip4j:zip4j:2.9.1'
 
     implementation 'io.github.Rosemoe.sora-editor:editor:0.11.1'
+    implementation 'io.github.damianvdb:materialchecklist:1.0.0'
 
     api 'com.android.tools:r8:3.3.28'
 
