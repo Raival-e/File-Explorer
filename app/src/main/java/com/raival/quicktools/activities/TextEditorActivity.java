@@ -100,7 +100,7 @@ public class TextEditorActivity extends AppCompatActivity {
 
         editor.post(()->{
             if(FileUtil.isEmpty(editor.getText().toString())){
-                if(file.getName().equals("Main.java") || file.getName().equals("Main.kt")){
+                if("Main.java".equalsIgnoreCase(file.getName())){
                     askToLoadCodeSample();
                 }
             }
@@ -197,10 +197,8 @@ private void detectLanguage(File file) {
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.text_editor_menu, menu);
-        if(file.getName().equalsIgnoreCase("Main.java")){
-            menu.add("Format");
-            menu.add("Execute");
-        }
+        if("java".equalsIgnoreCase(FileUtil.getFileExtension(file))) menu.add("Format");
+        if("Main.java".equalsIgnoreCase(file.getName())) menu.add("Execute");
         return super.onCreateOptionsMenu(menu);
     }
 
