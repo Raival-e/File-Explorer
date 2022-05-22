@@ -25,6 +25,15 @@ android {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
+
+    signingConfigs {
+        debug {
+            storeFile file("../testkey.keystore")
+            storePassword "testkey"
+            keyAlias "testkey"
+            keyPassword "testkey"
+        }
+    }
 }
 
 dependencies {
