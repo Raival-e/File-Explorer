@@ -83,9 +83,6 @@ public class JavaExecutor {
         ArrayList<String> classes = FileUtil.getAllFilesInDir(new File(output, "classes"), "class");
         if(classes != null && classes.size() > 0)
             opt.addAll(classes);
-        if(jarFiles.size() > 0)
-            for (File jar : jarFiles)
-                opt.add(jar.getAbsolutePath());
 
         D8.main(opt.toArray(new String[0]));
     }
