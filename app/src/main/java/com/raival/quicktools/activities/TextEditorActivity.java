@@ -198,7 +198,9 @@ private void detectLanguage(File file) {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.text_editor_menu, menu);
         if("java".equalsIgnoreCase(FileUtil.getFileExtension(file))) menu.add("Format");
-        if("Main.java".equalsIgnoreCase(file.getName())) menu.add("Execute");
+        if("Main.java".equalsIgnoreCase(file.getName())) menu.add("Execute")
+                .setIcon(R.drawable.ic_round_play_arrow_24)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         return super.onCreateOptionsMenu(menu);
     }
 
