@@ -126,8 +126,8 @@ public class TextEditorActivity extends AppCompatActivity {
             return "";
         }
     }
-
-private void detectLanguage(File file) {
+    
+    private void detectLanguage(File file) {
         String ext = FileUtil.getFileExtension(file).toLowerCase();
         switch (ext){
             case "java":
@@ -136,7 +136,7 @@ private void detectLanguage(File file) {
                 editor.setTypefaceText(Typeface.MONOSPACE);
                 break;
         }
-  }
+    }
   
     private void setupSearchPanel() {
         TextInputLayout findInput = searchPanel.findViewById(R.id.find_input);
@@ -194,11 +194,15 @@ private void detectLanguage(File file) {
         }
         super.onBackPressed();
     }
+    
+    private boolean canExecute(){
+        return new File(file.getParentFile(), "Main.java").exists();
+    }
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.text_editor_menu, menu);
         if("java".equalsIgnoreCase(FileUtil.getFileExtension(file))) menu.add("Format");
-        if("Main.java".equalsIgnoreCase(file.getName())) menu.add("Execute")
+        if(canExecute()) menu.add("Execute")
                 .setIcon(R.drawable.ic_round_play_arrow_24)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         return super.onCreateOptionsMenu(menu);
