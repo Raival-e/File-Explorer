@@ -15,22 +15,20 @@
         android:icon="@mipmap/app_icon"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/app_icon_round"
+        android:largeHeap="true"
         android:theme="@style/Theme.QuickTools">
         <activity
             android:name=".activities.CheckListActivity"
-            android:hardwareAccelerated="true"
             android:exported="true"
             android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activities.TextEditorActivity"
-            android:hardwareAccelerated="true"
             android:exported="true"
             android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activities.MainActivity"
-            android:hardwareAccelerated="true"
             android:exported="true"
             android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait">
