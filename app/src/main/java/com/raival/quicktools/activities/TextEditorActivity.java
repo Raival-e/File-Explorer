@@ -198,6 +198,10 @@ public class TextEditorActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
+    private boolean canExecute(){
+        return new File(file.getParentFile(), "Main.java").exists();
+    }
+
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.text_editor_menu, menu);
 
@@ -209,7 +213,7 @@ public class TextEditorActivity extends AppCompatActivity {
         menu.findItem(R.id.editor_option_read_only).setChecked(PrefsUtil.getTextEditorReadOnly());
 
         if ("java".equalsIgnoreCase(FileUtil.getFileExtension(file))) menu.add("Format");
-        if ("Main.java".equalsIgnoreCase(file.getName())) menu.add("Execute")
+        if (canExecute()) menu.add("Execute")
                 .setIcon(R.drawable.ic_round_play_arrow_24)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         return super.onCreateOptionsMenu(menu);
