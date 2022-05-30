@@ -9,12 +9,12 @@ import java.util.ArrayList;
 public class ExtractTask implements QTask, RegularTask {
     ArrayList<File> filesToExtract;
 
-    public ArrayList<File> getFilesToExtract() {
-        return filesToExtract;
-    }
-
     public ExtractTask(ArrayList<File> filesToExtract) {
         this.filesToExtract = filesToExtract;
+    }
+
+    public ArrayList<File> getFilesToExtract() {
+        return filesToExtract;
     }
 
     @Override
@@ -27,8 +27,8 @@ public class ExtractTask implements QTask, RegularTask {
         StringBuilder sb = new StringBuilder();
         boolean first = true;
 
-        for(File file : filesToExtract){
-            if(!first){
+        for (File file : filesToExtract) {
+            if (!first) {
                 sb.append(", ");
             }
             sb.append(file.getName());

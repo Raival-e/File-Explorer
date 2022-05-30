@@ -34,18 +34,6 @@ public class FileInfoDialog extends BottomSheetDialogFragment {
         return this;
     }
 
-    public static class InfoHolder{
-        public String name;
-        public String info;
-        public boolean clickable;
-
-        public InfoHolder(String name, String info, boolean clickable) {
-            this.name = name;
-            this.info = info;
-            this.clickable = clickable;
-        }
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -56,17 +44,17 @@ public class FileInfoDialog extends BottomSheetDialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ((TextView)view.findViewById(R.id.file_name)).setText(file.getName());
+        ((TextView) view.findViewById(R.id.file_name)).setText(file.getName());
         FileUtil.setFileIcon((ImageView) view.findViewById(R.id.file_icon), file);
 
         container = view.findViewById(R.id.container);
 
-        if(!useDefaultFileInfo){
-            for(InfoHolder holder : infoList){
+        if (!useDefaultFileInfo) {
+            for (InfoHolder holder : infoList) {
                 addItemView(holder, container);
             }
         } else {
-            if(file.isFile()){
+            if (file.isFile()) {
                 addDefaultFileInfo();
             } else {
                 addDefaultFolderInfo();
@@ -79,14 +67,14 @@ public class FileInfoDialog extends BottomSheetDialogFragment {
         addItemView(new InfoHolder("Path:", file.getAbsolutePath(), true), container);
         addItemView(new InfoHolder("Modified:", TimeUtil.getLastModifiedDate(file, TimeUtil.REGULAR_DATE_FORMAT), true), container);
         addItemView(new InfoHolder("Content:", FileUtil.getFormattedFileCount(file), true), container);
-        addItemView(new InfoHolder("Type:", file.isFile()? "File" : "Folder", true), container);
-        addItemView(new InfoHolder("Read:", file.canRead()? "Yes" : "No", true), container);
-        addItemView(new InfoHolder("Write:", file.canWrite()? "Yes" : "No", true), container);
+        addItemView(new InfoHolder("Type:", file.isFile() ? "File" : "Folder", true), container);
+        addItemView(new InfoHolder("Read:", file.canRead() ? "Yes" : "No", true), container);
+        addItemView(new InfoHolder("Write:", file.canWrite() ? "Yes" : "No", true), container);
 
         TextView size = addItemView(new InfoHolder("Size:", "Counting...", true), container);
-        new Thread(()->{
+        new Thread(() -> {
             String s = FileUtil.getFormattedFileSize(file);
-            size.post(()-> size.setText(s));
+            size.post(() -> size.setText(s));
         }).start();
     }
 
@@ -94,19 +82,19 @@ public class FileInfoDialog extends BottomSheetDialogFragment {
         addItemView(new InfoHolder("Path:", file.getAbsolutePath(), true), container);
         addItemView(new InfoHolder("Extension:", FileUtil.getFileExtension(file), true), container);
         addItemView(new InfoHolder("Modified:", TimeUtil.getLastModifiedDate(file, TimeUtil.REGULAR_DATE_FORMAT), true), container);
-        addItemView(new InfoHolder("Type:", file.isFile()? "File" : "Folder", true), container);
-        addItemView(new InfoHolder("Read:", file.canRead()? "Yes" : "No", true), container);
-        addItemView(new InfoHolder("Write:", file.canWrite()? "Yes" : "No", true), container);
+        addItemView(new InfoHolder("Type:", file.isFile() ? "File" : "Folder", true), container);
+        addItemView(new InfoHolder("Read:", file.canRead() ? "Yes" : "No", true), container);
+        addItemView(new InfoHolder("Write:", file.canWrite() ? "Yes" : "No", true), container);
         addItemView(new InfoHolder("Size:", FileUtil.getFormattedFileSize(file), true), container);
     }
 
     private TextView addItemView(InfoHolder holder, ViewGroup container) {
         View view = getLayoutInflater().inflate(R.layout.file_info_dialog_item, null, false);
 
-        ((TextView)view.findViewById(R.id.name)).setText(holder.name);
+        ((TextView) view.findViewById(R.id.name)).setText(holder.name);
         TextView details = view.findViewById(R.id.details);
         details.setText(holder.info);
-        if(holder.clickable){
+        if (holder.clickable) {
             details.setClickable(true);
             details.setOnClickListener(view1 -> {
                 App.copyString(holder.info);
@@ -120,5 +108,17 @@ public class FileInfoDialog extends BottomSheetDialogFragment {
     public FileInfoDialog addItem(String name, String info, boolean clickable) {
         infoList.add(new InfoHolder(name, info, clickable));
         return this;
+    }
+
+    public static class InfoHolder {
+        public String name;
+        public String info;
+        public boolean clickable;
+
+        public InfoHolder(String name, String info, boolean clickable) {
+            this.name = name;
+            this.info = info;
+            this.clickable = clickable;
+        }
     }
 }

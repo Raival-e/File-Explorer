@@ -25,30 +25,22 @@ public class OptionsDialog extends BottomSheetDialogFragment {
 
     ArrayList<OptionHolder> options = new ArrayList<>();
 
-    private class OptionHolder{
-        String label;
-        int res;
-        View.OnClickListener listener;
-        boolean dismissOnClick;
-
-        public OptionHolder(){ }
-    }
-
     public OptionsDialog(String title) {
         this.title = title;
     }
+
     public OptionsDialog(String title, String msg) {
         this.title = title;
         message = msg;
     }
 
-    public void addOption(String label, int resId, View.OnClickListener listener, boolean dismissOnClick){
-       OptionHolder optionHolder = new OptionHolder();
-       optionHolder.dismissOnClick = dismissOnClick;
-       optionHolder.label = label;
-       optionHolder.listener = listener;
-       optionHolder.res = resId;
-       options.add(optionHolder);
+    public void addOption(String label, int resId, View.OnClickListener listener, boolean dismissOnClick) {
+        OptionHolder optionHolder = new OptionHolder();
+        optionHolder.dismissOnClick = dismissOnClick;
+        optionHolder.label = label;
+        optionHolder.listener = listener;
+        optionHolder.res = resId;
+        options.add(optionHolder);
     }
 
     @Nullable
@@ -62,24 +54,24 @@ public class OptionsDialog extends BottomSheetDialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         this.container = view.findViewById(R.id.container);
-        ((TextView)view.findViewById(R.id.title)).setText(title);
+        ((TextView) view.findViewById(R.id.title)).setText(title);
 
-        if(message == null){
+        if (message == null) {
             view.findViewById(R.id.msg).setVisibility(View.GONE);
         } else {
-            ((TextView)view.findViewById(R.id.msg)).setText(message);
+            ((TextView) view.findViewById(R.id.msg)).setText(message);
         }
         addOptions();
     }
 
     private void addOptions() {
-        for (OptionHolder optionHolder : options){
+        for (OptionHolder optionHolder : options) {
             View v = getLayoutInflater().inflate(R.layout.common_options_dialog_item, container, false);
-            ((ImageView)v.findViewById(R.id.icon)).setImageResource(optionHolder.res);
-            ((TextView)v.findViewById(R.id.label)).setText(optionHolder.label);
+            ((ImageView) v.findViewById(R.id.icon)).setImageResource(optionHolder.res);
+            ((TextView) v.findViewById(R.id.label)).setText(optionHolder.label);
             v.findViewById(R.id.background).setOnClickListener(view -> {
                 optionHolder.listener.onClick(view);
-                if(optionHolder.dismissOnClick) dismiss();
+                if (optionHolder.dismissOnClick) dismiss();
             });
             container.addView(v);
         }
@@ -89,5 +81,15 @@ public class OptionsDialog extends BottomSheetDialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         return super.onCreateDialog(savedInstanceState);
+    }
+
+    private class OptionHolder {
+        String label;
+        int res;
+        View.OnClickListener listener;
+        boolean dismissOnClick;
+
+        public OptionHolder() {
+        }
     }
 }

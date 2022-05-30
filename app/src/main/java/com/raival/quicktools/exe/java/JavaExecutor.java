@@ -29,7 +29,7 @@ public class JavaExecutor {
     AppCompatActivity activity;
 
     public JavaExecutor(File folder, AppCompatActivity activity) {
-        if(folder.isFile()){
+        if (folder.isFile()) {
             isValidProject = false;
             return;
         }
@@ -38,15 +38,15 @@ public class JavaExecutor {
         parseInputFolder(project);
     }
 
-    public void execute() throws Exception{
-        if(!clearOutput()){
+    public void execute() throws Exception {
+        if (!clearOutput()) {
             throw new Exception("Failed cleaning output folder");
         }
         runECJ();
         runD8();
     }
 
-    public void invoke() throws Exception{
+    public void invoke() throws Exception {
         final String optimizedDir = App.appContext.getCodeCacheDir().getAbsolutePath();
         DexClassLoader dexClassLoader = new DexClassLoader(
                 getDexFiles(),
@@ -60,12 +60,12 @@ public class JavaExecutor {
 
     private String getDexFiles() {
         ArrayList<File> list = new ArrayList<>(dexFiles);
-        for(File file : output.listFiles()){
-            if(file.getName().endsWith(".dex"))
+        for (File file : output.listFiles()) {
+            if (file.getName().endsWith(".dex"))
                 list.add(file);
         }
         StringBuilder stringBuilder = new StringBuilder();
-        for(File file : list){
+        for (File file : list) {
             stringBuilder.append(":");
             stringBuilder.append(file.getAbsolutePath());
         }
@@ -81,13 +81,13 @@ public class JavaExecutor {
         opt.add("--output");
         opt.add(output.getAbsolutePath());
         ArrayList<String> classes = FileUtil.getAllFilesInDir(new File(output, "classes"), "class");
-        if(classes != null && classes.size() > 0)
+        if (classes != null && classes.size() > 0)
             opt.addAll(classes);
 
         D8.main(opt.toArray(new String[0]));
     }
 
-    private void runECJ() throws Exception{
+    private void runECJ() throws Exception {
         ArrayList<String> opt = new ArrayList<>();
         final File classes = new File(output, "classes");
         classes.mkdir();
@@ -100,8 +100,8 @@ public class JavaExecutor {
         opt.add("-cp");
 
         final StringBuilder sb = new StringBuilder();
-        for(File jar : jarFiles)
-      	    sb.append(":").append(jar.getAbsolutePath());
+        for (File jar : jarFiles)
+            sb.append(":").append(jar.getAbsolutePath());
 
         sb.append(":")
                 .append(D8Util.getLambdaStubsJarFile().getAbsolutePath())
@@ -112,18 +112,19 @@ public class JavaExecutor {
         opt.add("-proc:none");
         opt.add("-sourcepath");
         opt.add(" ");
-        for(File file : javaFiles)
+        for (File file : javaFiles)
             opt.add(file.getAbsolutePath());
 
         PrintWriter printWriter = new PrintWriter(new OutputStream() {
             @Override
-            public void write(int i) { }
+            public void write(int i) {
+            }
         });
         final StringBuilder errors = new StringBuilder();
         PrintWriter printWriter1 = new PrintWriter(new OutputStream() {
             @Override
             public void write(int i) {
-                errors.append((char)i);
+                errors.append((char) i);
             }
         });
 
@@ -135,13 +136,13 @@ public class JavaExecutor {
                 null);
         main.compile(opt.toArray(new String[0]));
 
-        if(main.globalErrorsCount > 0){
+        if (main.globalErrorsCount > 0) {
             throw new Exception(errors.toString());
         }
     }
 
     private boolean clearOutput() {
-        if(output == null){
+        if (output == null) {
             output = new File(project, "output");
             return output.mkdir();
         }
@@ -151,14 +152,14 @@ public class JavaExecutor {
     }
 
     private void parseInputFolder(File input) {
-        for(File file : input.listFiles()){
-            if(file.getName().toLowerCase().endsWith(".dex")){
+        for (File file : input.listFiles()) {
+            if (file.getName().toLowerCase().endsWith(".dex")) {
                 dexFiles.add(file);
-            } else if(file.getName().toLowerCase().endsWith(".jar")){
+            } else if (file.getName().toLowerCase().endsWith(".jar")) {
                 jarFiles.add(file);
-            } else if(file.getName().toLowerCase().endsWith(".java")){
+            } else if (file.getName().toLowerCase().endsWith(".java")) {
                 javaFiles.add(file);
-            } else if(file.isDirectory() && file.getName().equals("output")){
+            } else if (file.isDirectory() && file.getName().equals("output")) {
                 output = file;
             }
         }

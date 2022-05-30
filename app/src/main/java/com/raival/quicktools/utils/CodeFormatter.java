@@ -28,7 +28,8 @@ public class CodeFormatter {
                 indent = indent.substring(1);
                 int lastItem = tags.size() - 1;
                 if (lastItem < 0) lastItem = 0;
-                if (!isEmpty) sb.append(indent).append("</").append(tags.get(lastItem)).append(">").append("\n");
+                if (!isEmpty)
+                    sb.append(indent).append("</").append(tags.get(lastItem)).append(">").append("\n");
                 tags.remove(lastItem);
                 isEmpty = false;
             } else if (currentTag == XmlPullParser.START_TAG) {
@@ -85,8 +86,10 @@ public class CodeFormatter {
             final char currentChar = charArray[currentCharIndex];
             int currentLineIndex;
             boolean currentLineQuotesOpened;
-            label_line:{
-                label_currentChar:{
+            label_line:
+            {
+                label_currentChar:
+                {
                     if (isSingleLineComment) {
                         if (currentChar == '\n') {
                             sb.append(currentChar);

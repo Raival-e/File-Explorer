@@ -8,12 +8,13 @@ import java.util.ArrayList;
 
 public class Jar2DexTask implements QTask, RegularTask {
     File fileToConvert;
-    public File getFileToConvert() {
-        return fileToConvert;
-    }
 
     public Jar2DexTask(File file) {
         this.fileToConvert = file;
+    }
+
+    public File getFileToConvert() {
+        return fileToConvert;
     }
 
     @Override
@@ -28,6 +29,8 @@ public class Jar2DexTask implements QTask, RegularTask {
 
     @Override
     public ArrayList<File> getFilesList() {
-        return new ArrayList<File>(){{add(fileToConvert);}};
+        return new ArrayList<File>() {{
+            add(fileToConvert);
+        }};
     }
 }

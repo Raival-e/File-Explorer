@@ -9,12 +9,12 @@ import java.util.ArrayList;
 public class CompressTask implements QTask, RegularTask {
     ArrayList<File> filesToCompress;
 
-    public ArrayList<File> getFilesToCompress() {
-        return filesToCompress;
-    }
-
     public CompressTask(ArrayList<File> filesToCompress) {
         this.filesToCompress = filesToCompress;
+    }
+
+    public ArrayList<File> getFilesToCompress() {
+        return filesToCompress;
     }
 
     @Override
@@ -27,8 +27,8 @@ public class CompressTask implements QTask, RegularTask {
         StringBuilder sb = new StringBuilder();
         boolean first = true;
 
-        for(File file : filesToCompress){
-            if(!first){
+        for (File file : filesToCompress) {
+            if (!first) {
                 sb.append(", ");
             }
             sb.append(file.getName());

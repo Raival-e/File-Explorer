@@ -28,7 +28,9 @@ public class DiagnosticWrapper implements Diagnostic<File> {
     private View.OnClickListener onClickListener;
     private String message;
 
-    /** Extra information for this diagnostic */
+    /**
+     * Extra information for this diagnostic
+     */
     private Object mExtra;
     private int startLine;
     private int endLine;
@@ -60,12 +62,12 @@ public class DiagnosticWrapper implements Diagnostic<File> {
         }
     }
 
-    public void setOnClickListener(View.OnClickListener listener) {
-        onClickListener = listener;
-    }
-
     public View.OnClickListener getOnClickListener() {
         return onClickListener;
+    }
+
+    public void setOnClickListener(View.OnClickListener listener) {
+        onClickListener = listener;
     }
 
     @Override
@@ -73,9 +75,17 @@ public class DiagnosticWrapper implements Diagnostic<File> {
         return kind;
     }
 
+    public void setKind(Kind kind) {
+        this.kind = kind;
+    }
+
     @Override
     public File getSource() {
         return source;
+    }
+
+    public void setSource(File source) {
+        this.source = source;
     }
 
     @Override
@@ -83,9 +93,17 @@ public class DiagnosticWrapper implements Diagnostic<File> {
         return position;
     }
 
+    public void setPosition(long position) {
+        this.position = position;
+    }
+
     @Override
     public long getStartPosition() {
         return startPosition;
+    }
+
+    public void setStartPosition(long startPosition) {
+        this.startPosition = startPosition;
     }
 
     @Override
@@ -93,9 +111,17 @@ public class DiagnosticWrapper implements Diagnostic<File> {
         return endPosition;
     }
 
+    public void setEndPosition(long endPosition) {
+        this.endPosition = endPosition;
+    }
+
     @Override
     public long getLineNumber() {
         return lineNumber;
+    }
+
+    public void setLineNumber(long lineNumber) {
+        this.lineNumber = lineNumber;
     }
 
     @Override
@@ -103,9 +129,17 @@ public class DiagnosticWrapper implements Diagnostic<File> {
         return columnNumber;
     }
 
+    public void setColumnNumber(long columnNumber) {
+        this.columnNumber = columnNumber;
+    }
+
     @Override
     public String getCode() {
         return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     @Override
@@ -113,40 +147,8 @@ public class DiagnosticWrapper implements Diagnostic<File> {
         return message;
     }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public void setSource(File source) {
-        this.source = source;
-    }
-
-    public void setKind(Kind kind) {
-        this.kind = kind;
-    }
-
-    public void setPosition(long position) {
-        this.position = position;
-    }
-
-    public void setStartPosition(long startPosition) {
-        this.startPosition = startPosition;
-    }
-
-    public void setEndPosition(long endPosition) {
-        this.endPosition = endPosition;
-    }
-
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public void setLineNumber(long lineNumber) {
-        this.lineNumber = lineNumber;
-    }
-
-    public void setColumnNumber(long columnNumber) {
-        this.columnNumber = columnNumber;
     }
 
     public Object getExtra() {
@@ -206,12 +208,12 @@ public class DiagnosticWrapper implements Diagnostic<File> {
         return super.equals(obj);
     }
 
-    public void setStartLine(int line) {
-        this.startLine = line;
-    }
-
     public int getStartLine() {
         return startLine;
+    }
+
+    public void setStartLine(int line) {
+        this.startLine = line;
     }
 
     public int getEndLine() {

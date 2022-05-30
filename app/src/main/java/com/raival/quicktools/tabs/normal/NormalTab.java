@@ -62,6 +62,12 @@ public class NormalTab implements QTab {
 
     ArrayList<FileItem> activeFilesList;
     ArrayList<FileItem> searchList = new ArrayList<>();
+    ArrayList<Comparator<File>> comparators = new ArrayList<>();
+    Map<String, Parcelable> pathsStets = new HashMap<>();
+
+    public NormalTab(File path) {
+        currentPath = path;
+    }
 
     public ArrayList<FileItem> getSearchList() {
         return searchList;
@@ -71,55 +77,43 @@ public class NormalTab implements QTab {
         this.searchList = searchList;
     }
 
-    ArrayList<Comparator<File>> comparators = new ArrayList<>();
-
-    Map<String, Parcelable> pathsStets = new HashMap<>();
-
-    public NormalTab(File path){
-        currentPath = path;
-    }
-
     private void assignComparators() {
         comparators.clear();
-        switch (PrefsUtil.getSortingMethod()){
-            case PrefsUtil.SORT_NAME_A2Z:{
+        switch (PrefsUtil.getSortingMethod()) {
+            case PrefsUtil.SORT_NAME_A2Z: {
                 addComparators(FileUtil.sortNameAsc());
                 break;
             }
-            case PrefsUtil.SORT_NAME_Z2A:{
+            case PrefsUtil.SORT_NAME_Z2A: {
                 addComparators(FileUtil.sortNameDesc());
                 break;
             }
-            case PrefsUtil.SORT_SIZE_SMALLER:{
+            case PrefsUtil.SORT_SIZE_SMALLER: {
                 addComparators(FileUtil.sortSizeAsc());
                 break;
             }
-            case PrefsUtil.SORT_SIZE_BIGGER:{
+            case PrefsUtil.SORT_SIZE_BIGGER: {
                 addComparators(FileUtil.sortSizeDesc());
                 break;
             }
-            case PrefsUtil.SORT_DATE_NEWER:{
+            case PrefsUtil.SORT_DATE_NEWER: {
                 addComparators(FileUtil.sortDateDesc());
                 break;
             }
-            case PrefsUtil.SORT_DATE_OLDER:{
+            case PrefsUtil.SORT_DATE_OLDER: {
                 addComparators(FileUtil.sortDateAsc());
                 break;
             }
         }
-        if(PrefsUtil.listFoldersFirst()){
+        if (PrefsUtil.listFoldersFirst()) {
             addComparators(FileUtil.sortFoldersFirst());
         } else {
             addComparators(FileUtil.sortFilesFirst());
         }
     }
 
-    public File getCurrentPath(){
+    public File getCurrentPath() {
         return currentPath;
-    }
-
-    public final void addComparators(Comparator<File> comparator) {
-        this.comparators.add(comparator);
     }
 
     public void setCurrentPath(File currentPath) {
@@ -130,9 +124,13 @@ public class NormalTab implements QTab {
         activeFilesList = null;
     }
 
+    public final void addComparators(Comparator<File> comparator) {
+        this.comparators.add(comparator);
+    }
+
     private void addPathState(File currentPath) {
-        if(fragment != null){
-            if(fragment.getRecyclerViewInstance() != null){
+        if (fragment != null) {
+            if (fragment.getRecyclerViewInstance() != null) {
                 pathsStets.put(currentPath.getAbsolutePath(), fragment.getRecyclerViewInstance());
             }
         }
@@ -146,10 +144,10 @@ public class NormalTab implements QTab {
     @Override
     public String getName() {
         String name = Uri.parse(currentPath.getAbsolutePath()).getLastPathSegment();
-        if(FileUtil.isExternalStorageFolder(currentPath)){
+        if (FileUtil.isExternalStorageFolder(currentPath)) {
             name = FileUtil.INTERNAL_STORAGE;
         }
-        if(name.length() > MAX_NAME_LENGTH.length()){
+        if (name.length() > MAX_NAME_LENGTH.length()) {
             name = name.substring(0, MAX_NAME_LENGTH.length() - 3) + "...";
         }
         return name;
@@ -158,20 +156,20 @@ public class NormalTab implements QTab {
     @Override
     public ArrayList<FileItem> getFilesList() {
         assignComparators();
-        if(activeFilesList == null){
+        if (activeFilesList == null) {
             activeFilesList = getSortedFilesList(comparators);
         }
         return activeFilesList;
     }
 
-    public final ArrayList<FileItem> getSortedFilesList(ArrayList<Comparator<File>>  comparators){
+    public final ArrayList<FileItem> getSortedFilesList(ArrayList<Comparator<File>> comparators) {
         ArrayList<FileItem> list = new ArrayList<>();
         File[] files = currentPath.listFiles();
-        if(files != null){
-            for (Comparator<File> comparator : comparators){
+        if (files != null) {
+            for (Comparator<File> comparator : comparators) {
                 Arrays.sort(files, comparator);
             }
-            for(File file : files){
+            for (File file : files) {
                 list.add(new FileItem(file, getFileDetails(file)));
             }
         }
@@ -180,7 +178,7 @@ public class NormalTab implements QTab {
 
     @Override
     public Fragment getFragment() {
-        if(fragment == null){
+        if (fragment == null) {
             fragment = new NormalTabFragment(this);
         }
         return fragment;
@@ -193,7 +191,7 @@ public class NormalTab implements QTab {
 
     @Override
     public void selectAll() {
-        for(FileItem item : activeFilesList){
+        for (FileItem item : activeFilesList) {
             item.setSelected(true);
         }
         fragment.getRecyclerView().getAdapter().notifyDataSetChanged();
@@ -207,7 +205,7 @@ public class NormalTab implements QTab {
     @Override
     public void refresh() {
         setCurrentPath(currentPath);
-        if(fragment != null){
+        if (fragment != null) {
             fragment.updateFilesList();
         }
     }
@@ -215,8 +213,8 @@ public class NormalTab implements QTab {
     @Override
     public void createFile(String name, boolean isFolder) {
         File file = new File(currentPath, name);
-        if(isFolder){
-            if(!file.mkdir()){
+        if (isFolder) {
+            if (!file.mkdir()) {
                 App.showMsg("Unable to create folder: " + file.getAbsolutePath());
             } else {
                 refresh();
@@ -224,13 +222,13 @@ public class NormalTab implements QTab {
             }
         } else {
             try {
-                if(!file.createNewFile()){
+                if (!file.createNewFile()) {
                     App.showMsg("Unable to create file: " + file.getAbsolutePath());
                 } else {
                     refresh();
                     scrollTo(file);
                 }
-            } catch (IOException e){
+            } catch (IOException e) {
                 App.showMsg(e.toString());
                 App.log(e);
             }
@@ -241,7 +239,7 @@ public class NormalTab implements QTab {
     public ArrayList<File> getTreeViewList() {
         ArrayList<File> list = new ArrayList<>();
         File file = currentPath;
-        while (!file.getAbsolutePath().equals(Environment.getExternalStorageDirectory().getParentFile().getAbsolutePath())){
+        while (!file.getAbsolutePath().equals(Environment.getExternalStorageDirectory().getParentFile().getAbsolutePath())) {
             list.add(file);
             file = file.getParentFile();
         }
@@ -251,8 +249,8 @@ public class NormalTab implements QTab {
 
     @Override
     public void onTreeViewPathSelected(int position) {
-        if(getTreeViewList().size() > position+1){
-            previousPath = getTreeViewList().get(position+1);
+        if (getTreeViewList().size() > position + 1) {
+            previousPath = getTreeViewList().get(position + 1);
         }
 
         setCurrentPath(getTreeViewList().get(position));
@@ -263,18 +261,18 @@ public class NormalTab implements QTab {
 
     @Override
     public void handleTask(QTask task) {
-        if(task instanceof CopyTask){
-            handleCopyTask((CopyTask)task);
-        } else if(task instanceof CutTask) {
+        if (task instanceof CopyTask) {
+            handleCopyTask((CopyTask) task);
+        } else if (task instanceof CutTask) {
             handleCutTask((CutTask) task);
-        } else if(task instanceof CompressTask) {
+        } else if (task instanceof CompressTask) {
             handleCompressTask((CompressTask) task);
-        } else if(task instanceof ExtractTask){
-            handleExtractTask((ExtractTask)task);
-        } else if(task instanceof Jar2DexTask) {
+        } else if (task instanceof ExtractTask) {
+            handleExtractTask((ExtractTask) task);
+        } else if (task instanceof Jar2DexTask) {
             handleJar2DexTask((Jar2DexTask) task);
-        } else if(task instanceof APKSignerTask){
-            handleAPKSignerTask((APKSignerTask)task);
+        } else if (task instanceof APKSignerTask) {
+            handleAPKSignerTask((APKSignerTask) task);
         } else {
             App.showMsg("This task cannot be executed here");
         }
@@ -282,15 +280,15 @@ public class NormalTab implements QTab {
 
     private void handleJar2DexTask(Jar2DexTask task) {
         BackgroundTask backgroundTask = new BackgroundTask();
-        backgroundTask.setTasks(()-> backgroundTask.showProgressDialog("Running D8...", getFragment().requireActivity()), ()->{
+        backgroundTask.setTasks(() -> backgroundTask.showProgressDialog("Running D8...", getFragment().requireActivity()), () -> {
             try {
                 runD8(task.getFilesList().get(0), currentPath);
             } catch (Exception exception) {
                 exception.printStackTrace();
                 App.log(exception);
-                new Handler(Looper.getMainLooper()).post(()-> App.showMsg("Failed to convert file"));
+                new Handler(Looper.getMainLooper()).post(() -> App.showMsg("Failed to convert file"));
             }
-        }, ()-> {
+        }, () -> {
             refresh();
             backgroundTask.dismiss();
             App.showMsg("Done");
@@ -300,15 +298,15 @@ public class NormalTab implements QTab {
 
     private void handleAPKSignerTask(APKSignerTask task) {
         BackgroundTask backgroundTask = new BackgroundTask();
-        backgroundTask.setTasks(()-> backgroundTask.showProgressDialog("Signing...", getFragment().requireActivity()), ()->{
+        backgroundTask.setTasks(() -> backgroundTask.showProgressDialog("Signing...", getFragment().requireActivity()), () -> {
             try {
                 signAPK(task.getFilesList().get(0), currentPath);
             } catch (Exception exception) {
                 exception.printStackTrace();
                 App.log(exception);
-                new Handler(Looper.getMainLooper()).post(()-> App.showMsg("Failed to sign"));
+                new Handler(Looper.getMainLooper()).post(() -> App.showMsg("Failed to sign"));
             }
-        }, ()-> {
+        }, () -> {
             refresh();
             backgroundTask.dismiss();
             App.showMsg("Done");
@@ -336,7 +334,7 @@ public class NormalTab implements QTab {
         ApkSignerTool.main(args.toArray(new String[0]));
     }
 
-    private void runD8(File file, File currentPath) throws Exception{
+    private void runD8(File file, File currentPath) throws Exception {
         List<Path> path = new ArrayList<>();
         path.add(D8Util.getLambdaStubsJarFile().toPath());
         path.add(D8Util.getBootstrapJarFile().toPath());
@@ -352,21 +350,23 @@ public class NormalTab implements QTab {
 
     @Override
     public void handleSearch() {
-        SearchFragment searchFragment = new SearchFragment(this, new ArrayList<File>(){{add(currentPath);}});
+        SearchFragment searchFragment = new SearchFragment(this, new ArrayList<File>() {{
+            add(currentPath);
+        }});
         searchFragment.show(fragment.getParentFragmentManager(), "");
     }
 
     private void handleExtractTask(ExtractTask task) {
         BackgroundTask backgroundTask = new BackgroundTask();
-        backgroundTask.setTasks(()-> backgroundTask.showProgressDialog("Extracting files...", getFragment().requireActivity()), ()->{
+        backgroundTask.setTasks(() -> backgroundTask.showProgressDialog("Extracting files...", getFragment().requireActivity()), () -> {
             try {
                 ZipUtil.extract(task.getFilesToExtract(), currentPath);
             } catch (Exception exception) {
                 exception.printStackTrace();
                 App.log(exception);
-                new Handler(Looper.getMainLooper()).post(()-> App.showMsg("Failed to extract files"));
+                new Handler(Looper.getMainLooper()).post(() -> App.showMsg("Failed to extract files"));
             }
-        }, ()-> {
+        }, () -> {
             refresh();
             backgroundTask.dismiss();
             App.showMsg("Files have been extracted successfully");
@@ -385,7 +385,7 @@ public class NormalTab implements QTab {
                 .setTitle("Compress")
                 .addView(input)
                 .setPositiveButton("Save", view -> {
-                    if(input.getError() == null){
+                    if (input.getError() == null) {
                         executeCompressTask(task.getFilesToCompress(), new File(currentPath, input.getEditText().getText().toString()));
                     } else {
                         App.showMsg("Compress canceled");
@@ -396,15 +396,15 @@ public class NormalTab implements QTab {
 
     private void executeCompressTask(ArrayList<File> filesToCompress, File zip) {
         BackgroundTask backgroundTask = new BackgroundTask();
-        backgroundTask.setTasks(()-> backgroundTask.showProgressDialog("Compressing files...", getFragment().requireActivity()), ()->{
+        backgroundTask.setTasks(() -> backgroundTask.showProgressDialog("Compressing files...", getFragment().requireActivity()), () -> {
             try {
                 ZipUtil.archive(filesToCompress, zip);
             } catch (Exception exception) {
                 exception.printStackTrace();
                 App.log(exception);
-                new Handler(Looper.getMainLooper()).post(()-> App.showMsg("Failed to compress files"));
+                new Handler(Looper.getMainLooper()).post(() -> App.showMsg("Failed to compress files"));
             }
-        }, ()-> {
+        }, () -> {
             refresh();
             backgroundTask.dismiss();
             App.showMsg("Files have been compressed successfully");
@@ -415,16 +415,16 @@ public class NormalTab implements QTab {
 
     private void handleCutTask(CutTask task) {
         BackgroundTask backgroundTask = new BackgroundTask();
-        backgroundTask.setTasks(()-> backgroundTask.showProgressDialog("Moving files...", getFragment().requireActivity()), ()->{
+        backgroundTask.setTasks(() -> backgroundTask.showProgressDialog("Moving files...", getFragment().requireActivity()), () -> {
             try {
                 FileUtil.MoveFiles(task.getFilesToCut(), getCurrentPath());
             } catch (IOException e) {
                 e.printStackTrace();
                 App.log(e);
-                new Handler(Looper.getMainLooper()).post(()->App.showMsg("Failed to move files"));
+                new Handler(Looper.getMainLooper()).post(() -> App.showMsg("Failed to move files"));
             }
 
-        } , ()->{
+        }, () -> {
             refresh();
             backgroundTask.dismiss();
             App.showMsg("Files have been moved successfully");
@@ -434,16 +434,16 @@ public class NormalTab implements QTab {
 
     private void handleCopyTask(CopyTask task) {
         BackgroundTask backgroundTask = new BackgroundTask();
-        backgroundTask.setTasks(()-> backgroundTask.showProgressDialog("Coping files...", fragment.requireActivity()), ()->{
+        backgroundTask.setTasks(() -> backgroundTask.showProgressDialog("Coping files...", fragment.requireActivity()), () -> {
             try {
                 FileUtil.copyFiles(task.getFilesToCopy(), getCurrentPath());
             } catch (IOException e) {
                 e.printStackTrace();
                 App.log(e);
-                new Handler(Looper.getMainLooper()).post(()->App.showMsg("Failed to copy files"));
+                new Handler(Looper.getMainLooper()).post(() -> App.showMsg("Failed to copy files"));
             }
 
-        } , ()->{
+        }, () -> {
             refresh();
             backgroundTask.dismiss();
             App.showMsg("Files has been copied successfully");
@@ -452,9 +452,9 @@ public class NormalTab implements QTab {
     }
 
     private void scrollTo(File file) {
-        for(int i = 0; i < activeFilesList.size(); i++){
-            if(activeFilesList.get(i).getFile().getAbsolutePath().equals(file.getAbsolutePath())){
-                if(fragment.getRecyclerView().getAdapter().getItemCount() > i){
+        for (int i = 0; i < activeFilesList.size(); i++) {
+            if (activeFilesList.get(i).getFile().getAbsolutePath().equals(file.getAbsolutePath())) {
+                if (fragment.getRecyclerView().getAdapter().getItemCount() > i) {
                     fragment.getRecyclerView().scrollToPosition(i);
                     return;
                 }
@@ -462,9 +462,9 @@ public class NormalTab implements QTab {
         }
     }
 
-    public boolean hasSelectedFiles(){
-        for(FileItem item : activeFilesList){
-            if(item.isSelected())
+    public boolean hasSelectedFiles() {
+        for (FileItem item : activeFilesList) {
+            if (item.isSelected())
                 return true;
         }
         return false;
@@ -472,17 +472,17 @@ public class NormalTab implements QTab {
 
     private boolean canGoBack() {
         boolean hasFileSelected = false;
-        for(FileItem item : activeFilesList){
-            if(!hasFileSelected && item.isSelected())
+        for (FileItem item : activeFilesList) {
+            if (!hasFileSelected && item.isSelected())
                 hasFileSelected = true;
             item.setSelected(false);
         }
-        if(hasFileSelected) {
+        if (hasFileSelected) {
             fragment.getRecyclerView().getAdapter().notifyDataSetChanged();
             return true;
         }
 
-        if(currentPath.getAbsolutePath().equals(Environment.getExternalStorageDirectory().getAbsolutePath())){
+        if (currentPath.getAbsolutePath().equals(Environment.getExternalStorageDirectory().getAbsolutePath())) {
             return false;
         }
 
@@ -495,8 +495,8 @@ public class NormalTab implements QTab {
         return true;
     }
 
-    private void restoreRecyclerViewState(){
-        if(pathsStets.containsKey(currentPath.getAbsolutePath())){
+    private void restoreRecyclerViewState() {
+        if (pathsStets.containsKey(currentPath.getAbsolutePath())) {
             fragment.setRecyclerViewInstance(pathsStets.get(currentPath.getAbsolutePath()));
             pathsStets.remove(currentPath.getAbsolutePath());
         }
@@ -506,7 +506,7 @@ public class NormalTab implements QTab {
         final StringBuilder sb = new StringBuilder();
         sb.append(TimeUtil.getLastModifiedDate(file, TimeUtil.REGULAR_DATE_FORMAT));
         sb.append("  |  ");
-        if(file.isFile()){
+        if (file.isFile()) {
             sb.append(FileUtil.getFormattedFileSize(file));
         } else {
             sb.append(FileUtil.getFormattedFileCount(file));
@@ -515,20 +515,20 @@ public class NormalTab implements QTab {
     }
 
     public void updateTabName() {
-        if(tab != null){
+        if (tab != null) {
             tab.setText(getName());
         }
     }
 
-    public boolean shouldHighlightFile(File file){
-        if(previousPath == null) return false;
+    public boolean shouldHighlightFile(File file) {
+        if (previousPath == null) return false;
         return file.getAbsolutePath().equals(previousPath.getAbsolutePath());
     }
 
     public ArrayList<File> getSelectedFiles() {
         ArrayList<File> list = new ArrayList<>();
-        for(FileItem fileItem : activeFilesList){
-            if(fileItem.isSelected())
+        for (FileItem fileItem : activeFilesList) {
+            if (fileItem.isSelected())
                 list.add(fileItem.getFile());
         }
         return list;

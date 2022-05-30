@@ -16,6 +16,7 @@ import java.io.IOException;
 public class CheckListActivity extends AppCompatActivity {
     File file;
     MaterialChecklist materialChecklist;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,7 +24,7 @@ public class CheckListActivity extends AppCompatActivity {
 
         materialChecklist = findViewById(R.id.checklist);
 
-        if(getIntent().hasExtra("file")){
+        if (getIntent().hasExtra("file")) {
             file = new File(getIntent().getStringExtra("file"));
         } else {
             App.showMsg("the file is missing");
@@ -45,7 +46,7 @@ public class CheckListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        toolbar.setNavigationOnClickListener((v)-> super.onBackPressed());
+        toolbar.setNavigationOnClickListener((v) -> super.onBackPressed());
     }
 
     @Override

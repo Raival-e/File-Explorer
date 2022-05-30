@@ -27,8 +27,8 @@ public class CutTask implements QTask, RegularTask {
         StringBuilder sb = new StringBuilder();
         boolean first = true;
 
-        for(File file : filesToCut){
-            if(!first){
+        for (File file : filesToCut) {
+            if (!first) {
                 sb.append(", ");
             }
             sb.append(file.getName());

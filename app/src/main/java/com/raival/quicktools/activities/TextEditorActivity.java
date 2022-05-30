@@ -220,7 +220,7 @@ public class TextEditorActivity extends AppCompatActivity {
         editor.setWordwrap(PrefsUtil.getTextEditorWordwrap());
         editor.setLineNumberEnabled(PrefsUtil.getTextEditorShowLineNumber());
         editor.getComponent(Magnifier.class).setEnabled(PrefsUtil.getTextEditorMagnifier());
-        editor.setColorScheme(PrefsUtil.getTextEditorLightTheme()? new SchemeGitHub() : new SchemeDarcula());
+        editor.setColorScheme(PrefsUtil.getTextEditorLightTheme() ? new SchemeGitHub() : new SchemeDarcula());
         editor.setEditable(!PrefsUtil.getTextEditorReadOnly());
     }
 

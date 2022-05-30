@@ -19,18 +19,6 @@ public class App extends Application {
     public static Context appContext;
     public static volatile Handler appHandler;
 
-    @Override
-    public void onCreate() {
-        Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
-            log(throwable);
-            android.os.Process.killProcess(android.os.Process.myPid());
-            System.exit(2);
-        });
-        super.onCreate();
-        appContext = this;
-        appHandler = new Handler(appContext.getMainLooper());
-    }
-
     public static String getStackTrace(Throwable throwable) {
         final Writer result = new StringWriter();
         final PrintWriter printWriter = new PrintWriter(result);
@@ -40,16 +28,16 @@ public class App extends Application {
         return stacktraceAsString;
     }
 
-    public static void showMsg(String message){
+    public static void showMsg(String message) {
         ToastUtil.makeToast(appContext, message, Toast.LENGTH_SHORT).show();
     }
 
-    public static void showWarning(String message){
+    public static void showWarning(String message) {
         ToastUtil.makeWarningToast(appContext, message, Toast.LENGTH_SHORT).show();
     }
 
-    public static void copyString(String string){
-        ((ClipboardManager)appContext.getSystemService(CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText("clipboard", string));
+    public static void copyString(String string) {
+        ((ClipboardManager) appContext.getSystemService(CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText("clipboard", string));
     }
 
     public static void log(Throwable exception) {
@@ -60,8 +48,20 @@ public class App extends Application {
         final File logFile = new File(appContext.getExternalFilesDir(null).getAbsolutePath() + "/debug/log.txt");
         try {
             FileUtil.writeFile(logFile, exception);
-        } catch (Exception e){
+        } catch (Exception e) {
             showMsg(e.toString());
         }
+    }
+
+    @Override
+    public void onCreate() {
+        Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
+            log(throwable);
+            android.os.Process.killProcess(android.os.Process.myPid());
+            System.exit(2);
+        });
+        super.onCreate();
+        appContext = this;
+        appHandler = new Handler(appContext.getMainLooper());
     }
 }

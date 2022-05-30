@@ -91,7 +91,7 @@ public class SearchFragment extends BottomSheetDialogFragment {
         progress.setVisibility(View.GONE);
 
         searchButton.setOnClickListener(view1 -> {
-            if(active){
+            if (active) {
                 searchButton.setText("Search");
                 progress.setVisibility(View.GONE);
                 recyclerView.getAdapter().notifyDataSetChanged();
@@ -106,11 +106,11 @@ public class SearchFragment extends BottomSheetDialogFragment {
                 loseFocus(input);
                 active = true;
                 query = input.getEditText().getText().toString();
-                searchThread = new Thread(()->{
-                    for(File file : filesToSearchIn){
+                searchThread = new Thread(() -> {
+                    for (File file : filesToSearchIn) {
                         searchIn(file, deepSearch.isChecked(), regEx.isChecked(), prefix.isChecked(), suffix.isChecked());
                     }
-                    recyclerView.post(()->{
+                    recyclerView.post(() -> {
                         searchButton.setText("Search");
                         progress.setVisibility(View.GONE);
                         recyclerView.getAdapter().notifyDataSetChanged();
@@ -122,7 +122,7 @@ public class SearchFragment extends BottomSheetDialogFragment {
             }
         });
 
-        if(tab.getSearchList().size() > 0){
+        if (tab.getSearchList().size() > 0) {
             fileCount.setVisibility(View.VISIBLE);
             updateFileCount();
         }
@@ -134,39 +134,39 @@ public class SearchFragment extends BottomSheetDialogFragment {
     }
 
     private void searchIn(File file, boolean isDeepSearch, boolean useRegex, boolean startWith, boolean endWith) {
-        if(file.isFile()){
-            if(isDeepSearch){
-                if(useRegex){
+        if (file.isFile()) {
+            if (isDeepSearch) {
+                if (useRegex) {
                     try {
-                        if(Pattern.compile(query).matcher(FileUtil.readFile(file)).find())
+                        if (Pattern.compile(query).matcher(FileUtil.readFile(file)).find())
                             addFileItem(file);
                     } catch (Exception exception) {
                         exception.printStackTrace();
                     }
                 } else {
                     try {
-                        if(FileUtil.readFile(file).contains(query))
+                        if (FileUtil.readFile(file).contains(query))
                             addFileItem(file);
                     } catch (Exception exception) {
                         exception.printStackTrace();
                     }
                 }
             } else {
-               if(startWith){
-                   if(file.getName().startsWith(query))
-                       addFileItem(file);
-               }else if(endWith){
-                   if(file.getName().endsWith(query))
-                       addFileItem(file);
-               } else {
-                   if(file.getName().contains(query))
-                       addFileItem(file);
-               }
+                if (startWith) {
+                    if (file.getName().startsWith(query))
+                        addFileItem(file);
+                } else if (endWith) {
+                    if (file.getName().endsWith(query))
+                        addFileItem(file);
+                } else {
+                    if (file.getName().contains(query))
+                        addFileItem(file);
+                }
             }
         } else {
             File[] children = file.listFiles();
-            if(children != null){
-                for(File child : children){
+            if (children != null) {
+                for (File child : children) {
                     searchIn(child, isDeepSearch, useRegex, startWith, endWith);
                 }
             }
@@ -175,7 +175,7 @@ public class SearchFragment extends BottomSheetDialogFragment {
 
     private void addFileItem(File file) {
         tab.getSearchList().add(new FileItem(file, file.getAbsolutePath()));
-        recyclerView.post(()-> {
+        recyclerView.post(() -> {
             updateFileCount();
             recyclerView.getAdapter().notifyDataSetChanged();
         });
@@ -222,16 +222,16 @@ public class SearchFragment extends BottomSheetDialogFragment {
                 background = v.findViewById(R.id.background);
             }
 
-            public void bind(){
+            public void bind() {
                 final int position = getAdapterPosition();
                 final FileItem fileItem = tab.getSearchList().get(position);
 
                 name.setText(fileItem.getName());
                 details.setText(fileItem.getDetails());
 
-                if(FileUtil.getFileExtension(fileItem.getFile()).equalsIgnoreCase(FileExtensions.apkType)){
+                if (FileUtil.getFileExtension(fileItem.getFile()).equalsIgnoreCase(FileExtensions.apkType)) {
                     loadApkIcon(fileItem, icon);
-                } else if(fileItem.getIcon() == null){
+                } else if (fileItem.getIcon() == null) {
                     FileUtil.setFileIcon(icon, fileItem.getFile());
                     fileItem.setIcon(icon.getDrawable());
                 } else {
@@ -240,9 +240,9 @@ public class SearchFragment extends BottomSheetDialogFragment {
                             .into(icon);
                 }
 
-                icon.setAlpha(fileItem.getFile().isHidden()? 0.5f : 1f);
+                icon.setAlpha(fileItem.getFile().isHidden() ? 0.5f : 1f);
 
-                background.setOnClickListener((v)->{
+                background.setOnClickListener((v) -> {
                     tab.setCurrentPath(fileItem.getFile().getParentFile());
                     tab.refresh();
                     dismiss();
@@ -250,14 +250,14 @@ public class SearchFragment extends BottomSheetDialogFragment {
             }
 
             private void loadApkIcon(FileItem fileItem, ImageView icon) {
-                new Thread(()->{
+                new Thread(() -> {
                     PackageInfo info = App.appContext.getPackageManager().getPackageArchiveInfo(fileItem.getFile().getAbsolutePath(),
                             PackageManager.GET_ACTIVITIES);
-                    if(info != null){
+                    if (info != null) {
                         ApplicationInfo applicationInfo = info.applicationInfo;
                         applicationInfo.sourceDir = fileItem.getFile().getAbsolutePath();
                         applicationInfo.publicSourceDir = fileItem.getFile().getAbsolutePath();
-                        recyclerView.post(()->{
+                        recyclerView.post(() -> {
                             icon.setImageDrawable(applicationInfo.loadIcon(App.appContext.getPackageManager()));
                             fileItem.setIcon(icon.getDrawable());
                         });

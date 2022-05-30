@@ -8,12 +8,13 @@ import java.util.ArrayList;
 
 public class APKSignerTask implements QTask, RegularTask {
     File getFileToSign;
-    public File getFileToSign() {
-        return getFileToSign;
-    }
 
     public APKSignerTask(File file) {
         this.getFileToSign = file;
+    }
+
+    public File getFileToSign() {
+        return getFileToSign;
     }
 
     @Override
@@ -28,6 +29,8 @@ public class APKSignerTask implements QTask, RegularTask {
 
     @Override
     public ArrayList<File> getFilesList() {
-        return new ArrayList<File>(){{add(getFileToSign);}};
+        return new ArrayList<File>() {{
+            add(getFileToSign);
+        }};
     }
 }

@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -41,7 +40,6 @@ import com.raival.quicktools.interfaces.QTask;
 import com.raival.quicktools.tabs.normal.NormalTab;
 import com.raival.quicktools.utils.FileUtil;
 import com.raival.quicktools.utils.PrefsUtil;
-import com.raival.quicktools.utils.ToastUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -58,9 +56,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 121121){
+        if (requestCode == 121121) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                if(Environment.isExternalStorageManager()){
+                if (Environment.isExternalStorageManager()) {
                     init();
                 } else {
                     App.showMsg("Storage permission is required");
@@ -73,14 +71,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(getCurrentTab() != null){
+        if (getCurrentTab() != null) {
             getCurrentTab().refresh();
         }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if(savedInstanceState != null) savedInstanceState.clear();
+        if (savedInstanceState != null) savedInstanceState.clear();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -92,22 +90,22 @@ public class MainActivity extends AppCompatActivity {
 
         initPrefs();
 
-        if(grantStoragePermissions()){
+        if (grantStoragePermissions()) {
             init();
         }
     }
 
     @Override
-    public void onBackPressed(){
-        if(!getCurrentTab().onBackPressed()){
-            if(viewPager2.getCurrentItem() != 0){
+    public void onBackPressed() {
+        if (!getCurrentTab().onBackPressed()) {
+            if (viewPager2.getCurrentItem() != 0) {
                 closeTabAt(viewPager2.getCurrentItem());
                 return;
             }
-            if(!confirmExit){
+            if (!confirmExit) {
                 confirmExit = true;
                 App.showMsg("Press again to exit");
-                tabLayout.postDelayed(()-> confirmExit = false, 1500);
+                tabLayout.postDelayed(() -> confirmExit = false, 1500);
             } else {
                 super.onBackPressed();
             }
@@ -116,9 +114,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // this doesn't close the app.
-    public void simulateOnBackPressed(){
-        if(!getCurrentTab().onBackPressed()){
-            if(viewPager2.getCurrentItem() != 0){
+    public void simulateOnBackPressed() {
+        if (!getCurrentTab().onBackPressed()) {
+            if (viewPager2.getCurrentItem() != 0) {
                 closeTabAt(viewPager2.getCurrentItem());
             }
         }
@@ -131,15 +129,15 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean grantStoragePermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            if(!Environment.isExternalStorageManager()){
+            if (!Environment.isExternalStorageManager()) {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
                 intent.setData(Uri.fromParts("package", getPackageName(), null));
                 startActivityForResult(intent, 121121);
                 return false;
             }
         } else {
-            if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED
-                    || ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED
+                    || ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 9011);
                 return false;
             }
@@ -150,21 +148,23 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == 9011){
+        if (requestCode == 9011) {
             init();
         }
     }
 
-    private void init(){
+    private void init() {
         AddDefaultTab();
         initTabs();
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public void onTabSelected(TabLayout.Tab tab) { }
+            public void onTabSelected(TabLayout.Tab tab) {
+            }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) { }
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void showLogFile() {
         final File logFile = new File(getExternalFilesDir(null).getAbsolutePath() + "/debug/log.txt");
-        if(logFile.exists() && logFile.isFile()){
+        if (logFile.exists() && logFile.isFile()) {
             Intent intent = new Intent();
             intent.setClass(this, TextEditorActivity.class);
             intent.putExtra("file", logFile.getAbsolutePath());
@@ -216,13 +216,13 @@ public class MainActivity extends AppCompatActivity {
         tasksDialog.show(getSupportFragmentManager(), "tasks_dialog");
     }
 
-    public void updatePathTreeView(){
-        if(pathTreeView.getAdapter() == null){
+    public void updatePathTreeView() {
+        if (pathTreeView.getAdapter() == null) {
             initPathTreeViewRV();
             return;
         }
         pathTreeView.getAdapter().notifyDataSetChanged();
-        pathTreeView.scrollToPosition(pathTreeView.getAdapter().getItemCount()-1);
+        pathTreeView.scrollToPosition(pathTreeView.getAdapter().getItemCount() - 1);
     }
 
     private void initPathTreeViewRV() {
@@ -251,7 +251,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showAddNewFileDialog() {
-        if(!getCurrentTab().canCreateFile()){
+        if (!getCurrentTab().canCreateFile()) {
             App.showMsg("Creating files isn't possible here");
             return;
         }
@@ -277,7 +277,7 @@ public class MainActivity extends AppCompatActivity {
         popupMenu.getMenu().add("Logs");
         popupMenu.setOnMenuItemClickListener(menuItem -> {
             final String title = menuItem.getTitle().toString();
-            if("Logs".equals(title)){
+            if ("Logs".equals(title)) {
                 showLogFile();
                 return true;
             }
@@ -291,14 +291,14 @@ public class MainActivity extends AppCompatActivity {
 
         popupMenu.getMenu().add("Sort by:").setEnabled(false);
 
-        popupMenu.getMenu().add("Name (A-Z)").setCheckable(true).setChecked(PrefsUtil.getSortingMethod()==PrefsUtil.SORT_NAME_A2Z);
-        popupMenu.getMenu().add("Name (Z-A)").setCheckable(true).setChecked(PrefsUtil.getSortingMethod()==PrefsUtil.SORT_NAME_Z2A);
+        popupMenu.getMenu().add("Name (A-Z)").setCheckable(true).setChecked(PrefsUtil.getSortingMethod() == PrefsUtil.SORT_NAME_A2Z);
+        popupMenu.getMenu().add("Name (Z-A)").setCheckable(true).setChecked(PrefsUtil.getSortingMethod() == PrefsUtil.SORT_NAME_Z2A);
 
-        popupMenu.getMenu().add("Size (Bigger)").setCheckable(true).setChecked(PrefsUtil.getSortingMethod()==PrefsUtil.SORT_SIZE_BIGGER);
-        popupMenu.getMenu().add("Size (Smaller)").setCheckable(true).setChecked(PrefsUtil.getSortingMethod()==PrefsUtil.SORT_SIZE_SMALLER);
+        popupMenu.getMenu().add("Size (Bigger)").setCheckable(true).setChecked(PrefsUtil.getSortingMethod() == PrefsUtil.SORT_SIZE_BIGGER);
+        popupMenu.getMenu().add("Size (Smaller)").setCheckable(true).setChecked(PrefsUtil.getSortingMethod() == PrefsUtil.SORT_SIZE_SMALLER);
 
-        popupMenu.getMenu().add("Date (Newer)").setCheckable(true).setChecked(PrefsUtil.getSortingMethod()==PrefsUtil.SORT_DATE_NEWER);
-        popupMenu.getMenu().add("Date (Older)").setCheckable(true).setChecked(PrefsUtil.getSortingMethod()==PrefsUtil.SORT_DATE_OLDER);
+        popupMenu.getMenu().add("Date (Newer)").setCheckable(true).setChecked(PrefsUtil.getSortingMethod() == PrefsUtil.SORT_DATE_NEWER);
+        popupMenu.getMenu().add("Date (Older)").setCheckable(true).setChecked(PrefsUtil.getSortingMethod() == PrefsUtil.SORT_DATE_OLDER);
 
         popupMenu.getMenu().add("Other options:").setEnabled(false);
 
@@ -306,32 +306,32 @@ public class MainActivity extends AppCompatActivity {
 
         popupMenu.setOnMenuItemClickListener(menuItem -> {
             menuItem.setChecked(!menuItem.isChecked());
-            switch (menuItem.getTitle().toString()){
-                case "Name (A-Z)":{
+            switch (menuItem.getTitle().toString()) {
+                case "Name (A-Z)": {
                     PrefsUtil.setSortingMethod(PrefsUtil.SORT_NAME_A2Z);
                     break;
                 }
-                case "Name (Z-A)":{
+                case "Name (Z-A)": {
                     PrefsUtil.setSortingMethod(PrefsUtil.SORT_NAME_Z2A);
                     break;
                 }
-                case "Size (Bigger)":{
+                case "Size (Bigger)": {
                     PrefsUtil.setSortingMethod(PrefsUtil.SORT_SIZE_BIGGER);
                     break;
                 }
-                case "Size (Smaller)":{
+                case "Size (Smaller)": {
                     PrefsUtil.setSortingMethod(PrefsUtil.SORT_SIZE_SMALLER);
                     break;
                 }
-                case "Date (Older)":{
+                case "Date (Older)": {
                     PrefsUtil.setSortingMethod(PrefsUtil.SORT_DATE_OLDER);
                     break;
                 }
-                case "Date (Newer)":{
+                case "Date (Newer)": {
                     PrefsUtil.setSortingMethod(PrefsUtil.SORT_DATE_NEWER);
                     break;
                 }
-                case "Folders first":{
+                case "Folders first": {
                     PrefsUtil.setListFoldersFirst(menuItem.isChecked());
                     break;
                 }
@@ -348,37 +348,37 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showTabsOptionsMenu() {
-        PopupMenu popupMenu = new PopupMenu(this, (View)findViewById(R.id.tabs_options).getParent());
+        PopupMenu popupMenu = new PopupMenu(this, (View) findViewById(R.id.tabs_options).getParent());
 
         popupMenu.getMenu().add("Add new tab");
-        if(getCurrentTab() instanceof NormalTab){
+        if (getCurrentTab() instanceof NormalTab) {
             popupMenu.getMenu().add("Clone tab");
         }
 
-        if(tabs.size() > 1){
+        if (tabs.size() > 1) {
             popupMenu.getMenu().add("Close tab");
             popupMenu.getMenu().add("Close others");
         }
 
         popupMenu.setOnMenuItemClickListener(menuItem -> {
-            switch (menuItem.getTitle().toString()){
-                case "Add new tab":{
+            switch (menuItem.getTitle().toString()) {
+                case "Add new tab": {
                     addNewTab(Environment.getExternalStorageDirectory());
                     return true;
                 }
-                case "Clone tab":{
-                    addNewTab(((NormalTab)getCurrentTab()).getCurrentPath());
+                case "Clone tab": {
+                    addNewTab(((NormalTab) getCurrentTab()).getCurrentPath());
                     return true;
                 }
-                case "Close tab":{
+                case "Close tab": {
                     closeTabAt(viewPager2.getCurrentItem());
                     return true;
                 }
-                case "Close others":{
+                case "Close others": {
                     closeOtherTabs(viewPager2.getCurrentItem());
                     return true;
                 }
-                default:{
+                default: {
                     return false;
                 }
             }
@@ -396,12 +396,12 @@ public class MainActivity extends AppCompatActivity {
     private void closeTabAt(int currentItem) {
         tabs.remove(currentItem);
         reInitTabs();
-        if(currentItem >= tabs.size()){
-            viewPager2.setCurrentItem(tabs.size()-1, false);
-        } else if(currentItem != 0){
+        if (currentItem >= tabs.size()) {
+            viewPager2.setCurrentItem(tabs.size() - 1, false);
+        } else if (currentItem != 0) {
             viewPager2.setCurrentItem(currentItem - 1, false);
         }
-        viewPager2.post(()->getCurrentTab().refresh());
+        viewPager2.post(() -> getCurrentTab().refresh());
     }
 
     private void reInitTabs() {
@@ -409,7 +409,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void linkTabs() {
-        for(int i = 0; i < tabs.size(); i++){
+        for (int i = 0; i < tabs.size(); i++) {
             tabs.get(i).setTab(tabLayout.getTabAt(i));
         }
     }
@@ -431,14 +431,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Nullable
-    private QTab getCurrentTab(){
+    private QTab getCurrentTab() {
         final int i = viewPager2.getCurrentItem();
-        if(tabs.size() > i) return tabs.get(i);
+        if (tabs.size() > i) return tabs.get(i);
         return null;
     }
 
-    public void setPageSubtitle(String subtitle){
-        ((TextView)findViewById(R.id.subtitle)).setText(subtitle);
+    public void setPageSubtitle(String subtitle) {
+        ((TextView) findViewById(R.id.subtitle)).setText(subtitle);
     }
 
     public void AddTask(QTask task) {
@@ -462,8 +462,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public class PathTreeViewRvAdapter extends RecyclerView.Adapter<PathTreeViewRvAdapter.ViewHolder>{
-        public PathTreeViewRvAdapter(){ }
+    public class PathTreeViewRvAdapter extends RecyclerView.Adapter<PathTreeViewRvAdapter.ViewHolder> {
+        public PathTreeViewRvAdapter() {
+        }
+
         @NonNull
         @Override
         public PathTreeViewRvAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -480,7 +482,7 @@ public class MainActivity extends AppCompatActivity {
             return getCurrentTab().getTreeViewList().size();
         }
 
-        private class ViewHolder extends RecyclerView.ViewHolder{
+        private class ViewHolder extends RecyclerView.ViewHolder {
             TextView label;
 
             public ViewHolder(@NonNull View itemView) {
@@ -493,7 +495,7 @@ public class MainActivity extends AppCompatActivity {
                 label.setText(FileUtil.isExternalStorageFolder(getCurrentTab().getTreeViewList().get(position))
                         ? FileUtil.INTERNAL_STORAGE
                         : getCurrentTab().getTreeViewList().get(position).getName());
-                label.setTextColor((position==getItemCount()-1)
+                label.setTextColor((position == getItemCount() - 1)
                         ? getResources().getColor(R.color.orange, getTheme())
                         : getResources().getColor(R.color.onSurfaceContrast, getTheme()));
                 itemView.setOnClickListener(view -> getCurrentTab().onTreeViewPathSelected(position));

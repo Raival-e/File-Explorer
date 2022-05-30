@@ -24,7 +24,7 @@ public class TasksDialog extends BottomSheetDialogFragment {
     ViewGroup container;
     QTab tab;
 
-    public TasksDialog(ArrayList<QTask> tasks, QTab qTab){
+    public TasksDialog(ArrayList<QTask> tasks, QTab qTab) {
         this.tasks = tasks;
         tab = qTab;
     }
@@ -40,32 +40,32 @@ public class TasksDialog extends BottomSheetDialogFragment {
         super.onViewCreated(view, savedInstanceState);
         container = view.findViewById(R.id.container);
 
-        if(tasks.size() != 0){
+        if (tasks.size() != 0) {
             view.findViewById(R.id.place_holder).setVisibility(View.GONE);
         }
 
-        for(QTask task : tasks){
+        for (QTask task : tasks) {
             addTask(task, !(task instanceof RegularTask) || validate((RegularTask) task));
         }
 
     }
 
     private boolean validate(RegularTask task) {
-        for(File file : task.getFilesList()){
-            if(!file.exists())
+        for (File file : task.getFilesList()) {
+            if (!file.exists())
                 return false;
         }
         return true;
     }
 
-    private void addTask(QTask task, boolean valid){
+    private void addTask(QTask task, boolean valid) {
         View v = getLayoutInflater().inflate(R.layout.common_tasks_dialog_item, container, false);
 
-        ((TextView)v.findViewById(R.id.label)).setText(task.getName());
-        ((TextView)v.findViewById(R.id.task_details)).setText(task.getDetails());
+        ((TextView) v.findViewById(R.id.label)).setText(task.getName());
+        ((TextView) v.findViewById(R.id.task_details)).setText(task.getDetails());
 
         v.findViewById(R.id.background).setOnClickListener(view -> {
-            if(!valid){
+            if (!valid) {
                 App.showWarning("This task is invalid, some files are missing, long click to execute it");
                 return;
             }
@@ -77,7 +77,7 @@ public class TasksDialog extends BottomSheetDialogFragment {
         });
 
         v.setOnLongClickListener((view -> {
-            if(!valid){
+            if (!valid) {
                 execute(task);
                 return true;
             }
@@ -87,7 +87,7 @@ public class TasksDialog extends BottomSheetDialogFragment {
         container.addView(v);
     }
 
-    private void execute(QTask task){
+    private void execute(QTask task) {
         tab.handleTask(task);
         tasks.remove(task);
         dismiss();

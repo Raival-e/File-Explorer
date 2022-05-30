@@ -6,7 +6,7 @@ import com.raival.quicktools.interfaces.RegularTask;
 import java.io.File;
 import java.util.ArrayList;
 
-public class CopyTask  implements QTask, RegularTask {
+public class CopyTask implements QTask, RegularTask {
     ArrayList<File> filesToCopy;
 
     public CopyTask(ArrayList<File> filesToCopy) {
@@ -27,8 +27,8 @@ public class CopyTask  implements QTask, RegularTask {
         StringBuilder sb = new StringBuilder();
         boolean first = true;
 
-        for(File file : filesToCopy){
-            if(!first){
+        for (File file : filesToCopy) {
+            if (!first) {
                 sb.append(", ");
             }
             sb.append(file.getName());

@@ -10,6 +10,17 @@ public class FileItem {
     Drawable icon;
     boolean isSelected;
 
+    public FileItem(File file, String details) {
+        this.file = file;
+        this.details = details;
+    }
+
+    public FileItem(File file, String details, Drawable icon) {
+        this.file = file;
+        this.details = details;
+        this.icon = icon;
+    }
+
     public boolean isSelected() {
         return isSelected;
     }
@@ -43,17 +54,6 @@ public class FileItem {
     }
 
     public void setIcon(Drawable icon) {
-        this.icon = icon;
-    }
-
-    public FileItem(File file, String details){
-        this.file = file;
-        this.details = details;
-    }
-
-    public FileItem(File file, String details, Drawable icon) {
-        this.file = file;
-        this.details = details;
         this.icon = icon;
     }
 

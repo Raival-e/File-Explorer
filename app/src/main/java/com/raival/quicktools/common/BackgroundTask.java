@@ -16,18 +16,18 @@ public class BackgroundTask {
     Runnable preTask, task, postTask;
     AlertDialog alertDialog;
 
-    public BackgroundTask(){
+    public BackgroundTask() {
 
     }
 
-    public void setTasks(Runnable preTask, Runnable task, Runnable postTask){
+    public void setTasks(Runnable preTask, Runnable task, Runnable postTask) {
         this.preTask = preTask;
         this.task = task;
         this.postTask = postTask;
     }
 
-    public BackgroundTask run(){
-        new Thread(()->{
+    public BackgroundTask run() {
+        new Thread(() -> {
             new Handler(Looper.getMainLooper()).post(preTask);
             task.run();
             new Handler(Looper.getMainLooper()).post(postTask);
@@ -35,13 +35,13 @@ public class BackgroundTask {
         return this;
     }
 
-    public void dismiss(){
-        if(alertDialog != null)
+    public void dismiss() {
+        if (alertDialog != null)
             alertDialog.dismiss();
     }
 
     @SuppressLint("ResourceType")
-    public void showProgressDialog(String msg, Activity activity){
+    public void showProgressDialog(String msg, Activity activity) {
         alertDialog = new MaterialAlertDialogBuilder(activity)
                 .setCancelable(false)
                 .setView(getProgressView(msg, activity))
@@ -50,7 +50,7 @@ public class BackgroundTask {
 
     private View getProgressView(String msg, Activity activity) {
         View v = activity.getLayoutInflater().inflate(R.layout.progress_view, null);
-        ((TextView)v.findViewById(R.id.msg)).setText(msg);
+        ((TextView) v.findViewById(R.id.msg)).setText(msg);
         return v;
     }
 }
