@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         initPrefs();
 
         if(grantStoragePermissions()){
-           init();
+            init();
         }
     }
 
@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
             }
         } else {
             if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED
-            || ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+                    || ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 9011);
                 return false;
             }
@@ -263,11 +263,11 @@ public class MainActivity extends AppCompatActivity {
                 .setTitle("Create new file")
                 .addView(input)
                 .setPositiveButton("File", view ->
-                getCurrentTab()
-                        .createFile(input.getEditText().getText().toString(), false), true)
+                        getCurrentTab()
+                                .createFile(input.getEditText().getText().toString(), false), true)
                 .setNegativeButton("Folder", view ->
-                getCurrentTab()
-                        .createFile(input.getEditText().getText().toString(), true), true)
+                        getCurrentTab()
+                                .createFile(input.getEditText().getText().toString(), true), true)
                 .setNeutralButton("Cancel", null, true)
                 .show(getSupportFragmentManager(), "");
     }
@@ -401,6 +401,7 @@ public class MainActivity extends AppCompatActivity {
         } else if(currentItem != 0){
             viewPager2.setCurrentItem(currentItem - 1, false);
         }
+        viewPager2.post(()->getCurrentTab().refresh());
     }
 
     private void reInitTabs() {
@@ -428,7 +429,8 @@ public class MainActivity extends AppCompatActivity {
         }).attach();
         linkTabs();
     }
-    
+
+    @Nullable
     private QTab getCurrentTab(){
         final int i = viewPager2.getCurrentItem();
         if(tabs.size() > i) return tabs.get(i);
