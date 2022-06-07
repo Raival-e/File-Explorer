@@ -159,19 +159,27 @@ public class TextEditorActivity extends AppCompatActivity {
                 if(editable.length() > 0){
                     editor.getSearcher().search(editable.toString(),
                             new EditorSearcher.SearchOptions(false, false));
+                } else {
+                    editor.getSearcher().stopSearch();
                 }
             }
         });
 
-        searchPanel.findViewById(R.id.next).setOnClickListener(view -> editor.getSearcher().gotoNext());
-        searchPanel.findViewById(R.id.previous).setOnClickListener(view -> editor.getSearcher().gotoPrevious());
+        searchPanel.findViewById(R.id.next).setOnClickListener(view -> {
+            if(editor.getSearcher().hasQuery()) editor.getSearcher().gotoNext();
+        });
+        searchPanel.findViewById(R.id.previous).setOnClickListener(view -> {
+            if(editor.getSearcher().hasQuery()) editor.getSearcher().gotoPrevious();
+        });
 
-        searchPanel.findViewById(R.id.replace).setOnClickListener(view -> editor.getSearcher().replaceThis(
-                replaceInput.getEditText().getText().toString()
-        ));
-        searchPanel.findViewById(R.id.replace_all).setOnClickListener(view -> editor.getSearcher().replaceAll(
-                replaceInput.getEditText().getText().toString()
-        ));
+        searchPanel.findViewById(R.id.replace).setOnClickListener(view -> {
+            if(editor.getSearcher().hasQuery())
+            editor.getSearcher().replaceThis(replaceInput.getEditText().getText().toString());
+        });
+        searchPanel.findViewById(R.id.replace_all).setOnClickListener(view -> {
+            if(editor.getSearcher().hasQuery())
+            editor.getSearcher().replaceAll(replaceInput.getEditText().getText().toString());
+        });
 
     }
 
