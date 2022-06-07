@@ -156,7 +156,10 @@ public class TextEditorActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                editor.getSearcher().search(editable.toString(), new EditorSearcher.SearchOptions(false, false));
+                if(editable.length() > 0){
+                    editor.getSearcher().search(editable.toString(),
+                            new EditorSearcher.SearchOptions(false, false));
+                }
             }
         });
 
