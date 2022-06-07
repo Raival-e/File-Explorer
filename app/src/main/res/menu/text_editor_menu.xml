@@ -67,4 +67,10 @@
         android:title="Redo"
         android:icon="@drawable/ic_round_redo_24"
         app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/editor_execute"
+        android:title="Run"
+        android:icon="@drawable/ic_round_play_arrow_24"
+        app:showAsAction="always"/>
 </menu>

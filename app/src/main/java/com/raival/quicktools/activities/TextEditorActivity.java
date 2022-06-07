@@ -216,9 +216,7 @@ public class TextEditorActivity extends AppCompatActivity {
         menu.findItem(R.id.editor_option_read_only).setChecked(PrefsUtil.getTextEditorReadOnly());
 
         if ("java".equalsIgnoreCase(FileUtil.getFileExtension(file))) menu.add("Format");
-        if (canExecute()) menu.add("Execute")
-                .setIcon(R.drawable.ic_round_play_arrow_24)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        if (!canExecute()) menu.findItem(R.id.editor_execute).setVisible(false);
         return super.onCreateOptionsMenu(menu);
     }
 
