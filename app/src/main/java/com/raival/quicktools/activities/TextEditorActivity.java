@@ -244,11 +244,7 @@ public class TextEditorActivity extends AppCompatActivity {
             editor.formatCodeAsync();
         } else if (item.getTitle().equals("Execute")) {
             saveFile(editor.getText().toString());
-            if (file.getName().endsWith(".kt")) {
-                //TODO: kotlin executor
-            } else {
-                executeFile();
-            }
+            executeFile();
         } else if (id == R.id.editor_language_def) {
             item.setChecked(true);
             editor.setEditorLanguage(null);
