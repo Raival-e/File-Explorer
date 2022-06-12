@@ -20,7 +20,6 @@
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="36dp"
-        android:layout_marginTop="-36dp"
         android:scrollbars="none">
         <io.github.rosemoe.sora.widget.SymbolInputView
             android:id="@+id/symbol_input"
