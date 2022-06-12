@@ -61,6 +61,7 @@ public class TextEditorActivity extends AppCompatActivity {
         editor.setTextSize(14);
         editor.setLigatureEnabled(true);
         editor.setHighlightCurrentBlock(true);
+        editor.setTypefaceText(Typeface.MONOSPACE);
 
         editor.getProps().symbolPairAutoCompletion = false;
         editor.getProps().deleteMultiSpaces = -1;
@@ -134,7 +135,6 @@ public class TextEditorActivity extends AppCompatActivity {
             case "java":
             case "kt":
                 editor.setEditorLanguage(new JavaLanguage());
-                editor.setTypefaceText(Typeface.MONOSPACE);
                 break;
         }
     }
