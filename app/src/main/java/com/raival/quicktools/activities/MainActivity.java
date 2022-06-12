@@ -258,6 +258,7 @@ public class MainActivity extends AppCompatActivity {
 
         TextInputLayout input = (TextInputLayout) getLayoutInflater().inflate(R.layout.input, null, false);
         input.setHint("File name");
+        input.getEditText().setSingleLine();
 
         new QDialog()
                 .setTitle("Create new file")

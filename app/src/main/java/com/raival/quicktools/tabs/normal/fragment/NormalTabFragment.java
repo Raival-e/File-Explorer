@@ -307,6 +307,7 @@ public class NormalTabFragment extends Fragment {
         TextInputLayout input = (TextInputLayout) getLayoutInflater().inflate(R.layout.input, null, false);
         input.setHint("File name");
         input.getEditText().setText(selectedFiles.get(0).getName());
+        input.getEditText().setSingleLine();
         FileUtil.setFileInvalidator(input, selectedFiles.get(0), selectedFiles.get(0).getParentFile());
 
         new QDialog()
