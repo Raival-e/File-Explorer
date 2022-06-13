@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="12dp"
-    android:background="@color/surface">
+    android:padding="12dp">
 
     <TextView
         android:id="@+id/dialog_title"
@@ -12,7 +11,6 @@
         android:layout_height="wrap_content"
         android:text="Dialog Title"
         android:textSize="16sp"
-        android:textColor="@color/onSurfaceContrast"
         android:textStyle="normal"
         android:padding="8dp"/>
 
@@ -26,7 +24,6 @@
             android:layout_height="wrap_content"
             android:text="this is the content\nof something.\nnice work lol"
             android:textSize="14sp"
-            android:textColor="@color/onSurfaceContrast"
             android:textStyle="normal"
             android:padding="8dp"/>
     </ScrollView>
@@ -52,8 +49,7 @@
             android:textAllCaps="false"
             android:textStyle="normal"
             android:textSize="14sp"
-            android:fontFamily="sans-serif"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+            android:fontFamily="sans-serif" />
         <Space
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -67,8 +63,7 @@
             android:textAllCaps="false"
             android:textSize="14sp"
             android:textStyle="normal"
-            android:fontFamily="sans-serif"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+            android:fontFamily="sans-serif" />
         <com.google.android.material.button.MaterialButton
             android:id="@+id/dialog_positive_button"
             android:layout_width="wrap_content"
@@ -78,8 +73,7 @@
             android:textAllCaps="false"
             android:textSize="14sp"
             android:textStyle="normal"
-            android:fontFamily="sans-serif"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+            android:fontFamily="sans-serif" />
 
     </LinearLayout>
 

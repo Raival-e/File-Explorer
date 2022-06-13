@@ -12,8 +12,7 @@
     <ImageView
         android:layout_width="18dp"
         android:layout_height="18dp"
-        android:src="@drawable/ic_round_play_arrow_24"
-        app:tint="@color/onSurfaceContrast"/>
+        android:src="@drawable/ic_round_play_arrow_24" />
     <TextView
         android:id="@+id/text"
         android:layout_width="wrap_content"
@@ -22,6 +21,5 @@
         android:paddingRight="8dp"
         android:paddingLeft="8dp"
         android:gravity="center"
-        android:textSize="14sp"
-        android:textColor="@color/onSurfaceContrast"/>
+        android:textSize="14sp" />
 </LinearLayout>

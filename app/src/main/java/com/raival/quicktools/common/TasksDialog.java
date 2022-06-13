@@ -50,6 +50,11 @@ public class TasksDialog extends BottomSheetDialogFragment {
 
     }
 
+    @Override
+    public int getTheme() {
+        return R.style.ThemeOverlay_Material3_BottomSheetDialog;
+    }
+
     private boolean validate(RegularTask task) {
         for (File file : task.getFilesList()) {
             if (!file.exists())

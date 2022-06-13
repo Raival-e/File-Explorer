@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/surface"
     android:orientation="vertical"
     tools:context=".activities.MainActivity">
     <LinearLayout
@@ -15,15 +14,15 @@
         android:paddingStart="16dp"
         android:paddingTop="16dp"
         android:paddingEnd="16dp"
-        android:paddingBottom="8dp">
+        android:paddingBottom="8dp"
+        android:background="@color/background">
         <ImageView
             android:id="@+id/menu"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_round_menu_24"
             android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            app:tint="@color/onSurfaceContrast" />
+            android:clickable="true"/>
         <LinearLayout
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -37,7 +36,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Quick Tools"
-                android:textColor="@color/onSurfaceContrast"
                 android:textStyle="normal"
                 android:textSize="15sp"
                 android:maxLines="1"/>
@@ -46,7 +44,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="24 folders, 6 files"
-                android:textColor="@color/onSurface"
                 android:textStyle="normal"
                 android:textSize="11sp"
                 android:maxLines="1"/>
@@ -56,7 +53,6 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_baseline_assignment_24"
-            app:tint="@color/onSurfaceContrast"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:layout_marginEnd="12dp"/>
@@ -65,7 +61,6 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_baseline_more_vert_24"
-            app:tint="@color/onSurfaceContrast"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:clickable="true"/>
     </LinearLayout>
@@ -76,7 +71,8 @@
         android:orientation="horizontal"
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
-        android:gravity="center">
+        android:gravity="center"
+        android:background="@color/background">
         <ImageView
             android:id="@+id/home"
             android:layout_marginStart="8dp"
@@ -85,8 +81,7 @@
             android:layout_height="24dp"
             android:src="@drawable/ic_round_home_24"
             android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            app:tint="@color/onSurfaceContrast" />
+            android:clickable="true" />
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/path_treeview"
             android:layout_width="match_parent"
@@ -98,7 +93,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center"
+        android:background="@color/background">
         <ImageView
             android:id="@+id/tabs_options"
             android:layout_width="wrap_content"
@@ -107,7 +103,6 @@
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
             android:rotation="90"
-            app:tint="@color/onSurfaceContrast"
             android:scaleType="centerInside"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"/>
@@ -115,21 +110,15 @@
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:background="@color/surface"
-            app:tabTextAppearance="@style/TabLayoutCustomText"
-            app:tabSelectedTextColor="@color/onSurfaceContrast"
-            app:tabTextColor="@color/onSurface"
-            app:tabIndicatorColor="@color/secondary"
             app:tabMode="scrollable"
             app:tabIndicatorHeight="2dp"
             app:tabPadding="0dp"
-            app:tabRippleColor="@color/highlight"/>
+            android:background="@color/background"/>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/white"/>
+        android:layout_height="1dp" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager"
@@ -139,13 +128,13 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/white"/>
+        android:layout_height="1dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@color/background">
 
         <LinearLayout
             android:id="@+id/option_search"
@@ -156,7 +145,6 @@
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true">
             <ImageView
-                app:tint="@color/onSurfaceContrast"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@drawable/ic_round_search_24"/>
@@ -171,7 +159,6 @@
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true">
             <ImageView
-                app:tint="@color/onSurfaceContrast"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@drawable/ic_baseline_restart_alt_24"/>
@@ -186,7 +173,6 @@
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true">
             <ImageView
-                app:tint="@color/onSurfaceContrast"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@drawable/ic_baseline_add_24"/>
@@ -201,7 +187,6 @@
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true">
             <ImageView
-                app:tint="@color/onSurfaceContrast"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@drawable/ic_baseline_sort_24"/>
@@ -216,7 +201,6 @@
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true">
             <ImageView
-                app:tint="@color/onSurfaceContrast"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@drawable/ic_baseline_select_all_24"/>
@@ -231,7 +215,6 @@
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true">
             <ImageView
-                app:tint="@color/onSurfaceContrast"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@drawable/ic_baseline_arrow_back_24"/>

@@ -23,8 +23,7 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@drawable/ic_baseline_add_24"
-                android:rotation="45"
-                app:tint="@color/onSurfaceContrast"/>
+                android:rotation="45" />
         </LinearLayout>
 
         <LinearLayout
@@ -40,7 +39,6 @@
                 android:id="@+id/label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/onSurfaceContrast"
                 android:textSize="16sp"
                 android:maxLines="1"
                 android:textStyle="normal"
@@ -50,7 +48,6 @@
                 android:id="@+id/task_details"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/onSurface"
                 android:textSize="12sp"
                 android:textStyle="normal"
                 android:maxLines="2"
@@ -62,7 +59,6 @@
     <LinearLayout
         android:layout_marginStart="30dp"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/white"/>
+        android:layout_height="1dp" />
 
 </LinearLayout>

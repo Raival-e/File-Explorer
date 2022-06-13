@@ -70,6 +70,11 @@ public class SearchFragment extends BottomSheetDialogFragment {
         return inflater.inflate(R.layout.search_fragment_layout, container, false);
     }
 
+    @Override
+    public int getTheme() {
+        return R.style.ThemeOverlay_Material3_BottomSheetDialog;
+    }
+
     @SuppressLint("SetTextI18n")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {

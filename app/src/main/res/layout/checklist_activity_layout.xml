@@ -7,8 +7,7 @@
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        android:theme="@style/Theme.QuickTools.AppBarOverlay">
+        app:layout_constraintTop_toTopOf="parent">
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -20,8 +19,6 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/app_bar"
-        app:text_color="@color/black"
-        app:icon_tint_color="@color/primary"
         app:text_size="16sp"
         app:icon_alpha_drag_indicator="0.8"
         app:icon_alpha_delete="0.8"

@@ -44,7 +44,7 @@ import com.raival.quicktools.utils.PrefsUtil;
 import java.io.File;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
     TabLayout tabLayout;
     ViewPager2 viewPager2;
     RecyclerView pathTreeView;
@@ -275,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void showMoreOptions(View v) {
         PopupMenu popupMenu = new PopupMenu(this, v);
-        popupMenu.getMenu().add("Logs");
+        getMenuInflater().inflate(R.menu.main_more_options_menu, popupMenu.getMenu());
         popupMenu.setOnMenuItemClickListener(menuItem -> {
             final String title = menuItem.getTitle().toString();
             if ("Logs".equals(title)) {
@@ -497,8 +497,8 @@ public class MainActivity extends AppCompatActivity {
                         ? FileUtil.INTERNAL_STORAGE
                         : getCurrentTab().getTreeViewList().get(position).getName());
                 label.setTextColor((position == getItemCount() - 1)
-                        ? getResources().getColor(R.color.orange, getTheme())
-                        : getResources().getColor(R.color.onSurfaceContrast, getTheme()));
+                        ? getResources().getColor(R.color.primary, getTheme())
+                        : getResources().getColor(R.color.outline, getTheme()));
                 itemView.setOnClickListener(view -> getCurrentTab().onTreeViewPathSelected(position));
             }
         }

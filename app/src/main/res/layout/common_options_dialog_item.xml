@@ -18,7 +18,6 @@
         android:layout_marginRight="8dp"
         android:layout_marginTop="2dp"
         android:layout_marginBottom="2dp"
-        app:tint="@color/onSurfaceContrast"
         android:scaleType="fitXY"
         android:src="@drawable/ic_round_menu_24" />
     <TextView
@@ -28,7 +27,6 @@
         android:layout_height="wrap_content"
         android:padding="8dp"
         android:textStyle="normal"
-        android:textColor="@color/onSurfaceContrast"
         android:textSize="16sp"
         android:text="this is an option"/>
 </LinearLayout>

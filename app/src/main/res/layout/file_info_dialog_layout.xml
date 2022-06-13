@@ -4,8 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="8dp"
-    android:orientation="vertical"
-    android:background="@color/surface">
+    android:orientation="vertical">
 
    <LinearLayout
        android:layout_width="match_parent"
@@ -23,8 +22,7 @@
                android:layout_height="36dp"
                app:cardCornerRadius="16dp"
                android:layout_marginStart="4dp"
-               app:cardElevation="0dp"
-               app:cardBackgroundColor="@color/surface">
+               app:cardElevation="0dp">
                <ImageView
                    android:id="@+id/file_icon"
                    android:layout_width="match_parent"
@@ -45,7 +43,6 @@
                android:paddingEnd="8dp"
                android:text="file name"
                android:maxLines="1"
-               android:textColor="@color/onSurfaceContrast"
                android:textSize="16sp"/>
        </LinearLayout>
    </LinearLayout>

@@ -50,6 +50,11 @@ public class OptionsDialog extends BottomSheetDialogFragment {
     }
 
     @Override
+    public int getTheme() {
+        return R.style.ThemeOverlay_Material3_BottomSheetDialog;
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 

@@ -27,10 +27,10 @@ public class ToastUtil {
 
         if (toastType != TOAST_WARNING) {
             linearLayout.setBackground(context.getDrawable(R.drawable.bg_toast_normal));
-            textView.setTextColor(context.getColor(R.color.onSurfaceContrast));
+            textView.setTextColor(context.getColor(R.color.onPrimary));
         } else {
             linearLayout.setBackground(context.getDrawable(R.drawable.bg_toast_warning));
-            textView.setTextColor(context.getColor(R.color.red));
+            textView.setTextColor(context.getColor(R.color.design_default_color_error));
         }
 
         textView.setText(charSequence.toString());

@@ -13,7 +13,7 @@ import com.raival.quicktools.utils.FileUtil;
 import java.io.File;
 import java.io.IOException;
 
-public class CheckListActivity extends AppCompatActivity {
+public class CheckListActivity extends BaseActivity {
     File file;
     MaterialChecklist materialChecklist;
 

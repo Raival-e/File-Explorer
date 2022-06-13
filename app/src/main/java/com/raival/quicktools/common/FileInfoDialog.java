@@ -110,6 +110,11 @@ public class FileInfoDialog extends BottomSheetDialogFragment {
         return this;
     }
 
+    @Override
+    public int getTheme() {
+        return R.style.ThemeOverlay_Material3_BottomSheetDialog;
+    }
+
     public static class InfoHolder {
         public String name;
         public String info;

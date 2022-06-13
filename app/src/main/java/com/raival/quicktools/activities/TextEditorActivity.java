@@ -34,7 +34,7 @@ import io.github.rosemoe.sora.widget.component.Magnifier;
 import io.github.rosemoe.sora.widget.schemes.SchemeDarcula;
 import io.github.rosemoe.sora.widget.schemes.SchemeGitHub;
 
-public class TextEditorActivity extends AppCompatActivity {
+public class TextEditorActivity extends BaseActivity {
     private CodeEditor editor;
     private File file;
     private View searchPanel;
@@ -51,8 +51,8 @@ public class TextEditorActivity extends AppCompatActivity {
 
         SymbolInputView inputView = findViewById(R.id.symbol_input);
         inputView.bindEditor(editor);
-        inputView.setBackgroundColor(getColor(R.color.surface));
-        inputView.setTextColor(getColor(R.color.onSurfaceContrast));
+        inputView.setBackgroundColor(getColor(R.color.background));
+        inputView.setTextColor(getColor(R.color.onBackground));
         inputView.addSymbols(new String[]{"->", "_", "=", "{", "}", "<", ">", "|", "\\", "?", "+", "-", "*", "/"},
                 new String[]{"\t", "_", "=", "{", "}", "<", ">", "|", "\\", "?", "+", "-", "*", "/"});
 
