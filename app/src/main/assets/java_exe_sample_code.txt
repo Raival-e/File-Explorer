@@ -27,12 +27,12 @@ import androidx.appcompat.app.AppCompatActivity;
 public class Main {
     static AppCompatActivity activity;
     static Context context;
-    static File projectDir;
+    static File directory;
 
-	public static void main(AppCompatActivity ac, Context ctx, File file) {
-		context = ctx;
-		activity = ac;
-		projectDir = file;
+	public static void main(AppCompatActivity _activity, Context _context, File _file) {
+		context = _context;
+		activity = _activity;
+		directory = _file;
 		init();
 	}
 
@@ -60,6 +60,6 @@ public class Main {
 	/////////////////////////////
 
 	private static void init(){
-		showMsg("test");
+		showMsg("Hello World!);
 	}
 }
