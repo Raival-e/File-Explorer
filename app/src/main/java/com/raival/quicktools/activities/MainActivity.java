@@ -10,10 +10,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,6 +30,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.android.material.textfield.TextInputLayout;
@@ -48,6 +52,7 @@ public class MainActivity extends BaseActivity {
     TabLayout tabLayout;
     ViewPager2 viewPager2;
     RecyclerView pathTreeView;
+    MaterialToolbar toolbar;
 
     ArrayList<QTab> tabs = new ArrayList<>();
     ArrayList<QTask> tasks = new ArrayList<>();
@@ -85,8 +90,15 @@ public class MainActivity extends BaseActivity {
         tabLayout = findViewById(R.id.tabs);
         viewPager2 = findViewById(R.id.view_pager);
         pathTreeView = findViewById(R.id.path_treeview);
+        toolbar = findViewById(R.id.toolbar);
 
         viewPager2.setUserInputEnabled(false);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_round_menu_24);
+        toolbar.setNavigationOnClickListener(null);
 
         initPrefs();
 
@@ -188,16 +200,32 @@ public class MainActivity extends BaseActivity {
         setListeners();
     }
 
-    private void setListeners() {
-        findViewById(R.id.home).setOnClickListener(view -> getCurrentTab().onTreeViewPathSelected(0));
-        findViewById(R.id.tasks).setOnClickListener(view -> showTasksDialog());
-        findViewById(R.id.menu).setOnClickListener(view -> showMenu());
-        findViewById(R.id.more_options).setOnClickListener(this::showMoreOptions);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_more_options_menu, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
-    private void showMenu() {
-        App.showMsg("Not implemented yet");
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        final String title = item.getTitle().toString();
+        if(title.equals("Tasks")){
+            showTasksDialog();
+        } else if(title.equals("Logs")){
+            showLogFile();
+        }
+        return super.onOptionsItemSelected(item);
     }
+
+    private void setListeners() {
+        findViewById(R.id.home).setOnClickListener(view -> getCurrentTab().onTreeViewPathSelected(0));
+    }
+
+    private void showTasksDialog() {
+        TasksDialog tasksDialog = new TasksDialog(tasks, getCurrentTab());
+        tasksDialog.show(getSupportFragmentManager(), "tasks_dialog");
+    }
+
 
     private void showLogFile() {
         final File logFile = new File(getExternalFilesDir(null).getAbsolutePath() + "/debug/log.txt");
@@ -209,11 +237,6 @@ public class MainActivity extends BaseActivity {
             return;
         }
         App.showMsg("No logs found");
-    }
-
-    private void showTasksDialog() {
-        TasksDialog tasksDialog = new TasksDialog(tasks, getCurrentTab());
-        tasksDialog.show(getSupportFragmentManager(), "tasks_dialog");
     }
 
     public void updatePathTreeView() {
@@ -271,20 +294,6 @@ public class MainActivity extends BaseActivity {
                                 .createFile(input.getEditText().getText().toString(), true), true)
                 .setNeutralButton("Cancel", null, true)
                 .show(getSupportFragmentManager(), "");
-    }
-
-    private void showMoreOptions(View v) {
-        PopupMenu popupMenu = new PopupMenu(this, v);
-        getMenuInflater().inflate(R.menu.main_more_options_menu, popupMenu.getMenu());
-        popupMenu.setOnMenuItemClickListener(menuItem -> {
-            final String title = menuItem.getTitle().toString();
-            if ("Logs".equals(title)) {
-                showLogFile();
-                return true;
-            }
-            return false;
-        });
-        popupMenu.show();
     }
 
     private void showSortOptionsMenu(View view) {
@@ -439,7 +448,7 @@ public class MainActivity extends BaseActivity {
     }
 
     public void setPageSubtitle(String subtitle) {
-        ((TextView) findViewById(R.id.subtitle)).setText(subtitle);
+        ((MaterialToolbar) findViewById(R.id.toolbar)).setSubtitle(subtitle);
     }
 
     public void AddTask(QTask task) {

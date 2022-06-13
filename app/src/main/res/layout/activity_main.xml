@@ -6,65 +6,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".activities.MainActivity">
-    <LinearLayout
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:paddingStart="16dp"
-        android:paddingTop="16dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="8dp"
-        android:background="@color/background">
-        <ImageView
-            android:id="@+id/menu"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_round_menu_24"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:clickable="true"/>
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="8dp">
-            <TextView
-                android:id="@+id/subtitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Quick Tools"
-                android:textStyle="normal"
-                android:textSize="15sp"
-                android:maxLines="1"/>
-            <TextView
-                android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="24 folders, 6 files"
-                android:textStyle="normal"
-                android:textSize="11sp"
-                android:maxLines="1"/>
-        </LinearLayout>
-        <ImageView
-            android:id="@+id/tasks"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_baseline_assignment_24"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:layout_marginEnd="12dp"/>
-        <ImageView
-            android:id="@+id/more_options"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_baseline_more_vert_24"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:clickable="true"/>
-    </LinearLayout>
-
+        app:subtitleTextAppearance="@style/TextAppearance.Material3.LabelSmall"
+        android:background="@color/background" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
