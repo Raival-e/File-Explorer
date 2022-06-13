@@ -11,7 +11,8 @@
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?actionBarSize" />
+            android:layout_height="?actionBarSize"
+            android:background="@color/background"/>
     </com.google.android.material.appbar.AppBarLayout>
     <com.dvdb.materialchecklist.MaterialChecklist
         android:id="@+id/checklist"
@@ -19,6 +20,7 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/app_bar"
+        app:text_color="@color/onBackground"
         app:text_size="16sp"
         app:icon_alpha_drag_indicator="0.8"
         app:icon_alpha_delete="0.8"
