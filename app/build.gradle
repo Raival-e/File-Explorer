@@ -6,7 +6,7 @@ android {
     compileSdk 31
 
     defaultConfig {
-        applicationId "com.raival.quicktools"
+        applicationId "com.raival.fileexplorer"
         minSdk 26
         targetSdk 31
         versionCode 1
