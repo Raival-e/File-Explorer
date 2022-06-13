@@ -12,7 +12,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <TextView
         android:textSize="13.0sp"
-        android:textColor="@color/onSurfaceContrast"
         android:gravity="center"
         android:layout_gravity="center_horizontal"
         android:id="@+id/tv_toast"

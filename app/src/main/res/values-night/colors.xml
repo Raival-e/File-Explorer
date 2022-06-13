@@ -1,32 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#CACADC</color>
-    <color name="white">#2A2936</color>
-    <color name="red">#ED6E6E</color>
+    <color name="primary">@color/material_dynamic_primary80</color>
+    <color name="onPrimary">@color/material_dynamic_primary20</color>
+    <color name="primaryContainer">@color/material_dynamic_primary30</color>
+    <color name="onPrimaryContainer">@color/material_dynamic_primary90</color>
 
-    <color name="onSurfaceShade">#FFE7E7F8</color>
+    <color name="secondary">@color/material_dynamic_secondary80</color>
+    <color name="onSecondary">@color/material_dynamic_secondary20</color>
+    <color name="secondaryContainer">@color/material_dynamic_secondary30</color>
+    <color name="onSecondaryContainer">@color/material_dynamic_secondary90</color>
 
-    <color name="surface">#1C1B25</color>
-    <color name="onSurface">#9696A8</color>
-    <color name="onSurfaceContrast">#CACADC</color>
+    <color name="tertiary">@color/material_dynamic_tertiary80</color>
+    <color name="onTertiary">@color/material_dynamic_tertiary20</color>
+    <color name="tertiaryContainer">@color/material_dynamic_tertiary30</color>
+    <color name="onTertiaryContainer">@color/material_dynamic_tertiary90</color>
 
-    <color name="primary">#5C5A5A</color>
-    <color name="primaryContrast">#E4E4E4</color>
-    <color name="onPrimary">#FFE1DEFC</color>
-    <color name="onPrimaryContrast">#FFFFFFFF</color>
+    <color name="background">@color/material_dynamic_neutral_variant10</color>
+    <color name="onBackground">@color/material_dynamic_neutral_variant90</color>
+    <color name="surface">@color/material_dynamic_neutral_variant10</color>
+    <color name="onSurface">@color/material_dynamic_neutral_variant90</color>
 
-    <color name="secondary">#474747</color>
-    <color name="secondaryContrast">#EFEFEF</color>
-    <color name="onSecondary">#FFE1DEFC</color>
-    <color name="onSecondaryContrast">#FFFFFF</color>
+    <color name="inverseOnSurface">@color/material_dynamic_neutral_variant10</color>
+    <color name="inverseSurface">@color/material_dynamic_neutral_variant99</color>
+    <color name="inversePrimary">@color/material_dynamic_primary40</color>
 
-    <color name="redTune">#FDE1E1</color>
-    <color name="greenTune">#FDE1E1</color>
-
-    <color name="timeline_card">#575656</color>
-
-    <color name="highlight">#434343</color>
-    <color name="orange">#FFC107</color>
-
-    <color name="toast">@color/white</color>
+    <color name="surfaceVariant">@color/material_dynamic_neutral_variant30</color>
+    <color name="onSurfaceVariant">@color/material_dynamic_neutral_variant80</color>
+    <color name="outline">@color/material_dynamic_neutral_variant60</color>
 </resources>

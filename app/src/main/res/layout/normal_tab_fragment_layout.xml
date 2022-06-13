@@ -13,7 +13,7 @@
         android:scrollbars="vertical"
         android:scrollbarSize="10dp"
         android:scrollbarThumbVertical="@drawable/fastscroll_thumb"
-        android:fadeScrollbars="false"/>
+        android:fadeScrollbars="true"/>
 
     <include
         android:id="@+id/place_holder"

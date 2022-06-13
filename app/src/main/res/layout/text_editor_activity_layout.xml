@@ -9,8 +9,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/surface"
-        style="@style/Widget.MaterialComponents.Toolbar"/>
+        android:background="@color/background" />
     <io.github.rosemoe.sora.widget.CodeEditor
         android:id="@+id/editor"
         android:layout_width="match_parent"
@@ -24,8 +23,7 @@
         <io.github.rosemoe.sora.widget.SymbolInputView
             android:id="@+id/symbol_input"
             android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:background="@color/surface"/>
+            android:layout_height="36dp" />
     </HorizontalScrollView>
 
     <LinearLayout
@@ -38,29 +36,23 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="gone"
-        android:background="@color/surface">
+        android:background="@color/background">
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/find_input"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:boxBackgroundColor="@color/white"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense">
+            android:layout_height="wrap_content">
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/onSurfaceContrast"/>
+                android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/replace_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:boxBackgroundColor="@color/white"
-            android:layout_marginTop="8dp"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense">
+            android:layout_marginTop="8dp">
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/onSurfaceContrast"/>
+                android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -73,8 +65,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="Rep"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+                android:layout_margin="3dp"/>
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/replace_all"
                 android:layout_marginEnd="2dp"
@@ -82,8 +73,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="All"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+                android:layout_margin="3dp"/>
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/previous"
                 android:layout_marginEnd="2dp"
@@ -91,16 +81,15 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="Prev"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+                android:layout_margin="3dp"/>
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/next"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="Next"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+                android:layout_margin="3dp"
+                />
         </LinearLayout>
     </LinearLayout>
 
