@@ -12,7 +12,8 @@
         android:text="Dialog Title"
         android:textSize="16sp"
         android:textStyle="normal"
-        android:padding="8dp"/>
+        android:padding="8dp"
+        style="@style/Theme.Material3.Light.Dialog.Alert"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -46,10 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="More"
-            android:textAllCaps="false"
-            android:textStyle="normal"
-            android:textSize="14sp"
-            android:fontFamily="sans-serif" />
+            style="@style/Widget.Material3.Button"/>
         <Space
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -60,20 +58,14 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:text="Cancel"
-            android:textAllCaps="false"
-            android:textSize="14sp"
-            android:textStyle="normal"
-            android:fontFamily="sans-serif" />
+            style="@style/Widget.Material3.Button"/>
         <com.google.android.material.button.MaterialButton
             android:id="@+id/dialog_positive_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:text="Save"
-            android:textAllCaps="false"
-            android:textSize="14sp"
-            android:textStyle="normal"
-            android:fontFamily="sans-serif" />
+            style="@style/Widget.Material3.Button"/>
 
     </LinearLayout>
 
