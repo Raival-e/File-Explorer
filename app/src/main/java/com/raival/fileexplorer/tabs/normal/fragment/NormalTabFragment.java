@@ -50,11 +50,11 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class NormalTabFragment extends Fragment {
-    NormalTab tab;
-    RecyclerView recyclerView;
-    View placeHolder;
-    int prevPathHighlight = 0x06ffffff;
-    int selectedFileHighlight = 0x320066ff;
+    private final NormalTab tab;
+    private RecyclerView recyclerView;
+    private View placeHolder;
+    private final int prevPathHighlight = 0x06ffffff;
+    private final int selectedFileHighlight = 0x320066ff;
 
     public NormalTabFragment(NormalTab tab) {
         super();

@@ -13,8 +13,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.raival.fileexplorer.R;
 
 public class BackgroundTask {
-    Runnable preTask, task, postTask;
-    AlertDialog alertDialog;
+    private Runnable preTask, task, postTask;
+    private AlertDialog alertDialog;
 
     public BackgroundTask() {
 

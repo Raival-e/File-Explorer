@@ -7,7 +7,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class APKSignerTask implements QTask, RegularTask {
-    File getFileToSign;
+    private final File getFileToSign;
 
     public APKSignerTask(File file) {
         this.getFileToSign = file;

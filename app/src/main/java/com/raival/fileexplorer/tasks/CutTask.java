@@ -7,7 +7,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class CutTask implements QTask, RegularTask {
-    ArrayList<File> filesToCut;
+    private final ArrayList<File> filesToCut;
 
     public CutTask(ArrayList<File> selectedFiles) {
         filesToCut = selectedFiles;

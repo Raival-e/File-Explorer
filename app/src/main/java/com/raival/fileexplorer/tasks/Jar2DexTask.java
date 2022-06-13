@@ -7,7 +7,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class Jar2DexTask implements QTask, RegularTask {
-    File fileToConvert;
+    private final File fileToConvert;
 
     public Jar2DexTask(File file) {
         this.fileToConvert = file;

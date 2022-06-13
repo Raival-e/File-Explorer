@@ -7,7 +7,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class ExtractTask implements QTask, RegularTask {
-    ArrayList<File> filesToExtract;
+    private final ArrayList<File> filesToExtract;
 
     public ExtractTask(ArrayList<File> filesToExtract) {
         this.filesToExtract = filesToExtract;

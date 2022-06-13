@@ -7,7 +7,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class CopyTask implements QTask, RegularTask {
-    ArrayList<File> filesToCopy;
+    private final ArrayList<File> filesToCopy;
 
     public CopyTask(ArrayList<File> filesToCopy) {
         this.filesToCopy = filesToCopy;

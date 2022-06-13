@@ -53,17 +53,17 @@ import java.util.Map;
 public class NormalTab implements QTab {
     public final static String MAX_NAME_LENGTH = "maximum name length";
 
-    TabLayout.Tab tab;
+    private TabLayout.Tab tab;
 
-    File currentPath;
-    File previousPath;
+    private File currentPath;
+    private File previousPath;
 
-    NormalTabFragment fragment;
+    private NormalTabFragment fragment;
 
-    ArrayList<FileItem> activeFilesList;
-    ArrayList<FileItem> searchList = new ArrayList<>();
-    ArrayList<Comparator<File>> comparators = new ArrayList<>();
-    Map<String, Parcelable> pathsStets = new HashMap<>();
+    private ArrayList<FileItem> activeFilesList;
+    private ArrayList<FileItem> searchList = new ArrayList<>();
+    private final ArrayList<Comparator<File>> comparators = new ArrayList<>();
+    private final Map<String, Parcelable> pathsStets = new HashMap<>();
 
     public NormalTab(File path) {
         currentPath = path;

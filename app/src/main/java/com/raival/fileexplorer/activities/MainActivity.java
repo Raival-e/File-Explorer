@@ -47,14 +47,13 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class MainActivity extends BaseActivity {
-    TabLayout tabLayout;
-    ViewPager2 viewPager2;
-    RecyclerView pathTreeView;
-    MaterialToolbar toolbar;
+    private TabLayout tabLayout;
+    private ViewPager2 viewPager2;
+    private RecyclerView pathTreeView;
 
-    ArrayList<QTab> tabs = new ArrayList<>();
-    ArrayList<QTask> tasks = new ArrayList<>();
-    boolean confirmExit = false;
+    private ArrayList<QTab> tabs = new ArrayList<>();
+    private final ArrayList<QTask> tasks = new ArrayList<>();
+    private boolean confirmExit = false;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -88,7 +87,7 @@ public class MainActivity extends BaseActivity {
         tabLayout = findViewById(R.id.tabs);
         viewPager2 = findViewById(R.id.view_pager);
         pathTreeView = findViewById(R.id.path_treeview);
-        toolbar = findViewById(R.id.toolbar);
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
 
         viewPager2.setUserInputEnabled(false);
 

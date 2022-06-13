@@ -20,9 +20,9 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class TasksDialog extends BottomSheetDialogFragment {
-    ArrayList<QTask> tasks;
-    ViewGroup container;
-    QTab tab;
+    private final ArrayList<QTask> tasks;
+    private ViewGroup container;
+    private final QTab tab;
 
     public TasksDialog(ArrayList<QTask> tasks, QTab qTab) {
         this.tasks = tasks;

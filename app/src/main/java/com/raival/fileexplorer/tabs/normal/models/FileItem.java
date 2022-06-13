@@ -5,10 +5,10 @@ import android.graphics.drawable.Drawable;
 import java.io.File;
 
 public class FileItem {
-    File file;
-    String details;
-    Drawable icon;
-    boolean isSelected;
+    private File file;
+    private String details;
+    private Drawable icon;
+    private boolean isSelected;
 
     public FileItem(File file, String details) {
         this.file = file;

@@ -36,21 +36,21 @@ import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 public class SearchFragment extends BottomSheetDialogFragment {
-    NormalTab tab;
-    ArrayList<File> filesToSearchIn;
-    RecyclerView recyclerView;
+    private final NormalTab tab;
+    private final ArrayList<File> filesToSearchIn;
+    private RecyclerView recyclerView;
 
-    TextInputLayout input;
-    CheckBox deepSearch;
-    CheckBox regEx;
-    CheckBox suffix;
-    CheckBox prefix;
-    Button searchButton;
-    ProgressBar progress;
-    TextView fileCount;
+    private TextInputLayout input;
+    private CheckBox deepSearch;
+    private CheckBox regEx;
+    private CheckBox suffix;
+    private CheckBox prefix;
+    private Button searchButton;
+    private ProgressBar progress;
+    private TextView fileCount;
 
-    Thread searchThread;
-    boolean active = false;
+    private Thread searchThread;
+    private boolean active = false;
     private String query;
 
     public SearchFragment(NormalTab tab, ArrayList<File> files) {

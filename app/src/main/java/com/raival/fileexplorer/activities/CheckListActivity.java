@@ -12,8 +12,8 @@ import java.io.File;
 import java.io.IOException;
 
 public class CheckListActivity extends BaseActivity {
-    File file;
-    MaterialChecklist materialChecklist;
+    private File file;
+    private MaterialChecklist materialChecklist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

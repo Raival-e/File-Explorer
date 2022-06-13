@@ -19,19 +19,19 @@ import com.raival.fileexplorer.R;
 import java.util.ArrayList;
 
 public class QDialog extends BottomSheetDialogFragment {
-    String title;
-    String msg;
+    private String title;
+    private String msg;
 
-    String positiveButton;
-    Listener positiveListener;
+    private String positiveButton;
+    private Listener positiveListener;
 
-    String negativeButton;
-    Listener negativeListener;
+    private String negativeButton;
+    private Listener negativeListener;
 
-    String neutralButton;
-    Listener neutralListener;
+    private String neutralButton;
+    private Listener neutralListener;
 
-    ArrayList<View> views = new ArrayList<>();
+    private final ArrayList<View> views = new ArrayList<>();
 
     @Nullable
     @Override

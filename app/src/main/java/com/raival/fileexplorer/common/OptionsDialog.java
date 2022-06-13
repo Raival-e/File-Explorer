@@ -18,12 +18,12 @@ import com.raival.fileexplorer.R;
 import java.util.ArrayList;
 
 public class OptionsDialog extends BottomSheetDialogFragment {
-    String title;
-    String message;
+    private final String title;
+    private String message;
 
-    LinearLayout container;
+    private LinearLayout container;
 
-    ArrayList<OptionHolder> options = new ArrayList<>();
+    private final ArrayList<OptionHolder> options = new ArrayList<>();
 
     public OptionsDialog(String title) {
         this.title = title;

@@ -7,7 +7,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class CompressTask implements QTask, RegularTask {
-    ArrayList<File> filesToCompress;
+    private final ArrayList<File> filesToCompress;
 
     public CompressTask(ArrayList<File> filesToCompress) {
         this.filesToCompress = filesToCompress;

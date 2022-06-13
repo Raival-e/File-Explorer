@@ -17,16 +17,16 @@ import java.util.ArrayList;
 import dalvik.system.DexClassLoader;
 
 public class JavaExecutor {
-    File project;
-    File output;
+    private File project;
+    private File output;
 
-    ArrayList<File> javaFiles = new ArrayList<>();
-    ArrayList<File> dexFiles = new ArrayList<>();
-    ArrayList<File> jarFiles = new ArrayList<>();
+    private final ArrayList<File> javaFiles = new ArrayList<>();
+    private final ArrayList<File> dexFiles = new ArrayList<>();
+    private final ArrayList<File> jarFiles = new ArrayList<>();
 
-    boolean isValidProject = false;
+    private boolean isValidProject = false;
 
-    AppCompatActivity activity;
+    private AppCompatActivity activity;
 
     public JavaExecutor(File folder, AppCompatActivity activity) {
         if (folder.isFile()) {
