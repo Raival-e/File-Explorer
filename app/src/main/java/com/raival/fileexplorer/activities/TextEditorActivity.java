@@ -155,7 +155,7 @@ public class TextEditorActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if(editable.length() > 0){
+                if (editable.length() > 0) {
                     editor.getSearcher().search(editable.toString(),
                             new EditorSearcher.SearchOptions(false, false));
                 } else {
@@ -165,19 +165,19 @@ public class TextEditorActivity extends BaseActivity {
         });
 
         searchPanel.findViewById(R.id.next).setOnClickListener(view -> {
-            if(editor.getSearcher().hasQuery()) editor.getSearcher().gotoNext();
+            if (editor.getSearcher().hasQuery()) editor.getSearcher().gotoNext();
         });
         searchPanel.findViewById(R.id.previous).setOnClickListener(view -> {
-            if(editor.getSearcher().hasQuery()) editor.getSearcher().gotoPrevious();
+            if (editor.getSearcher().hasQuery()) editor.getSearcher().gotoPrevious();
         });
 
         searchPanel.findViewById(R.id.replace).setOnClickListener(view -> {
-            if(editor.getSearcher().hasQuery())
-            editor.getSearcher().replaceThis(replaceInput.getEditText().getText().toString());
+            if (editor.getSearcher().hasQuery())
+                editor.getSearcher().replaceThis(replaceInput.getEditText().getText().toString());
         });
         searchPanel.findViewById(R.id.replace_all).setOnClickListener(view -> {
-            if(editor.getSearcher().hasQuery())
-            editor.getSearcher().replaceAll(replaceInput.getEditText().getText().toString());
+            if (editor.getSearcher().hasQuery())
+                editor.getSearcher().replaceAll(replaceInput.getEditText().getText().toString());
         });
 
     }
@@ -208,7 +208,7 @@ public class TextEditorActivity extends BaseActivity {
         super.onBackPressed();
     }
 
-    private boolean canExecute(){
+    private boolean canExecute() {
         return new File(file.getParentFile(), "Main.java").exists();
     }
 

@@ -207,9 +207,9 @@ public class MainActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         final String title = item.getTitle().toString();
-        if(title.equals("Tasks")){
+        if (title.equals("Tasks")) {
             showTasksDialog();
-        } else if(title.equals("Logs")){
+        } else if (title.equals("Logs")) {
             showLogFile();
         }
         return super.onOptionsItemSelected(item);

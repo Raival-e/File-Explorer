@@ -45,7 +45,7 @@ public class FileInfoDialog extends BottomSheetDialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         ((TextView) view.findViewById(R.id.file_name)).setText(file.getName());
-        FileUtil.setFileIcon((ImageView) view.findViewById(R.id.file_icon), file);
+        FileUtil.setFileIcon(view.findViewById(R.id.file_icon), file);
 
         container = view.findViewById(R.id.container);
 
