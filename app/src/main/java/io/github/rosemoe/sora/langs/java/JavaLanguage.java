@@ -51,7 +51,7 @@ import io.github.rosemoe.sora.widget.SymbolPairMatch;
 public class JavaLanguage implements Language {
 
     private IdentifierAutoComplete autoComplete;
-    private JavaIncrementalAnalyzeManager manager;
+    private final JavaIncrementalAnalyzeManager manager;
 
     public JavaLanguage() {
         autoComplete = new IdentifierAutoComplete(JavaTextTokenizer.sKeywords);
@@ -112,7 +112,7 @@ public class JavaLanguage implements Language {
 
     @Override
     public CharSequence format(CharSequence text) {
-        return CodeFormatter.javaFormat(text.toString());
+        return CodeFormatter.internalJavaFormat(text.toString());
     }
 
     @Override
