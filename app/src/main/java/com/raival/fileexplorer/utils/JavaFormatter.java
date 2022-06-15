@@ -19,6 +19,7 @@ public class JavaFormatter {
 
         boolean isSingleLineComment = false;
         boolean isMultiLineComment = false;
+        boolean isJavaDoc = false;
         boolean isEscape = false;
         boolean isChar = false;
         boolean isString = false;
@@ -63,6 +64,7 @@ public class JavaFormatter {
                             final char nextChar = charArray[nextCharIndex];
                             if (nextChar == '/') {
                                 isMultiLineComment = false;
+                                isJavaDoc = false;
                             }
                         }
                     }
@@ -96,14 +98,16 @@ public class JavaFormatter {
                     }
                 }
 
-                if (currentChar == '{') {
-                    ++indents;
-                }
+                if(!isJavaDoc){
+                    if (currentChar == '{') {
+                        ++indents;
+                    }
 
-                if (currentChar == '}') {
-                    --indents;
-                    if (result.charAt(result.length() - 1) == '\t') {
-                        result.deleteCharAt(result.length() - 1);
+                    if (currentChar == '}') {
+                        --indents;
+                        if (result.charAt(result.length() - 1) == '\t') {
+                            result.deleteCharAt(result.length() - 1);
+                        }
                     }
                 }
 
@@ -115,7 +119,10 @@ public class JavaFormatter {
                         if (isValidNextChar) {
                             final char nextChar = charArray[nextCharIndex];
                             if (nextChar == '*') {
+                                isJavaDoc = true;
                                 result.append(" ");
+                            } else {
+                                isJavaDoc = false;
                             }
                         }
                     }
