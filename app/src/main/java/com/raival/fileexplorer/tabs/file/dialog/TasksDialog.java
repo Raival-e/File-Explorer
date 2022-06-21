@@ -22,11 +22,11 @@ import com.raival.fileexplorer.tabs.file.model.Task;
 import java.util.ArrayList;
 
 public class TasksDialog extends BottomSheetDialogFragment {
+    private final FileExplorerTabFragment fileExplorerTabFragment;
     private ViewGroup container;
     private MainViewModel mainViewModel;
     private AlertDialog alertDialog;
     private View placeHolder;
-    private final FileExplorerTabFragment fileExplorerTabFragment;
 
     public TasksDialog(FileExplorerTabFragment explorerTabFragment) {
         super();
@@ -52,7 +52,7 @@ public class TasksDialog extends BottomSheetDialogFragment {
             placeHolder.setVisibility(View.GONE);
         }
 
-        for(Task task : tasks){
+        for (Task task : tasks) {
             addTask(task, task.isValid());
         }
     }
@@ -79,7 +79,7 @@ public class TasksDialog extends BottomSheetDialogFragment {
         v.findViewById(R.id.remove).setOnClickListener(view -> {
             mainViewModel.tasks.remove(task);
             container.removeView(v);
-            if(container.getChildCount() == 0){
+            if (container.getChildCount() == 0) {
                 placeHolder.setVisibility(View.GONE);
             }
         });
@@ -101,7 +101,7 @@ public class TasksDialog extends BottomSheetDialogFragment {
         task.setActiveDirectory(fileExplorerTabFragment.getCurrentDirectory());
 
         View view = getProgressView();
-        TextView progress =  view.findViewById(R.id.msg);
+        TextView progress = view.findViewById(R.id.msg);
         progress.setText("Processing...");
 
         alertDialog = new MaterialAlertDialogBuilder(requireActivity())

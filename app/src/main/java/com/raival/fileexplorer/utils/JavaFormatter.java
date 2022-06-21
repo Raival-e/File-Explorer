@@ -98,7 +98,7 @@ public class JavaFormatter {
                     }
                 }
 
-                if(!isJavaDoc){
+                if (!isJavaDoc) {
                     if (currentChar == '{') {
                         ++indents;
                     }

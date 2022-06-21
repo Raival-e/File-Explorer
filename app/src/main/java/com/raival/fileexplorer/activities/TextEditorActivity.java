@@ -80,7 +80,8 @@ public class TextEditorActivity extends BaseActivity {
 
         loadEditorPrefs();
 
-        if(editorViewModel.file == null) editorViewModel.file = new File(getIntent().getStringExtra("file"));
+        if (editorViewModel.file == null)
+            editorViewModel.file = new File(getIntent().getStringExtra("file"));
         detectLanguage(editorViewModel.file);
 
         materialToolbar.setTitle(editorViewModel.file.getName());
@@ -232,7 +233,8 @@ public class TextEditorActivity extends BaseActivity {
         menu.findItem(R.id.editor_option_line_number).setChecked(PrefsUtil.getTextEditorShowLineNumber());
         menu.findItem(R.id.editor_option_read_only).setChecked(PrefsUtil.getTextEditorReadOnly());
 
-        if ("java".equalsIgnoreCase(FileUtil.getFileExtension(editorViewModel.file))) menu.add("Format");
+        if ("java".equalsIgnoreCase(FileUtil.getFileExtension(editorViewModel.file)))
+            menu.add("Format");
         if (!canExecute()) menu.findItem(R.id.editor_execute).setVisible(false);
         return super.onCreateOptionsMenu(menu);
     }

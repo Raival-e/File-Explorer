@@ -28,7 +28,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         getWindow().setStatusBarColor(getColor(R.color.background));
     }
 
-    protected void checkPermissions(){
+    protected void checkPermissions() {
         if (grantStoragePermissions()) {
             init();
         }

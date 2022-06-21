@@ -73,8 +73,8 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
             // Set a proper background color
             if (fileItem.isSelected) {
                 background.setForeground(new ColorDrawable(parentFragment.getContext().getColor(R.color.selectedFileHighlight)));
-            } else if(parentFragment.getPreviousDirectory() != null
-                    && fileItem.file.getAbsolutePath().equals(parentFragment.getPreviousDirectory().getAbsolutePath())){
+            } else if (parentFragment.getPreviousDirectory() != null
+                    && fileItem.file.getAbsolutePath().equals(parentFragment.getPreviousDirectory().getAbsolutePath())) {
                 background.setForeground(new ColorDrawable(parentFragment.getContext().getColor(R.color.previousFileHighlight)));
             } else {
                 background.setForeground(null);
@@ -88,7 +88,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
 
             // Handle click event
             background.setOnClickListener(view -> {
-                if(fileItem.file.isFile()){
+                if (fileItem.file.isFile()) {
                     parentFragment.openFile(fileItem);
                 } else {
                     parentFragment.setCurrentDirectory(fileItem.file);

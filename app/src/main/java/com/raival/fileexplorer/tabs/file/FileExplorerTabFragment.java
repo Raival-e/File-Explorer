@@ -45,29 +45,24 @@ import java.util.Comparator;
 
 public class FileExplorerTabFragment extends BaseTabFragment {
     public final static int MAX_NAME_LENGTH = 32;
-
+    private final ArrayList<FileItem> files = new ArrayList<>();
     private RecyclerView fileList;
     private RecyclerView pathRootRv;
     private View placeHolder;
-
     private MainViewModel mainViewModel;
-
     private MaterialToolbar toolbar;
     private BottomBarView bottomBarView;
     private TabView.Tab tabView;
-
     private FileExplorerTabDataHolder dataHolder;
     private FileOptionHandler fileOptionHandler;
-
-    private final ArrayList<FileItem> files = new ArrayList<>();
-
     private File previousDirectory;
     private File currentDirectory;
 
-    public FileExplorerTabFragment(){
+    public FileExplorerTabFragment() {
         super();
     }
-    public FileExplorerTabFragment(File directory){
+
+    public FileExplorerTabFragment(File directory) {
         super();
         currentDirectory = directory;
     }
@@ -87,10 +82,11 @@ public class FileExplorerTabFragment extends BaseTabFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        if(toolbar == null) toolbar = ((MainActivity)requireActivity()).getToolbar();
-        if(bottomBarView == null) bottomBarView = ((MainActivity)requireActivity()).getBottomBarView();
+        if (toolbar == null) toolbar = ((MainActivity) requireActivity()).getToolbar();
+        if (bottomBarView == null)
+            bottomBarView = ((MainActivity) requireActivity()).getBottomBarView();
 
-        if(mainViewModel == null){
+        if (mainViewModel == null) {
             mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         }
 
@@ -113,7 +109,7 @@ public class FileExplorerTabFragment extends BaseTabFragment {
 
     private void createNewDataHolder() {
         dataHolder = new FileExplorerTabDataHolder(getTag());
-        dataHolder.activeDirectory = currentDirectory == null? getDefaultHomeDirectory() : currentDirectory;
+        dataHolder.activeDirectory = currentDirectory == null ? getDefaultHomeDirectory() : currentDirectory;
         mainViewModel.addDataHolder(dataHolder);
     }
 
@@ -236,24 +232,24 @@ public class FileExplorerTabFragment extends BaseTabFragment {
     @Override
     public boolean onBackPressed() {
         //  Unselect selected files (if any)
-        if(getSelectedFiles().size() > 0){
+        if (getSelectedFiles().size() > 0) {
             setSelectAll(false);
             return true;
         }
         // Go back if possible
         final File parent = getCurrentDirectory().getParentFile();
-        if(parent != null && parent.exists() && parent.canRead()){
+        if (parent != null && parent.exists() && parent.canRead()) {
             setCurrentDirectory(getCurrentDirectory().getParentFile());
             // restore RecyclerView state
             restoreRecyclerViewState();
             return true;
         }
         // Close the tab (if not default tab)
-        if(!getTag().startsWith("0_")) {
+        if (!getTag().startsWith("0_")) {
             // Remove the associated DataHolder
             mainViewModel.getDataHolders().removeIf(dataHolder1 -> dataHolder1.getTag().equals(getTag()));
             // Remove the tab
-            ((MainActivity)requireActivity()).closeTab(getTag());
+            ((MainActivity) requireActivity()).closeTab(getTag());
             return true;
         }
 
@@ -267,7 +263,7 @@ public class FileExplorerTabFragment extends BaseTabFragment {
     }
 
     public void setSelectAll(boolean select) {
-        for(FileItem item : files){
+        for (FileItem item : files) {
             item.isSelected = select;
         }
         // Don't call refresh(), because it will recreate the tab and reset the selection
@@ -276,8 +272,8 @@ public class FileExplorerTabFragment extends BaseTabFragment {
 
     public ArrayList<FileItem> getSelectedFiles() {
         final ArrayList<FileItem> list = new ArrayList<>();
-        for(FileItem item : files){
-            if(item.isSelected) list.add(item);
+        for (FileItem item : files) {
+            if (item.isSelected) list.add(item);
         }
         return list;
     }
@@ -285,16 +281,16 @@ public class FileExplorerTabFragment extends BaseTabFragment {
     /**
      * Show/Hide placeholder
      */
-    public void showPlaceholder(boolean isShow){
-        placeHolder.setVisibility(isShow? View.VISIBLE : View.GONE);
+    public void showPlaceholder(boolean isShow) {
+        placeHolder.setVisibility(isShow ? View.VISIBLE : View.GONE);
     }
 
     /**
      * Used to update the title of attached tabView
      */
     private void updateTabTitle() {
-        if(tabView == null) {
-            if(!findAssociatedTabView()){
+        if (tabView == null) {
+            if (!findAssociatedTabView()) {
                 createNewTabView();
             }
         }
@@ -302,11 +298,11 @@ public class FileExplorerTabFragment extends BaseTabFragment {
     }
 
     private void createNewTabView() {
-        tabView = ((MainActivity)requireActivity()).getTabView().addNewTab(getTag());
+        tabView = ((MainActivity) requireActivity()).getTabView().addNewTab(getTag());
     }
 
     private boolean findAssociatedTabView() {
-        tabView = ((MainActivity)requireActivity()).getTabView().getTabByTag(getTag());
+        tabView = ((MainActivity) requireActivity()).getTabView().getTabByTag(getTag());
         return (tabView != null);
     }
 
@@ -325,29 +321,6 @@ public class FileExplorerTabFragment extends BaseTabFragment {
     }
 
     /**
-     * This method handles the following (in order):
-     *   - Updating currentDirectory and previousDirectory fields
-     *   - Updating recyclerViewStates in DataHolder
-     *   - Sorting files based on the preferences
-     *   - Updating tabView title
-     *   - Refreshing adapters (fileList & pathRoot)
-     *   - Updating activeDirectory in DataHolder
-     *
-     * @param dir the directory to open
-     */
-    public void setCurrentDirectory(File dir){
-        previousDirectory = currentDirectory;
-        currentDirectory = dir;
-        // Save only when previousDirectory is set (so that it can restore the state before onDestroy())
-        if(previousDirectory != null) getDataHolder()
-                .recyclerViewStates.put(previousDirectory, fileList.getLayoutManager().onSaveInstanceState());
-        prepareSortedFiles();
-        updateTabTitle();
-        refreshFileList();
-        getDataHolder().activeDirectory = getCurrentDirectory();
-    }
-
-    /**
      * RecyclerView state should be saved when the fragment is destroyed and recreated.
      * #getDataHolder() isn't used here because we don't want to create a new DataHolder if the fragment is about
      * to close (note that the DataHolder gets removed just right before the fragment is closed)
@@ -355,7 +328,7 @@ public class FileExplorerTabFragment extends BaseTabFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(dataHolder != null){
+        if (dataHolder != null) {
             dataHolder.recyclerViewStates.put(getCurrentDirectory(), fileList.getLayoutManager().onSaveInstanceState());
         }
     }
@@ -363,13 +336,13 @@ public class FileExplorerTabFragment extends BaseTabFragment {
     /**
      * This method automatically removes the restored state from DataHolder recyclerViewStates
      * This method is called when:
-     *   - Create the fragment
-     *   - #onBackPressed()
-     *   - when select a directory from pathRoot RecyclerView
+     * - Create the fragment
+     * - #onBackPressed()
+     * - when select a directory from pathRoot RecyclerView
      */
-    public void restoreRecyclerViewState(){
+    public void restoreRecyclerViewState() {
         Parcelable savedState = getDataHolder().recyclerViewStates.get(getCurrentDirectory());
-        if(savedState != null) {
+        if (savedState != null) {
             fileList.getLayoutManager().onRestoreInstanceState(savedState);
             getDataHolder().recyclerViewStates.remove(getCurrentDirectory());
         }
@@ -383,24 +356,25 @@ public class FileExplorerTabFragment extends BaseTabFragment {
         pathRootRv.getAdapter().notifyDataSetChanged();
         pathRootRv.scrollToPosition(pathRootRv.getAdapter().getItemCount() - 1);
         fileList.scrollToPosition(0);
-        if(toolbar != null) toolbar.setSubtitle(FileUtil.getFormattedFileCount(getCurrentDirectory()));
+        if (toolbar != null)
+            toolbar.setSubtitle(FileUtil.getFormattedFileCount(getCurrentDirectory()));
     }
 
     /**
      * Used to refresh the tab
      */
-    public void refresh(){
+    public void refresh() {
         setCurrentDirectory(getCurrentDirectory());
         restoreRecyclerViewState();
     }
 
-    private File getDefaultHomeDirectory(){
+    private File getDefaultHomeDirectory() {
         return Environment.getExternalStorageDirectory();
     }
 
     private void prepareSortedFiles() {
         // Make sure current file is ready
-        if(getCurrentDirectory() == null){
+        if (getCurrentDirectory() == null) {
             loadData();
             return;
         }
@@ -419,8 +393,8 @@ public class FileExplorerTabFragment extends BaseTabFragment {
     }
 
     public void focusOn(File file) {
-        for(int i = 0; i < files.size(); i++){
-            if(file.equals(files.get(i).file)){
+        for (int i = 0; i < files.size(); i++) {
+            if (file.equals(files.get(i).file)) {
                 fileList.scrollToPosition(i);
                 return;
             }
@@ -435,29 +409,29 @@ public class FileExplorerTabFragment extends BaseTabFragment {
     }
 
     public void showFileOptions(FileItem fileItem) {
-        if(fileOptionHandler == null){
+        if (fileOptionHandler == null) {
             fileOptionHandler = new FileOptionHandler(this);
         }
         fileOptionHandler.showOptions(fileItem);
     }
 
     public void openFile(FileItem fileItem) {
-        if(!handleKnownFileExtensions(fileItem)){
+        if (!handleKnownFileExtensions(fileItem)) {
             FileUtil.openFileWith(fileItem.file, false);
         }
     }
 
     private boolean handleKnownFileExtensions(FileItem fileItem) {
-        if(FileUtil.isTextFile(fileItem.file) || FileUtil.isCodeFile(fileItem.file)){
+        if (FileUtil.isTextFile(fileItem.file) || FileUtil.isCodeFile(fileItem.file)) {
             Intent intent = new Intent();
             intent.setClass(requireActivity(), TextEditorActivity.class);
             intent.putExtra("file", fileItem.file.getAbsolutePath());
             requireActivity().startActivity(intent);
             return true;
         }
-        if(FileUtil.getFileExtension(fileItem.file).equals("checklist")){
-            ((MainActivity)requireActivity()).addNewTab(new ChecklistTabFragment(fileItem.file)
-                    , "ChecklistTabFragment_" + ((MainActivity)requireActivity()).generateRandomTag());
+        if (FileUtil.getFileExtension(fileItem.file).equals("checklist")) {
+            ((MainActivity) requireActivity()).addNewTab(new ChecklistTabFragment(fileItem.file)
+                    , "ChecklistTabFragment_" + ((MainActivity) requireActivity()).generateRandomTag());
             return true;
         }
         return false;
@@ -471,15 +445,40 @@ public class FileExplorerTabFragment extends BaseTabFragment {
                 .showDialog(getParentFragmentManager(), "");
     }
 
-    //______________| Getter and Setter |_______________\\
-
-    public ArrayList<FileItem> getFiles(){
+    public ArrayList<FileItem> getFiles() {
         return files;
     }
-    public File getCurrentDirectory(){
+
+    //______________| Getter and Setter |_______________\\
+
+    public File getCurrentDirectory() {
         return currentDirectory;
     }
-    public File getPreviousDirectory(){
+
+    /**
+     * This method handles the following (in order):
+     * - Updating currentDirectory and previousDirectory fields
+     * - Updating recyclerViewStates in DataHolder
+     * - Sorting files based on the preferences
+     * - Updating tabView title
+     * - Refreshing adapters (fileList & pathRoot)
+     * - Updating activeDirectory in DataHolder
+     *
+     * @param dir the directory to open
+     */
+    public void setCurrentDirectory(File dir) {
+        previousDirectory = currentDirectory;
+        currentDirectory = dir;
+        // Save only when previousDirectory is set (so that it can restore the state before onDestroy())
+        if (previousDirectory != null) getDataHolder()
+                .recyclerViewStates.put(previousDirectory, fileList.getLayoutManager().onSaveInstanceState());
+        prepareSortedFiles();
+        updateTabTitle();
+        refreshFileList();
+        getDataHolder().activeDirectory = getCurrentDirectory();
+    }
+
+    public File getPreviousDirectory() {
         return previousDirectory;
     }
 }

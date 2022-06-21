@@ -110,7 +110,8 @@ public class TabView extends HorizontalScrollView {
         if (select) {
             if (oldSelectedTab != null) {
                 oldSelectedTab.select(false);
-                if (onUpdateListener != null) onUpdateListener.onUpdate(oldSelectedTab, ON_UNSELECT);
+                if (onUpdateListener != null)
+                    onUpdateListener.onUpdate(oldSelectedTab, ON_UNSELECT);
             }
             if (onUpdateListener != null) {
                 onUpdateListener.onUpdate(tab, ON_SELECT);
@@ -185,7 +186,8 @@ public class TabView extends HorizontalScrollView {
             exception.select(true);
             if (onUpdateListener != null) onUpdateListener.onUpdate(exception, ON_SELECT);
         }
-        if (tabsArray.size() == 0 && onUpdateListener != null) onUpdateListener.onUpdate(null, ON_EMPTY);
+        if (tabsArray.size() == 0 && onUpdateListener != null)
+            onUpdateListener.onUpdate(null, ON_EMPTY);
     }
 
     public void removeAllTabsExceptSelectedTab() {
@@ -193,7 +195,7 @@ public class TabView extends HorizontalScrollView {
     }
 
     private boolean valid(int pos) {
-        if(tabsArray.isEmpty()) return false;
+        if (tabsArray.isEmpty()) return false;
         return pos > 0 && pos < tabsArray.size();
     }
 
@@ -302,7 +304,7 @@ public class TabView extends HorizontalScrollView {
     }
 
     private View createTabView() {
-        int padding = (int)UiUtil.pxToDp(8);
+        int padding = (int) UiUtil.pxToDp(8);
         LinearLayout bg = new LinearLayout(getContext());
         bg.setOrientation(LinearLayout.VERTICAL);
         bg.setTag("tab_background");
@@ -326,7 +328,7 @@ public class TabView extends HorizontalScrollView {
         line.setTag("tab_indicator");
 
         bg.addView(text, new LinearLayout.LayoutParams(-2, 0, 1));
-        bg.addView(line, new LinearLayout.LayoutParams(-1, (int)UiUtil.pxToDp(2), 0));
+        bg.addView(line, new LinearLayout.LayoutParams(-1, (int) UiUtil.pxToDp(2), 0));
 
         return bg;
     }
@@ -343,19 +345,19 @@ public class TabView extends HorizontalScrollView {
 
     /**
      * Interface
-     *
+     * <p>
      * Events called when create/insert new tab:
      * onCreate > onUnselect? > onSelect?
-     *
+     * <p>
      * Events called when remove a single tab new tab:
      * onRemove > onSelect?
-     *
+     * <p>
      * Events called when remove moe than one tab:
      * onBulkRemove > onSelect?
-     *
+     * <p>
      * Events called when remove all tabs:
      * onRemoveAll
-     *
+     * <p>
      * Event called when update a tab:
      * onUpdate
      */

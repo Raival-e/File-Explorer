@@ -61,8 +61,8 @@ public class CutTask extends Task {
             boolean error = false;
             try {
                 int progress = 1;
-                for(File file : filesToCut){
-                    try{
+                for (File file : filesToCut) {
+                    try {
                         int finalProgress = progress;
                         new Handler(Looper.getMainLooper()).post(() -> {
                             onUpdateListener.onUpdate("["
@@ -74,7 +74,7 @@ public class CutTask extends Task {
                                     + file.getName());
                         });
                         FileUtil.move(file, activeDirectory);
-                    } catch (Exception exception){
+                    } catch (Exception exception) {
                         error = true;
                     }
                     ++progress;

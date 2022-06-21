@@ -19,19 +19,15 @@ import com.raival.fileexplorer.R;
 import java.util.ArrayList;
 
 public class CustomDialog extends BottomSheetDialogFragment {
+    private final ArrayList<View> views = new ArrayList<>();
     private String title;
     private String msg;
-
     private String positiveButton;
     private Listener positiveListener;
-
     private String negativeButton;
     private Listener negativeListener;
-
     private String neutralButton;
     private Listener neutralListener;
-
-    private final ArrayList<View> views = new ArrayList<>();
 
     @Nullable
     @Override

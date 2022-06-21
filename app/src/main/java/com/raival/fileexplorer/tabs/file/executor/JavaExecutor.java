@@ -1,7 +1,5 @@
 package com.raival.fileexplorer.tabs.file.executor;
 
-import android.content.Context;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.tools.r8.D8;
@@ -18,13 +16,11 @@ import java.util.ArrayList;
 import dalvik.system.DexClassLoader;
 
 public class JavaExecutor {
-    private File project;
-    private File output;
-
     private final ArrayList<File> javaFiles = new ArrayList<>();
     private final ArrayList<File> dexFiles = new ArrayList<>();
     private final ArrayList<File> jarFiles = new ArrayList<>();
-
+    private File project;
+    private File output;
     private boolean isValidProject = false;
 
     private AppCompatActivity activity;
@@ -55,11 +51,11 @@ public class JavaExecutor {
                 null,
                 App.appContext.getClassLoader());
         Class<?> clazz = dexClassLoader.loadClass("com.main.Main");
-        for(Method method : clazz.getMethods()){
-            if(method.getName().equals("main")){
-                if(method.getParameterTypes().length == 2){
+        for (Method method : clazz.getMethods()) {
+            if (method.getName().equals("main")) {
+                if (method.getParameterTypes().length == 2) {
                     method.invoke(null, activity, project);
-                } else if(method.getParameterTypes().length == 3){
+                } else if (method.getParameterTypes().length == 3) {
                     method.invoke(null, activity, activity, project);
                 }
             }

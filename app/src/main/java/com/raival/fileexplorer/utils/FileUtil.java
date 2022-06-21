@@ -73,7 +73,7 @@ public class FileUtil {
         return sb.toString();
     }
 
-    public static ArrayList<Comparator<File>> getComparators(){
+    public static ArrayList<Comparator<File>> getComparators() {
         ArrayList<Comparator<File>> list = new ArrayList<>();
         switch (PrefsUtil.getSortingMethod()) {
             case PrefsUtil.SORT_NAME_A2Z: {
@@ -133,7 +133,7 @@ public class FileUtil {
         return (file1, file2) -> Long.compare(file2.length(), file1.length());
     }
 
-    public static String getShortLabel(File file, int maxLength){
+    public static String getShortLabel(File file, int maxLength) {
         String name = Uri.parse(file.getAbsolutePath()).getLastPathSegment();
         if (FileUtil.isExternalStorageFolder(file)) {
             name = FileUtil.INTERNAL_STORAGE;

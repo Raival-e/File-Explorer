@@ -19,11 +19,9 @@ import java.util.ArrayList;
 
 public class OptionsDialog extends BottomSheetDialogFragment {
     private final String title;
-    private String message;
-
-    private LinearLayout container;
-
     private final ArrayList<OptionHolder> options = new ArrayList<>();
+    private String message;
+    private LinearLayout container;
 
     public OptionsDialog(String title) {
         this.title = title;

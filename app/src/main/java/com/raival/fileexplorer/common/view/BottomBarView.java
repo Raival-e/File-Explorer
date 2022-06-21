@@ -15,7 +15,7 @@ import com.raival.fileexplorer.R;
 import java.util.ArrayList;
 
 public class BottomBarView extends LinearLayout {
-    private ArrayList<Item> items = new ArrayList<>();
+    private final ArrayList<Item> items = new ArrayList<>();
 
     public BottomBarView(Context context) {
         super(context);
@@ -33,9 +33,9 @@ public class BottomBarView extends LinearLayout {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    public void addItem(@NonNull String tag, int icon, OnClickListener clickListener){
-        View view = ((LayoutInflater)getContext()
-                .getSystemService( Context.LAYOUT_INFLATER_SERVICE ))
+    public void addItem(@NonNull String tag, int icon, OnClickListener clickListener) {
+        View view = ((LayoutInflater) getContext()
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE))
                 .inflate(R.layout.bottom_bar_menu_item, this, false);
         view.setOnClickListener(clickListener);
         ImageView image = view.findViewById(R.id.icon);
@@ -44,20 +44,21 @@ public class BottomBarView extends LinearLayout {
         addView(view);
     }
 
-    public Item getItem(String tag){
-        for(Item item : items){
-            if(item.tag.equals(tag)){
+    public Item getItem(String tag) {
+        for (Item item : items) {
+            if (item.tag.equals(tag)) {
                 return item;
             }
         }
         return null;
     }
 
-    public void clear(){
+    public void clear() {
         items.clear();
         removeAllViews();
     }
-    public class Item{
+
+    public class Item {
         String tag;
         View view;
         ImageView icon;

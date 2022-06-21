@@ -20,8 +20,8 @@ import java.util.ArrayList;
 
 public class FileInfoDialog extends BottomSheetDialogFragment {
     private final ArrayList<InfoHolder> infoList = new ArrayList<>();
-    private boolean useDefaultFileInfo;
     private final File file;
+    private boolean useDefaultFileInfo;
     private ViewGroup container;
 
     public FileInfoDialog(@NonNull File file) {

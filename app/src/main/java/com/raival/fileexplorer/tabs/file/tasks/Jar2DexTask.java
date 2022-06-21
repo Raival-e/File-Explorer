@@ -7,7 +7,6 @@ import com.android.tools.r8.CompilationMode;
 import com.android.tools.r8.D8;
 import com.android.tools.r8.D8Command;
 import com.android.tools.r8.OutputMode;
-
 import com.raival.fileexplorer.tabs.file.d8.DexDiagnosticHandler;
 import com.raival.fileexplorer.tabs.file.model.Task;
 import com.raival.fileexplorer.utils.D8Util;

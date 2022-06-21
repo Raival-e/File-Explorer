@@ -6,7 +6,7 @@ public class FileItem {
     public File file;
     public boolean isSelected = false;
 
-    public FileItem(File file){
+    public FileItem(File file) {
         this.file = file;
     }
 }

@@ -16,10 +16,10 @@ import com.raival.fileexplorer.activities.MainActivity;
 import com.raival.fileexplorer.activities.TextEditorActivity;
 import com.raival.fileexplorer.activities.model.MainViewModel;
 import com.raival.fileexplorer.common.BackgroundTask;
-import com.raival.fileexplorer.tabs.file.dialog.FileInfoDialog;
-import com.raival.fileexplorer.common.dialog.OptionsDialog;
 import com.raival.fileexplorer.common.dialog.CustomDialog;
+import com.raival.fileexplorer.common.dialog.OptionsDialog;
 import com.raival.fileexplorer.tabs.file.FileExplorerTabFragment;
+import com.raival.fileexplorer.tabs.file.dialog.FileInfoDialog;
 import com.raival.fileexplorer.tabs.file.dialog.SearchDialog;
 import com.raival.fileexplorer.tabs.file.executor.JavaExecutor;
 import com.raival.fileexplorer.tabs.file.model.FileItem;
@@ -94,9 +94,9 @@ public class FileOptionHandler {
         }
 
         bottomDialog.addOption("Copy", R.drawable.ic_baseline_file_copy_24, view1 -> {
-           getMainViewModel().tasks.add(new CopyTask(selectedFiles));
-           parentFragment.setSelectAll(false);
-           notifyNewTask();
+            getMainViewModel().tasks.add(new CopyTask(selectedFiles));
+            parentFragment.setSelectAll(false);
+            notifyNewTask();
         }, true);
 
         bottomDialog.addOption("Cut", R.drawable.ic_round_content_cut_24, view1 -> {
@@ -163,11 +163,11 @@ public class FileOptionHandler {
     }
 
     private void jar2Dex(Jar2DexTask task) {
-        if(task.isValid()){
+        if (task.isValid()) {
             task.setActiveDirectory(parentFragment.getCurrentDirectory());
 
             View view = getProgressView();
-            TextView progress =  view.findViewById(R.id.msg);
+            TextView progress = view.findViewById(R.id.msg);
             progress.setText("Processing...");
 
             AlertDialog dialog = getDialog().setView(view).show();
@@ -193,11 +193,11 @@ public class FileOptionHandler {
                 .addView(input)
                 .setPositiveButton("Save", _view -> {
                     if (input.getError() == null) {
-                        if(task.isValid()){
+                        if (task.isValid()) {
                             task.setActiveDirectory(new File(parentFragment.getCurrentDirectory(), input.getEditText().getText().toString()));
 
                             View view = getProgressView();
-                            TextView progress =  view.findViewById(R.id.msg);
+                            TextView progress = view.findViewById(R.id.msg);
                             progress.setText("Processing...");
 
                             AlertDialog dialog = getDialog().setView(view).show();
@@ -224,8 +224,8 @@ public class FileOptionHandler {
         parentFragment.requireActivity().startActivity(intent);
     }
 
-    private MainViewModel getMainViewModel(){
-        if(mainViewModel == null) {
+    private MainViewModel getMainViewModel() {
+        if (mainViewModel == null) {
             mainViewModel = new ViewModelProvider(parentFragment.requireActivity()).get(MainViewModel.class);
         }
         return mainViewModel;
@@ -239,12 +239,12 @@ public class FileOptionHandler {
         new FileInfoDialog(file).setUseDefaultFileInfo(true).show(parentFragment.getParentFragmentManager(), "");
     }
 
-    private void signApkWithTestKey(APKSignerTask task){
-        if(task.isValid()){
+    private void signApkWithTestKey(APKSignerTask task) {
+        if (task.isValid()) {
             task.setActiveDirectory(parentFragment.getCurrentDirectory());
 
             View view = getProgressView();
-            TextView progress =  view.findViewById(R.id.msg);
+            TextView progress = view.findViewById(R.id.msg);
             progress.setText("Processing...");
 
             AlertDialog dialog = getDialog().setView(view).show();
@@ -263,7 +263,7 @@ public class FileOptionHandler {
         return parentFragment.requireActivity().getLayoutInflater().inflate(R.layout.progress_view, null);
     }
 
-    private AlertDialog.Builder getDialog(){
+    private AlertDialog.Builder getDialog() {
         return new MaterialAlertDialogBuilder(parentFragment.requireActivity())
                 .setCancelable(false);
     }

@@ -31,31 +31,33 @@ public class ChecklistTabFragment extends BaseTabFragment {
     private TabView.Tab tabView;
     private File file;
 
-    public ChecklistTabFragment(){
+    public ChecklistTabFragment() {
         super();
     }
+
     public ChecklistTabFragment(File file) {
         super();
         this.file = file;
     }
 
     private void createDataHolderIfNecessary() {
-        if(getDataHolder() == null){
+        if (getDataHolder() == null) {
             ChecklistTabDataHolder checklistTabDataHolder = new ChecklistTabDataHolder(getTag());
             checklistTabDataHolder.file = file;
             getMainViewModel().addDataHolder(checklistTabDataHolder);
         }
     }
 
-    private ChecklistTabDataHolder getDataHolder(){
-        for(BaseDataHolder baseDataHolder : getMainViewModel().getDataHolders()){
-            if(baseDataHolder.getTag().equals(getTag())) return (ChecklistTabDataHolder) baseDataHolder;
+    private ChecklistTabDataHolder getDataHolder() {
+        for (BaseDataHolder baseDataHolder : getMainViewModel().getDataHolders()) {
+            if (baseDataHolder.getTag().equals(getTag()))
+                return (ChecklistTabDataHolder) baseDataHolder;
         }
         return null;
     }
 
-    private MainViewModel getMainViewModel(){
-        if(mainViewModel == null) {
+    private MainViewModel getMainViewModel() {
+        if (mainViewModel == null) {
             mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         }
         return mainViewModel;
@@ -88,7 +90,7 @@ public class ChecklistTabFragment extends BaseTabFragment {
     }
 
     private void saveFile() {
-        if(getDataHolder() == null) return;
+        if (getDataHolder() == null) return;
         try {
             FileUtil.writeFile(getDataHolder().file, materialChecklist.getItems(true, true));
         } catch (IOException e) {
@@ -102,19 +104,20 @@ public class ChecklistTabFragment extends BaseTabFragment {
         // Close the tab
         saveFile();
         getMainViewModel().getDataHolders().removeIf(dataHolder1 -> dataHolder1.getTag().equals(getTag()));
-        ((MainActivity)requireActivity()).closeTab(getTag());
+        ((MainActivity) requireActivity()).closeTab(getTag());
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        if(bottomBarView == null) bottomBarView = ((MainActivity)requireActivity()).getBottomBarView();
+        if (bottomBarView == null)
+            bottomBarView = ((MainActivity) requireActivity()).getBottomBarView();
         prepareBottomBarView();
         updateTabTitle();
     }
 
     private void updateTabTitle() {
-        if(tabView == null) {
-            if(!findAssociatedTabView()){
+        if (tabView == null) {
+            if (!findAssociatedTabView()) {
                 createNewTabView();
             }
         }
@@ -122,11 +125,11 @@ public class ChecklistTabFragment extends BaseTabFragment {
     }
 
     private void createNewTabView() {
-        tabView = ((MainActivity)requireActivity()).getTabView().addNewTab(getTag());
+        tabView = ((MainActivity) requireActivity()).getTabView().addNewTab(getTag());
     }
 
     private boolean findAssociatedTabView() {
-        tabView = ((MainActivity)requireActivity()).getTabView().getTabByTag(getTag());
+        tabView = ((MainActivity) requireActivity()).getTabView().getTabByTag(getTag());
         return (tabView != null);
     }
 

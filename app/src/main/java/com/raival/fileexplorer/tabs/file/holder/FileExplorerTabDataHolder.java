@@ -4,7 +4,6 @@ import android.os.Parcelable;
 
 import com.raival.fileexplorer.tabs.BaseDataHolder;
 import com.raival.fileexplorer.tabs.file.model.FileItem;
-import com.raival.fileexplorer.tabs.file.model.Task;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -17,7 +16,7 @@ public class FileExplorerTabDataHolder extends BaseDataHolder {
     public Map<File, Parcelable> recyclerViewStates = new HashMap<>();
     public ArrayList<FileItem> searchList = new ArrayList<>();
 
-    public FileExplorerTabDataHolder(String tag){
+    public FileExplorerTabDataHolder(String tag) {
         this.tag = tag;
     }
 

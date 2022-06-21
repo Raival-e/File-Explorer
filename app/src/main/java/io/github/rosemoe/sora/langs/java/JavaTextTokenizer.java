@@ -31,23 +31,20 @@ import io.github.rosemoe.sora.util.TrieTree;
  */
 public class JavaTextTokenizer {
 
+    protected static String[] sKeywords;
     private static TrieTree<Tokens> keywords;
 
     static {
         doStaticInit();
     }
 
-    public static TrieTree<Tokens> getTree() {
-        return keywords;
-    }
-
-    private CharSequence source;
     protected int bufferLen;
+    protected int offset;
+    protected int length;
+    private CharSequence source;
     private int line;
     private int column;
     private int index;
-    protected int offset;
-    protected int length;
     private Tokens currToken;
     private boolean lcCal;
 
@@ -57,6 +54,49 @@ public class JavaTextTokenizer {
         }
         this.source = src;
         init();
+    }
+
+    public static TrieTree<Tokens> getTree() {
+        return keywords;
+    }
+
+    protected static void doStaticInit() {
+        sKeywords = new String[]{
+                "assert", "abstract", "boolean", "byte", "char", "class", "do",
+                "double", "final", "float", "for", "if", "int", "long", "new",
+                "public", "private", "protected", "package", "return", "static",
+                "short", "super", "switch", "else", "volatile", "synchronized", "strictfp",
+                "goto", "continue", "break", "transient", "void", "try", "catch",
+                "finally", "while", "case", "default", "const", "enum", "extends",
+                "implements", "import", "instanceof", "interface", "native",
+                "this", "throw", "throws", "true", "false", "null", "var", "sealed", "permits"
+        };
+        Tokens[] sTokens = new Tokens[]{
+                Tokens.ABSTRACT, Tokens.ASSERT, Tokens.BOOLEAN, Tokens.BYTE, Tokens.CHAR, Tokens.CLASS, Tokens.DO,
+                Tokens.DOUBLE, Tokens.FINAL, Tokens.FLOAT, Tokens.FOR, Tokens.IF, Tokens.INT, Tokens.LONG, Tokens.NEW,
+                Tokens.PUBLIC, Tokens.PRIVATE, Tokens.PROTECTED, Tokens.PACKAGE, Tokens.RETURN, Tokens.STATIC,
+                Tokens.SHORT, Tokens.SUPER, Tokens.SWITCH, Tokens.ELSE, Tokens.VOLATILE, Tokens.SYNCHRONIZED, Tokens.STRICTFP,
+                Tokens.GOTO, Tokens.CONTINUE, Tokens.BREAK, Tokens.TRANSIENT, Tokens.VOID, Tokens.TRY, Tokens.CATCH,
+                Tokens.FINALLY, Tokens.WHILE, Tokens.CASE, Tokens.DEFAULT, Tokens.CONST, Tokens.ENUM, Tokens.EXTENDS,
+                Tokens.IMPLEMENTS, Tokens.IMPORT, Tokens.INSTANCEOF, Tokens.INTERFACE, Tokens.NATIVE,
+                Tokens.THIS, Tokens.THROW, Tokens.THROWS, Tokens.TRUE, Tokens.FALSE, Tokens.NULL, Tokens.VAR, Tokens.SEALED, Tokens.PERMITS
+        };
+        keywords = new TrieTree<>();
+        for (int i = 0; i < sKeywords.length; i++) {
+            keywords.put(sKeywords[i], sTokens[i]);
+        }
+    }
+
+    protected static boolean isDigit(char c) {
+        return ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f'));
+    }
+
+    protected static boolean isPrimeDigit(char c) {
+        return (c >= '0' && c <= '9');
+    }
+
+    protected static boolean isWhitespace(char c) {
+        return (c == '\t' || c == ' ' || c == '\f' || c == '\n' || c == '\r');
     }
 
     private void init() {
@@ -248,6 +288,8 @@ public class JavaTextTokenizer {
         }
     }
 
+    /* The following methods have been simplified for syntax high light */
+
     protected Tokens scanIdentifier(char ch) {
         TrieTree.Node<Tokens> n = keywords.root.map.get(ch);
         while (offset + length < bufferLen && isIdentifierPart(ch = charAt(offset + length))) {
@@ -382,8 +424,6 @@ public class JavaTextTokenizer {
         }
     }
 
-    /* The following methods have been simplified for syntax high light */
-
     protected Tokens scanDIV() {
         if (offset + 1 == bufferLen) {
             return Tokens.DIV;
@@ -441,46 +481,5 @@ public class JavaTextTokenizer {
         offset = 0;
         currToken = Tokens.WHITESPACE;
         bufferLen = src.length();
-    }
-
-    protected static String[] sKeywords;
-
-    protected static void doStaticInit() {
-        sKeywords = new String[]{
-                "assert", "abstract", "boolean", "byte", "char", "class", "do",
-                "double", "final", "float", "for", "if", "int", "long", "new",
-                "public", "private", "protected", "package", "return", "static",
-                "short", "super", "switch", "else", "volatile", "synchronized", "strictfp",
-                "goto", "continue", "break", "transient", "void", "try", "catch",
-                "finally", "while", "case", "default", "const", "enum", "extends",
-                "implements", "import", "instanceof", "interface", "native",
-                "this", "throw", "throws", "true", "false", "null", "var", "sealed", "permits"
-        };
-        Tokens[] sTokens = new Tokens[]{
-                Tokens.ABSTRACT, Tokens.ASSERT, Tokens.BOOLEAN, Tokens.BYTE, Tokens.CHAR, Tokens.CLASS, Tokens.DO,
-                Tokens.DOUBLE, Tokens.FINAL, Tokens.FLOAT, Tokens.FOR, Tokens.IF, Tokens.INT, Tokens.LONG, Tokens.NEW,
-                Tokens.PUBLIC, Tokens.PRIVATE, Tokens.PROTECTED, Tokens.PACKAGE, Tokens.RETURN, Tokens.STATIC,
-                Tokens.SHORT, Tokens.SUPER, Tokens.SWITCH, Tokens.ELSE, Tokens.VOLATILE, Tokens.SYNCHRONIZED, Tokens.STRICTFP,
-                Tokens.GOTO, Tokens.CONTINUE, Tokens.BREAK, Tokens.TRANSIENT, Tokens.VOID, Tokens.TRY, Tokens.CATCH,
-                Tokens.FINALLY, Tokens.WHILE, Tokens.CASE, Tokens.DEFAULT, Tokens.CONST, Tokens.ENUM, Tokens.EXTENDS,
-                Tokens.IMPLEMENTS, Tokens.IMPORT, Tokens.INSTANCEOF, Tokens.INTERFACE, Tokens.NATIVE,
-                Tokens.THIS, Tokens.THROW, Tokens.THROWS, Tokens.TRUE, Tokens.FALSE, Tokens.NULL, Tokens.VAR, Tokens.SEALED, Tokens.PERMITS
-        };
-        keywords = new TrieTree<>();
-        for (int i = 0; i < sKeywords.length; i++) {
-            keywords.put(sKeywords[i], sTokens[i]);
-        }
-    }
-
-    protected static boolean isDigit(char c) {
-        return ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f'));
-    }
-
-    protected static boolean isPrimeDigit(char c) {
-        return (c >= '0' && c <= '9');
-    }
-
-    protected static boolean isWhitespace(char c) {
-        return (c == '\t' || c == ' ' || c == '\f' || c == '\n' || c == '\r');
     }
 }

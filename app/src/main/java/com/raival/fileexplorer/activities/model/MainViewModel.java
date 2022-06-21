@@ -8,33 +8,30 @@ import com.raival.fileexplorer.tabs.file.model.Task;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class MainViewModel extends ViewModel {
+    //______________| FileExplorerTab methods |_______________\\
+    public final ArrayList<Task> tasks = new ArrayList<Task>();
     private final List<BaseDataHolder> dataHolders = new ArrayList<>();
 
-    public void addDataHolder (BaseDataHolder dataHolder){
+    public void addDataHolder(BaseDataHolder dataHolder) {
         dataHolders.add(dataHolder);
     }
 
-    public List<BaseDataHolder> getDataHolders(){
+    public List<BaseDataHolder> getDataHolders() {
         return dataHolders;
     }
 
-
-
-    //______________| FileExplorerTab methods |_______________\\
-    public final ArrayList<Task> tasks = new ArrayList<Task>();
-    public FileExplorerTabDataHolder getFileExplorerDataHolder(String tag){
-        for (BaseDataHolder dataHolder : dataHolders){
-            if(dataHolder instanceof FileExplorerTabDataHolder){
-                if(dataHolder.getTag().equals(tag)) return (FileExplorerTabDataHolder) dataHolder;
+    public FileExplorerTabDataHolder getFileExplorerDataHolder(String tag) {
+        for (BaseDataHolder dataHolder : dataHolders) {
+            if (dataHolder instanceof FileExplorerTabDataHolder) {
+                if (dataHolder.getTag().equals(tag)) return (FileExplorerTabDataHolder) dataHolder;
             }
         }
         return null;
     }
 
-    public List<FileExplorerTabDataHolder> getFileExplorerDataHolders(){
+    public List<FileExplorerTabDataHolder> getFileExplorerDataHolders() {
         List<FileExplorerTabDataHolder> list = new ArrayList<>();
         dataHolders.stream()
                 .filter(baseDataHolder -> baseDataHolder instanceof FileExplorerTabDataHolder)

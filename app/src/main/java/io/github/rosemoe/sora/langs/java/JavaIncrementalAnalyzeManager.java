@@ -42,9 +42,27 @@ public class JavaIncrementalAnalyzeManager extends AsyncIncrementalAnalyzeManage
 
     private final static int STATE_NORMAL = 0;
     private final static int STATE_INCOMPLETE_COMMENT = 1;
-
+    private static final int ORDINAL_LBRACE = Tokens.LBRACE.ordinal();
+    private static final int ORDINAL_RBRACE = Tokens.RBRACE.ordinal();
+    private static final int ORDINAL_IDT = Tokens.IDENTIFIER.ordinal();
+    private static Tokens[] mapping;
     private final ThreadLocal<JavaTextTokenizer> tokenizerProvider = new ThreadLocal<>();
     protected IdentifierAutoComplete.Identifiers identifiers;
+
+    private static long token(Tokens type, int column) {
+        return IntPair.pack(type.ordinal(), column);
+    }
+
+    private static Tokens ordinalToToken(int ordinal) {
+        if (mapping == null) {
+            var tokens = Tokens.values();
+            mapping = new Tokens[tokens.length];
+            for (var token : tokens) {
+                mapping[token.ordinal()] = token;
+            }
+        }
+        return mapping[ordinal];
+    }
 
     private synchronized JavaTextTokenizer obtainTokenizer() {
         JavaTextTokenizer res = tokenizerProvider.get();
@@ -179,10 +197,6 @@ public class JavaIncrementalAnalyzeManager extends AsyncIncrementalAnalyzeManage
             }
         }
         return state;
-    }
-
-    private static long token(Tokens type, int column) {
-        return IntPair.pack(type.ordinal(), column);
     }
 
     @Override
@@ -332,21 +346,5 @@ public class JavaIncrementalAnalyzeManager extends AsyncIncrementalAnalyzeManage
         }
         return spans;
     }
-
-    private static Tokens ordinalToToken(int ordinal) {
-        if (mapping == null) {
-            var tokens = Tokens.values();
-            mapping = new Tokens[tokens.length];
-            for (var token : tokens) {
-                mapping[token.ordinal()] = token;
-            }
-        }
-        return mapping[ordinal];
-    }
-
-    private static final int ORDINAL_LBRACE = Tokens.LBRACE.ordinal();
-    private static final int ORDINAL_RBRACE = Tokens.RBRACE.ordinal();
-    private static final int ORDINAL_IDT = Tokens.IDENTIFIER.ordinal();
-    private static Tokens[] mapping;
 
 }

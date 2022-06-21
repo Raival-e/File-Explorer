@@ -36,7 +36,7 @@ public class MainActivity extends BaseActivity {
     private FragmentContainerView fragmentContainerView;
     private MaterialToolbar toolbar;
     private BottomBarView bottomBarView;
-    private boolean confirmExit = false;
+    private final boolean confirmExit = false;
 
     /**
      * Called after read & write permissions are granted
@@ -44,17 +44,17 @@ public class MainActivity extends BaseActivity {
     @Override
     public void init() {
         initPrefs();
-        if(getTabFragments().isEmpty()) {
+        if (getTabFragments().isEmpty()) {
             loadDefaultTab();
         } else {
             fragmentContainerView.post(this::restoreTabs);
         }
     }
 
-    private List<BaseTabFragment> getTabFragments(){
+    private List<BaseTabFragment> getTabFragments() {
         List<BaseTabFragment> list = new ArrayList<>();
-        for(Fragment fragment : getSupportFragmentManager().getFragments()){
-            if(fragment instanceof BaseTabFragment){
+        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+            if (fragment instanceof BaseTabFragment) {
                 list.add((BaseTabFragment) fragment);
             }
         }
@@ -65,16 +65,16 @@ public class MainActivity extends BaseActivity {
         final String activeFragmentTag = getTabFragments().get(0).getTag();
         MainViewModel mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
-        for(int i = 0; i < mainViewModel.getDataHolders().size(); i++){
+        for (int i = 0; i < mainViewModel.getDataHolders().size(); i++) {
             BaseDataHolder dataHolder = mainViewModel.getDataHolders().get(i);
-            if(!dataHolder.getTag().equals(activeFragmentTag)){
+            if (!dataHolder.getTag().equals(activeFragmentTag)) {
                 // Handle FileExplorerTabDataHolder
-                if(dataHolder instanceof FileExplorerTabDataHolder){
+                if (dataHolder instanceof FileExplorerTabDataHolder) {
                     tabView.insertNewTabAt(i, dataHolder.getTag(), false)
-                            .setName(FileUtil.getShortLabel(((FileExplorerTabDataHolder)dataHolder).activeDirectory, FileExplorerTabFragment.MAX_NAME_LENGTH));
-                } else if(dataHolder instanceof ChecklistTabDataHolder){
+                            .setName(FileUtil.getShortLabel(((FileExplorerTabDataHolder) dataHolder).activeDirectory, FileExplorerTabFragment.MAX_NAME_LENGTH));
+                } else if (dataHolder instanceof ChecklistTabDataHolder) {
                     tabView.insertNewTabAt(i, dataHolder.getTag(), false)
-                            .setName(FileUtil.getShortLabel(((ChecklistTabDataHolder)dataHolder).file, FileExplorerTabFragment.MAX_NAME_LENGTH));
+                            .setName(FileUtil.getShortLabel(((ChecklistTabDataHolder) dataHolder).file, FileExplorerTabFragment.MAX_NAME_LENGTH));
                 }
                 // handle other types of DataHolders here
             }
@@ -110,17 +110,17 @@ public class MainActivity extends BaseActivity {
         toolbar.setNavigationOnClickListener(null);
 
         tabView.setOnUpdateTabViewListener((tab, event) -> {
-            if(event == TabView.ON_SELECT){
-                if(tab.tag.startsWith("FileExplorerTabFragment_") || tab.tag.startsWith("0_FileExplorerTabFragment_")){
-                    if(!getSupportFragmentManager().findFragmentById(R.id.fragment_container).getTag().equals(tab.tag)){
+            if (event == TabView.ON_SELECT) {
+                if (tab.tag.startsWith("FileExplorerTabFragment_") || tab.tag.startsWith("0_FileExplorerTabFragment_")) {
+                    if (!getSupportFragmentManager().findFragmentById(R.id.fragment_container).getTag().equals(tab.tag)) {
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.fragment_container, new FileExplorerTabFragment(), tab.tag)
                                 .setReorderingAllowed(true)
                                 .commit();
                     }
                 }
-                if(tab.tag.startsWith("ChecklistTabFragment_")){
-                    if(!getSupportFragmentManager().findFragmentById(R.id.fragment_container).getTag().equals(tab.tag)){
+                if (tab.tag.startsWith("ChecklistTabFragment_")) {
+                    if (!getSupportFragmentManager().findFragmentById(R.id.fragment_container).getTag().equals(tab.tag)) {
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.fragment_container, new ChecklistTabFragment(), tab.tag)
                                 .setReorderingAllowed(true)
@@ -173,10 +173,10 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         BaseTabFragment fragment = (BaseTabFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        if(fragment != null){
-            if(fragment.onBackPressed()){
+        if (fragment != null) {
+            if (fragment.onBackPressed()) {
                 return;
             }
         }
@@ -191,21 +191,24 @@ public class MainActivity extends BaseActivity {
                 .build();
     }
 
-    public MaterialToolbar getToolbar(){
+    public MaterialToolbar getToolbar() {
         return toolbar;
     }
-    public BottomBarView getBottomBarView(){
+
+    public BottomBarView getBottomBarView() {
         return bottomBarView;
     }
-    public TabView getTabView(){
+
+    public TabView getTabView() {
         return tabView;
     }
-    public void closeTab(String tag){
+
+    public void closeTab(String tag) {
         // Remove the tab from TabView. TabView will select another tab which will replace the corresponding fragment.
         // The DataHolder must be removed by the fragment itself, as deletion process differs for each tab.
 
         // Default fragment (the one added when the app is opened) won't be closed.
-        if(tag.startsWith("0_")) return;
+        if (tag.startsWith("0_")) return;
         tabView.removeTab(tag);
     }
 }
