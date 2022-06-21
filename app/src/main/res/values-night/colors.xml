@@ -27,4 +27,7 @@
     <color name="surfaceVariant">@color/material_dynamic_neutral_variant30</color>
     <color name="onSurfaceVariant">@color/material_dynamic_neutral_variant80</color>
     <color name="outline">@color/material_dynamic_neutral_variant60</color>
+
+    <color name="selectedFileHighlight">#2F0066FF</color>
+    <color name="previousFileHighlight">#0FFDFDFD</color>
 </resources>

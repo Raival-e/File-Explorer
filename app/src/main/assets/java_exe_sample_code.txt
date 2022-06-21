@@ -26,11 +26,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class Main {
     static AppCompatActivity activity;
-    static Context context;
     static File directory;
 
-	public static void main(AppCompatActivity _activity, Context _context, File _file) {
-		context = _context;
+	public static void main(AppCompatActivity _activity, File _file) {
 		activity = _activity;
 		directory = _file;
 		init();

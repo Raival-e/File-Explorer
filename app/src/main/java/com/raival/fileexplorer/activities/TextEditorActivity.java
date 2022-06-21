@@ -10,13 +10,15 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.raival.fileexplorer.App;
 import com.raival.fileexplorer.R;
+import com.raival.fileexplorer.activities.model.TextEditorViewModel;
 import com.raival.fileexplorer.common.BackgroundTask;
-import com.raival.fileexplorer.common.QDialog;
-import com.raival.fileexplorer.exe.java.JavaExecutor;
+import com.raival.fileexplorer.common.dialog.CustomDialog;
+import com.raival.fileexplorer.tabs.file.executor.JavaExecutor;
 import com.raival.fileexplorer.utils.FileUtil;
 import com.raival.fileexplorer.utils.PrefsUtil;
 
@@ -35,13 +37,20 @@ import io.github.rosemoe.sora.widget.schemes.SchemeGitHub;
 
 public class TextEditorActivity extends BaseActivity {
     private CodeEditor editor;
-    private File file;
     private View searchPanel;
+    private TextEditorViewModel editorViewModel;
+
+    @Override
+    public void init() {
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.text_editor_activity_layout);
+        setContentView(R.layout.text_editor_activity);
+
+        editorViewModel = new ViewModelProvider(this).get(TextEditorViewModel.class);
 
         editor = findViewById(R.id.editor);
         Toolbar materialToolbar = findViewById(R.id.toolbar);
@@ -60,6 +69,7 @@ public class TextEditorActivity extends BaseActivity {
         editor.setTextSize(14);
         editor.setLigatureEnabled(true);
         editor.setHighlightCurrentBlock(true);
+        editor.setStickyTextSelection(true);
         editor.setTypefaceText(Typeface.MONOSPACE);
 
         editor.getProps().symbolPairAutoCompletion = false;
@@ -70,10 +80,10 @@ public class TextEditorActivity extends BaseActivity {
 
         loadEditorPrefs();
 
-        file = new File(getIntent().getStringExtra("file"));
-        detectLanguage(file);
+        if(editorViewModel.file == null) editorViewModel.file = new File(getIntent().getStringExtra("file"));
+        detectLanguage(editorViewModel.file);
 
-        materialToolbar.setTitle(file.getName());
+        materialToolbar.setTitle(editorViewModel.file.getName());
 
         setSupportActionBar(materialToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -81,27 +91,27 @@ public class TextEditorActivity extends BaseActivity {
         materialToolbar.setNavigationOnClickListener(view -> onBackPressed());
 
 
-        if (!file.exists()) {
+        if (!editorViewModel.file.exists()) {
             App.showMsg("File not found");
             finish();
         }
-        if (file.isDirectory()) {
+        if (editorViewModel.file.isDirectory()) {
             App.showMsg("Invalid file");
             finish();
         }
 
         try {
-            editor.setText(FileUtil.readFile(file));
+            editor.setText(FileUtil.readFile(editorViewModel.file));
         } catch (Exception exception) {
             exception.printStackTrace();
-            App.showMsg("Failed to read file: " + file.getAbsolutePath());
+            App.showMsg("Failed to read file: " + editorViewModel.file.getAbsolutePath());
             App.log(exception);
             finish();
         }
 
         editor.post(() -> {
             if (FileUtil.isEmpty(editor.getText().toString())) {
-                if ("Main.java".equalsIgnoreCase(file.getName())) {
+                if ("Main.java".equalsIgnoreCase(editorViewModel.file.getName())) {
                     askToLoadCodeSample();
                 }
             }
@@ -110,7 +120,7 @@ public class TextEditorActivity extends BaseActivity {
     }
 
     private void askToLoadCodeSample() {
-        new QDialog()
+        new CustomDialog()
                 .setTitle("Help")
                 .setMsg("Do you want to use an executable code sample in this file?")
                 .setPositiveButton("Yes", (v) -> editor.setText(getCodeSample()), true)
@@ -190,8 +200,8 @@ public class TextEditorActivity extends BaseActivity {
             return;
         }
         try {
-            if (!FileUtil.readFile(file).equals(editor.getText().toString())) {
-                new QDialog()
+            if (!FileUtil.readFile(editorViewModel.file).equals(editor.getText().toString())) {
+                new CustomDialog()
                         .setTitle("Save File")
                         .setMsg("Do you want to save this file before exit?")
                         .setPositiveButton("Yes", view -> {
@@ -209,7 +219,7 @@ public class TextEditorActivity extends BaseActivity {
     }
 
     private boolean canExecute() {
-        return new File(file.getParentFile(), "Main.java").exists();
+        return new File(editorViewModel.file.getParentFile(), "Main.java").exists();
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -222,7 +232,7 @@ public class TextEditorActivity extends BaseActivity {
         menu.findItem(R.id.editor_option_line_number).setChecked(PrefsUtil.getTextEditorShowLineNumber());
         menu.findItem(R.id.editor_option_read_only).setChecked(PrefsUtil.getTextEditorReadOnly());
 
-        if ("java".equalsIgnoreCase(FileUtil.getFileExtension(file))) menu.add("Format");
+        if ("java".equalsIgnoreCase(FileUtil.getFileExtension(editorViewModel.file))) menu.add("Format");
         if (!canExecute()) menu.findItem(R.id.editor_execute).setVisible(false);
         return super.onCreateOptionsMenu(menu);
     }
@@ -302,7 +312,7 @@ public class TextEditorActivity extends BaseActivity {
     }
 
     private void executeFile() {
-        JavaExecutor javaExecutor = new JavaExecutor(file.getParentFile(), this);
+        JavaExecutor javaExecutor = new JavaExecutor(editorViewModel.file.getParentFile(), this);
         BackgroundTask backgroundTask = new BackgroundTask();
 
         AtomicReference<String> error = new AtomicReference<>("");
@@ -335,7 +345,7 @@ public class TextEditorActivity extends BaseActivity {
     }
 
     private void showDialog(String title, String msg) {
-        new QDialog()
+        new CustomDialog()
                 .setTitle(title)
                 .setMsg(msg)
                 .setPositiveButton("Ok", null, true)
@@ -344,7 +354,7 @@ public class TextEditorActivity extends BaseActivity {
 
     private void saveFile(String content) {
         try {
-            FileUtil.writeFile(file, content);
+            FileUtil.writeFile(editorViewModel.file, content);
         } catch (IOException e) {
             e.printStackTrace();
             App.showMsg("Something went wrong, check app debug for more details");

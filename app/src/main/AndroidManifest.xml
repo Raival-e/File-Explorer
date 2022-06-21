@@ -18,18 +18,13 @@
         android:largeHeap="true"
         android:theme="@style/Theme.FileExplorer">
         <activity
-            android:name="com.raival.fileexplorer.activities.CheckListActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name="com.raival.fileexplorer.activities.TextEditorActivity"
             android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait"/>
         <activity
             android:name="com.raival.fileexplorer.activities.MainActivity"
             android:windowSoftInputMode="adjustResize"
-            android:exported="true"
-            android:screenOrientation="portrait">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
