@@ -61,6 +61,54 @@ public class FileUtil {
         };
     }
 
+    public static String getFileDetails(File file) {
+        final StringBuilder sb = new StringBuilder();
+        sb.append(TimeUtil.getLastModifiedDate(file, TimeUtil.REGULAR_DATE_FORMAT));
+        sb.append("  |  ");
+        if (file.isFile()) {
+            sb.append(FileUtil.getFormattedFileSize(file));
+        } else {
+            sb.append(FileUtil.getFormattedFileCount(file));
+        }
+        return sb.toString();
+    }
+
+    public static ArrayList<Comparator<File>> getComparators(){
+        ArrayList<Comparator<File>> list = new ArrayList<>();
+        switch (PrefsUtil.getSortingMethod()) {
+            case PrefsUtil.SORT_NAME_A2Z: {
+                list.add(FileUtil.sortNameAsc());
+                break;
+            }
+            case PrefsUtil.SORT_NAME_Z2A: {
+                list.add(FileUtil.sortNameDesc());
+                break;
+            }
+            case PrefsUtil.SORT_SIZE_SMALLER: {
+                list.add(FileUtil.sortSizeAsc());
+                break;
+            }
+            case PrefsUtil.SORT_SIZE_BIGGER: {
+                list.add(FileUtil.sortSizeDesc());
+                break;
+            }
+            case PrefsUtil.SORT_DATE_NEWER: {
+                list.add(FileUtil.sortDateDesc());
+                break;
+            }
+            case PrefsUtil.SORT_DATE_OLDER: {
+                list.add(FileUtil.sortDateAsc());
+                break;
+            }
+        }
+        if (PrefsUtil.listFoldersFirst()) {
+            list.add(FileUtil.sortFoldersFirst());
+        } else {
+            list.add(FileUtil.sortFilesFirst());
+        }
+        return list;
+    }
+
     public static Comparator<File> sortDateAsc() {
         return Comparator.comparingLong(File::lastModified);
     }
@@ -85,6 +133,17 @@ public class FileUtil {
         return (file1, file2) -> Long.compare(file2.length(), file1.length());
     }
 
+    public static String getShortLabel(File file, int maxLength){
+        String name = Uri.parse(file.getAbsolutePath()).getLastPathSegment();
+        if (FileUtil.isExternalStorageFolder(file)) {
+            name = FileUtil.INTERNAL_STORAGE;
+        }
+        if (name.length() > maxLength) {
+            name = name.substring(0, maxLength - 3) + "...";
+        }
+        return name;
+    }
+
     public static void setFileIcon(ImageView icon, File file) {
         if (!file.isFile()) {
             icon.setImageResource(R.drawable.folder_icon);
@@ -107,19 +166,19 @@ public class FileUtil {
             icon.setImageResource(R.drawable.pdf_file);
             return;
         }
-        if (isTextFile(ext)) {
+        if (isTextFile(file)) {
             icon.setImageResource(R.drawable.text_file);
             return;
         }
-        if (isCodeFile(ext)) {
+        if (isCodeFile(file)) {
             icon.setImageResource(R.drawable.java_file);
             return;
         }
-        if (isArchiveFile(ext) || ext.equals(FileExtensions.rarType)) {
+        if (isArchiveFile(file) || ext.equals(FileExtensions.rarType)) {
             icon.setImageResource(R.drawable.zip_file);
             return;
         }
-        if (isVideoFile(ext)) {
+        if (isVideoFile(file)) {
             Glide.with(App.appContext)
                     .load(file)
                     .error(R.drawable.video_file)
@@ -127,11 +186,11 @@ public class FileUtil {
                     .into(icon);
             return;
         }
-        if (isAudioFile(ext)) {
+        if (isAudioFile(file)) {
             icon.setImageResource(R.drawable.sound_file);
             return;
         }
-        if (isImageFile(ext)) {
+        if (isImageFile(file)) {
             Glide.with(App.appContext)
                     .applyDefaultRequestOptions(new RequestOptions().override(65).encodeQuality(30))
                     .load(file)
@@ -146,9 +205,9 @@ public class FileUtil {
         return file.getAbsolutePath().equals(Environment.getExternalStorageDirectory().getAbsolutePath());
     }
 
-    private static boolean isImageFile(String ext) {
+    private static boolean isImageFile(File file) {
         for (String extension : FileExtensions.imageType) {
-            if (extension.equals(ext))
+            if (extension.equals(getFileExtension(file)))
                 return true;
         }
         return false;
@@ -187,41 +246,41 @@ public class FileUtil {
         return (folders == 0 && files == 0) ? noItemsString : sb.toString();
     }
 
-    public static boolean isAudioFile(String extension) {
+    public static boolean isAudioFile(File file) {
         for (String ext : FileExtensions.audioType) {
-            if (extension.equals(ext))
+            if (getFileExtension(file).equals(ext))
                 return true;
         }
         return false;
     }
 
-    public static boolean isVideoFile(String ext) {
+    public static boolean isVideoFile(File file) {
         for (String extension : FileExtensions.videoType) {
-            if (extension.equals(ext))
+            if (extension.equals(getFileExtension(file)))
                 return true;
         }
         return false;
     }
 
-    public static boolean isArchiveFile(String ext) {
+    public static boolean isArchiveFile(File file) {
         for (String extension : FileExtensions.archiveType) {
-            if (extension.equals(ext))
+            if (extension.equals(getFileExtension(file)))
                 return true;
         }
         return false;
     }
 
-    public static boolean isCodeFile(String ext) {
+    public static boolean isCodeFile(File file) {
         for (String extension : FileExtensions.codeType) {
-            if (extension.equals(ext))
+            if (extension.equals(getFileExtension(file)))
                 return true;
         }
         return false;
     }
 
-    public static boolean isTextFile(String ext) {
+    public static boolean isTextFile(File file) {
         for (String extension : FileExtensions.textType) {
-            if (extension.equals(ext))
+            if (extension.equals(getFileExtension(file)))
                 return true;
         }
         return false;
@@ -327,7 +386,7 @@ public class FileUtil {
 
     public static boolean isArchiveFiles(ArrayList<File> selectedFiles) {
         for (File file : selectedFiles) {
-            if (!isArchiveFile(getFileExtension(file)))
+            if (!isArchiveFile(file))
                 return false;
         }
         return true;
@@ -359,7 +418,7 @@ public class FileUtil {
         }
     }
 
-    private static void copy(File file, File to) throws IOException {
+    public static void copy(File file, File to) throws IOException {
         if (file.isFile()) {
             copyFile(file, new File(to, file.getName()));
         } else {
@@ -436,7 +495,7 @@ public class FileUtil {
         }
     }
 
-    private static void move(File file, File destination) throws IOException {
+    public static void move(File file, File destination) throws IOException {
         if (file.isFile()) {
             if (!file.renameTo(new File(destination, file.getName()))) {
                 throw new IOException("Failed to move file: " + file.getAbsolutePath());
