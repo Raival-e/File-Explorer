@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.raival.fileexplorer.R;
+import com.raival.fileexplorer.utils.AndroidUtil;
 import com.raival.fileexplorer.utils.UiUtil;
 
 import java.util.ArrayList;
@@ -53,8 +54,8 @@ public class TabView extends HorizontalScrollView {
         setVerticalScrollBarEnabled(false);
         setHorizontalScrollBarEnabled(false);
 
-        textColor = getContext().getColor(R.color.primary);
-        indicatorColor = getContext().getColor(R.color.primary);
+        textColor = AndroidUtil.getColorAttribute(R.attr.colorPrimary, getContext());
+        indicatorColor = AndroidUtil.getColorAttribute(R.attr.colorPrimary, getContext());
         textSize = 14;
     }
 

@@ -19,6 +19,7 @@ import com.raival.fileexplorer.activities.model.TextEditorViewModel;
 import com.raival.fileexplorer.common.BackgroundTask;
 import com.raival.fileexplorer.common.dialog.CustomDialog;
 import com.raival.fileexplorer.tabs.file.executor.JavaExecutor;
+import com.raival.fileexplorer.utils.AndroidUtil;
 import com.raival.fileexplorer.utils.FileUtil;
 import com.raival.fileexplorer.utils.PrefsUtil;
 
@@ -59,8 +60,8 @@ public class TextEditorActivity extends BaseActivity {
 
         SymbolInputView inputView = findViewById(R.id.symbol_input);
         inputView.bindEditor(editor);
-        inputView.setBackgroundColor(getColor(R.color.background));
-        inputView.setTextColor(getColor(R.color.onBackground));
+        inputView.setBackgroundColor(AndroidUtil.getColorAttribute(android.R.attr.colorBackground, this));
+        inputView.setTextColor(AndroidUtil.getColorAttribute(android.R.attr.colorBackground, this));
         inputView.addSymbols(new String[]{"->", "_", "=", "{", "}", "<", ">", "|", "\\", "?", "+", "-", "*", "/"},
                 new String[]{"\t", "_", "=", "{", "}", "<", ">", "|", "\\", "?", "+", "-", "*", "/"});
 

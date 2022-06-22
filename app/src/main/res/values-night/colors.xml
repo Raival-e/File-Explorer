@@ -1,33 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">@color/material_dynamic_primary80</color>
-    <color name="onPrimary">@color/material_dynamic_primary20</color>
-    <color name="primaryContainer">@color/material_dynamic_primary30</color>
-    <color name="onPrimaryContainer">@color/material_dynamic_primary90</color>
-
-    <color name="secondary">@color/material_dynamic_secondary80</color>
-    <color name="onSecondary">@color/material_dynamic_secondary20</color>
-    <color name="secondaryContainer">@color/material_dynamic_secondary30</color>
-    <color name="onSecondaryContainer">@color/material_dynamic_secondary90</color>
-
-    <color name="tertiary">@color/material_dynamic_tertiary80</color>
-    <color name="onTertiary">@color/material_dynamic_tertiary20</color>
-    <color name="tertiaryContainer">@color/material_dynamic_tertiary30</color>
-    <color name="onTertiaryContainer">@color/material_dynamic_tertiary90</color>
-
-    <color name="background">@color/material_dynamic_neutral_variant10</color>
-    <color name="onBackground">@color/material_dynamic_neutral_variant90</color>
-    <color name="surface">@color/material_dynamic_neutral_variant10</color>
-    <color name="onSurface">@color/material_dynamic_neutral_variant90</color>
-
-    <color name="inverseOnSurface">@color/material_dynamic_neutral_variant10</color>
-    <color name="inverseSurface">@color/material_dynamic_neutral_variant99</color>
-    <color name="inversePrimary">@color/material_dynamic_primary40</color>
-
-    <color name="surfaceVariant">@color/material_dynamic_neutral_variant30</color>
-    <color name="onSurfaceVariant">@color/material_dynamic_neutral_variant80</color>
-    <color name="outline">@color/material_dynamic_neutral_variant60</color>
-
     <color name="selectedFileHighlight">#2F0066FF</color>
     <color name="previousFileHighlight">#0FFDFDFD</color>
 </resources>

@@ -9,7 +9,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/background" />
+        android:background="?android:attr/colorBackground" />
     <io.github.rosemoe.sora.widget.CodeEditor
         android:id="@+id/editor"
         android:layout_width="match_parent"
@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="gone"
-        android:background="@color/background">
+        android:background="?android:attr/colorBackground">
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/find_input"
             android:layout_width="match_parent"

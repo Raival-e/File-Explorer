@@ -25,10 +25,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class ChecklistTabFragment extends BaseTabFragment {
-    private MainViewModel mainViewModel;
     private MaterialChecklist materialChecklist;
-    private BottomBarView bottomBarView;
-    private TabView.Tab tabView;
     private File file;
 
     public ChecklistTabFragment() {
@@ -40,29 +37,6 @@ public class ChecklistTabFragment extends BaseTabFragment {
         this.file = file;
     }
 
-    private void createDataHolderIfNecessary() {
-        if (getDataHolder() == null) {
-            ChecklistTabDataHolder checklistTabDataHolder = new ChecklistTabDataHolder(getTag());
-            checklistTabDataHolder.file = file;
-            getMainViewModel().addDataHolder(checklistTabDataHolder);
-        }
-    }
-
-    private ChecklistTabDataHolder getDataHolder() {
-        for (BaseDataHolder baseDataHolder : getMainViewModel().getDataHolders()) {
-            if (baseDataHolder.getTag().equals(getTag()))
-                return (ChecklistTabDataHolder) baseDataHolder;
-        }
-        return null;
-    }
-
-    private MainViewModel getMainViewModel() {
-        if (mainViewModel == null) {
-            mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
-        }
-        return mainViewModel;
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -70,10 +44,8 @@ public class ChecklistTabFragment extends BaseTabFragment {
         View view = inflater.inflate(R.layout.checklist_tab_fragment, container, false);
         materialChecklist = view.findViewById(R.id.checklist);
 
-        createDataHolderIfNecessary();
-
         try {
-            materialChecklist.setItems(FileUtil.readFile(getDataHolder().file));
+            materialChecklist.setItems(FileUtil.readFile(((ChecklistTabDataHolder)getDataHolder()).file));
         } catch (Exception e) {
             e.printStackTrace();
             App.log(e);
@@ -92,7 +64,7 @@ public class ChecklistTabFragment extends BaseTabFragment {
     private void saveFile() {
         if (getDataHolder() == null) return;
         try {
-            FileUtil.writeFile(getDataHolder().file, materialChecklist.getItems(true, true));
+            FileUtil.writeFile(((ChecklistTabDataHolder)getDataHolder()).file, materialChecklist.getItems(true, true));
         } catch (IOException e) {
             e.printStackTrace();
             App.log(e);
@@ -100,47 +72,30 @@ public class ChecklistTabFragment extends BaseTabFragment {
         }
     }
 
-    private void closeTab() {
+    public void closeTab() {
         // Close the tab
         saveFile();
-        getMainViewModel().getDataHolders().removeIf(dataHolder1 -> dataHolder1.getTag().equals(getTag()));
-        ((MainActivity) requireActivity()).closeTab(getTag());
+        super.closeTab();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        if (bottomBarView == null)
-            bottomBarView = ((MainActivity) requireActivity()).getBottomBarView();
         prepareBottomBarView();
         updateTabTitle();
     }
 
     private void updateTabTitle() {
-        if (tabView == null) {
-            if (!findAssociatedTabView()) {
-                createNewTabView();
-            }
-        }
-        tabView.setName(FileUtil.getShortLabel(getDataHolder().file, FileExplorerTabFragment.MAX_NAME_LENGTH));
-    }
-
-    private void createNewTabView() {
-        tabView = ((MainActivity) requireActivity()).getTabView().addNewTab(getTag());
-    }
-
-    private boolean findAssociatedTabView() {
-        tabView = ((MainActivity) requireActivity()).getTabView().getTabByTag(getTag());
-        return (tabView != null);
+        getTabView().setName(FileUtil.getShortLabel(((ChecklistTabDataHolder)getDataHolder()).file, FileExplorerTabFragment.MAX_NAME_LENGTH));
     }
 
     private void prepareBottomBarView() {
-        bottomBarView.clear();
+        getBottomBarView().clear();
 
-        bottomBarView.addItem("Clear", R.drawable.ic_baseline_delete_sweep_24, view -> {
+        getBottomBarView().addItem("Clear", R.drawable.ic_baseline_delete_sweep_24, view -> {
             materialChecklist.removeAllCheckedItems();
             saveFile();
         });
-        bottomBarView.addItem("Save", R.drawable.ic_baseline_save_24, view -> {
+        getBottomBarView().addItem("Save", R.drawable.ic_baseline_save_24, view -> {
             saveFile();
             App.showMsg("Saved!");
         });
@@ -150,5 +105,12 @@ public class ChecklistTabFragment extends BaseTabFragment {
     public boolean onBackPressed() {
         closeTab();
         return true;
+    }
+
+    @Override
+    public ChecklistTabDataHolder createNewDataHolder() {
+        ChecklistTabDataHolder checklistTabDataHolder = new ChecklistTabDataHolder(getTag());
+        checklistTabDataHolder.file = file;
+        return checklistTabDataHolder;
     }
 }

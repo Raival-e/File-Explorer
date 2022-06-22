@@ -15,7 +15,7 @@
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
         android:gravity="center"
-        android:background="@color/background"
+        android:background="?android:attr/colorBackground"
         app:layout_constraintTop_toTopOf="parent">
         <ImageView
             android:id="@+id/home"

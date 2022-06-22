@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.raival.fileexplorer.R;
 import com.raival.fileexplorer.tabs.file.FileExplorerTabFragment;
+import com.raival.fileexplorer.utils.AndroidUtil;
 import com.raival.fileexplorer.utils.FileUtil;
 
 import java.io.File;
@@ -65,8 +66,8 @@ public class PathRootAdapter extends RecyclerView.Adapter<PathRootAdapter.ViewHo
                     ? FileUtil.INTERNAL_STORAGE
                     : getRootList(parentFragment.getCurrentDirectory()).get(position).getName());
             label.setTextColor((position == getItemCount() - 1)
-                    ? parentFragment.requireActivity().getColor(R.color.primary)
-                    : parentFragment.requireActivity().getColor(R.color.outline));
+                    ? AndroidUtil.getColorAttribute(R.attr.colorPrimary, parentFragment.requireActivity())
+                    : AndroidUtil.getColorAttribute(R.attr.colorOutline, parentFragment.requireActivity()));
             itemView.setOnClickListener(view -> {
                 parentFragment.setCurrentDirectory(getRootList(parentFragment.getCurrentDirectory()).get(position));
                 // Restore RecyclerView state

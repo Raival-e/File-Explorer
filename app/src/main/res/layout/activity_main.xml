@@ -11,13 +11,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:subtitleTextAppearance="@style/TextAppearance.Material3.LabelSmall"
-        android:background="@color/background" />
+        android:background="?android:attr/colorBackground" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
-        android:background="@color/background">
+        android:background="?android:attr/colorBackground">
         <ImageView
             android:id="@+id/tabs_options"
             android:layout_width="wrap_content"
@@ -33,7 +33,7 @@
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:background="@color/background"/>
+            android:background="?android:attr/colorBackground"/>
     </LinearLayout>
 
     <Space
@@ -53,6 +53,6 @@
     <com.raival.fileexplorer.common.view.BottomBarView
         android:id="@+id/bottom_bar_view"
         android:layout_width="match_parent"
-        android:layout_height="48dp"/>
+        android:layout_height="48dp" />
 
 </LinearLayout>
