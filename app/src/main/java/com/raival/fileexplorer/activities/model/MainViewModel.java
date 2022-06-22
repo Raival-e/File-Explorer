@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainViewModel extends ViewModel {
-    //______________| FileExplorerTab methods |_______________\\
     public final ArrayList<Task> tasks = new ArrayList<Task>();
     private final List<BaseDataHolder> dataHolders = new ArrayList<>();
 
@@ -20,6 +19,13 @@ public class MainViewModel extends ViewModel {
 
     public List<BaseDataHolder> getDataHolders() {
         return dataHolders;
+    }
+
+    public BaseDataHolder getDataHolder(String tag) {
+        for (BaseDataHolder dataHolder : dataHolders) {
+            if (dataHolder.getTag().equals(tag)) return dataHolder;
+        }
+        return null;
     }
 
     public FileExplorerTabDataHolder getFileExplorerDataHolder(String tag) {

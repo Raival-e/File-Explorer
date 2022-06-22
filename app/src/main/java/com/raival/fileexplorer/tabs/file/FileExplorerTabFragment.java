@@ -11,20 +11,16 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.raival.fileexplorer.App;
 import com.raival.fileexplorer.R;
 import com.raival.fileexplorer.activities.MainActivity;
 import com.raival.fileexplorer.activities.TextEditorActivity;
-import com.raival.fileexplorer.activities.model.MainViewModel;
 import com.raival.fileexplorer.common.dialog.CustomDialog;
-import com.raival.fileexplorer.common.view.BottomBarView;
-import com.raival.fileexplorer.common.view.TabView;
+import com.raival.fileexplorer.tabs.BaseDataHolder;
 import com.raival.fileexplorer.tabs.BaseTabFragment;
 import com.raival.fileexplorer.tabs.checklist.ChecklistTabFragment;
 import com.raival.fileexplorer.tabs.file.adapter.FileListAdapter;
@@ -49,11 +45,6 @@ public class FileExplorerTabFragment extends BaseTabFragment {
     private RecyclerView fileList;
     private RecyclerView pathRootRv;
     private View placeHolder;
-    private MainViewModel mainViewModel;
-    private MaterialToolbar toolbar;
-    private BottomBarView bottomBarView;
-    private TabView.Tab tabView;
-    private FileExplorerTabDataHolder dataHolder;
     private FileOptionHandler fileOptionHandler;
     private File previousDirectory;
     private File currentDirectory;
@@ -82,14 +73,6 @@ public class FileExplorerTabFragment extends BaseTabFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        if (toolbar == null) toolbar = ((MainActivity) requireActivity()).getToolbar();
-        if (bottomBarView == null)
-            bottomBarView = ((MainActivity) requireActivity()).getBottomBarView();
-
-        if (mainViewModel == null) {
-            mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
-        }
-
         prepareBottomBarView();
         initFileList();
         loadData();
@@ -97,40 +80,24 @@ public class FileExplorerTabFragment extends BaseTabFragment {
         restoreRecyclerViewState();
     }
 
-    public FileExplorerTabDataHolder getDataHolder() {
-        if (dataHolder == null) {
-            dataHolder = mainViewModel.getFileExplorerDataHolder(getTag());
-        }
-        if (dataHolder == null) {
-            createNewDataHolder();
-        }
-        return dataHolder;
-    }
-
-    private void createNewDataHolder() {
-        dataHolder = new FileExplorerTabDataHolder(getTag());
-        dataHolder.activeDirectory = currentDirectory == null ? getDefaultHomeDirectory() : currentDirectory;
-        mainViewModel.addDataHolder(dataHolder);
-    }
-
     private void loadData() {
-        setCurrentDirectory(getDataHolder().activeDirectory);
+        setCurrentDirectory(((FileExplorerTabDataHolder)getDataHolder()).activeDirectory);
     }
 
     public void prepareBottomBarView() {
-        bottomBarView.clear();
-        bottomBarView.addItem("Tasks", R.drawable.ic_baseline_assignment_24, (view) ->
+        getBottomBarView().clear();
+        getBottomBarView().addItem("Tasks", R.drawable.ic_baseline_assignment_24, (view) ->
                 new TasksDialog(this).show(getParentFragmentManager(), ""));
 
-        bottomBarView.addItem("Search", R.drawable.ic_round_search_24, view -> {
+        getBottomBarView().addItem("Search", R.drawable.ic_round_search_24, view -> {
             SearchDialog searchFragment = new SearchDialog(this, getCurrentDirectory());
             searchFragment.show(getParentFragmentManager(), "");
             setSelectAll(false);
         });
-        bottomBarView.addItem("Create", R.drawable.ic_baseline_add_24, view -> showAddNewFileDialog());
-        bottomBarView.addItem("Sort", R.drawable.ic_baseline_sort_24, this::showSortOptionsMenu);
-        bottomBarView.addItem("Select All", R.drawable.ic_baseline_select_all_24, view -> setSelectAll(true));
-        bottomBarView.addItem("refresh", R.drawable.ic_baseline_restart_alt_24, view -> refresh());
+        getBottomBarView().addItem("Create", R.drawable.ic_baseline_add_24, view -> showAddNewFileDialog());
+        getBottomBarView().addItem("Sort", R.drawable.ic_baseline_sort_24, this::showSortOptionsMenu);
+        getBottomBarView().addItem("Select All", R.drawable.ic_baseline_select_all_24, view -> setSelectAll(true));
+        getBottomBarView().addItem("refresh", R.drawable.ic_baseline_restart_alt_24, view -> refresh());
     }
 
     private void showSortOptionsMenu(View view) {
@@ -246,14 +213,18 @@ public class FileExplorerTabFragment extends BaseTabFragment {
         }
         // Close the tab (if not default tab)
         if (!getTag().startsWith("0_")) {
-            // Remove the associated DataHolder
-            mainViewModel.getDataHolders().removeIf(dataHolder1 -> dataHolder1.getTag().equals(getTag()));
-            // Remove the tab
-            ((MainActivity) requireActivity()).closeTab(getTag());
+            closeTab();
             return true;
         }
 
         return false;
+    }
+
+    @Override
+    public BaseDataHolder createNewDataHolder() {
+        FileExplorerTabDataHolder _dataHolder = new FileExplorerTabDataHolder(getTag());
+        _dataHolder.activeDirectory = currentDirectory == null ? getDefaultHomeDirectory() : currentDirectory;
+        return _dataHolder;
     }
 
     @Override
@@ -289,21 +260,7 @@ public class FileExplorerTabFragment extends BaseTabFragment {
      * Used to update the title of attached tabView
      */
     private void updateTabTitle() {
-        if (tabView == null) {
-            if (!findAssociatedTabView()) {
-                createNewTabView();
-            }
-        }
-        tabView.setName(getName());
-    }
-
-    private void createNewTabView() {
-        tabView = ((MainActivity) requireActivity()).getTabView().addNewTab(getTag());
-    }
-
-    private boolean findAssociatedTabView() {
-        tabView = ((MainActivity) requireActivity()).getTabView().getTabByTag(getTag());
-        return (tabView != null);
+        getTabView().setName(getName());
     }
 
     /**
@@ -328,8 +285,9 @@ public class FileExplorerTabFragment extends BaseTabFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (dataHolder != null) {
-            dataHolder.recyclerViewStates.put(getCurrentDirectory(), fileList.getLayoutManager().onSaveInstanceState());
+        FileExplorerTabDataHolder fileExplorerTabDataHolder = (FileExplorerTabDataHolder) getMainViewModel().getDataHolder(getTag());
+        if (fileExplorerTabDataHolder != null) {
+            fileExplorerTabDataHolder.recyclerViewStates.put(getCurrentDirectory(), fileList.getLayoutManager().onSaveInstanceState());
         }
     }
 
@@ -341,10 +299,10 @@ public class FileExplorerTabFragment extends BaseTabFragment {
      * - when select a directory from pathRoot RecyclerView
      */
     public void restoreRecyclerViewState() {
-        Parcelable savedState = getDataHolder().recyclerViewStates.get(getCurrentDirectory());
+        Parcelable savedState = ((FileExplorerTabDataHolder)getDataHolder()).recyclerViewStates.get(getCurrentDirectory());
         if (savedState != null) {
             fileList.getLayoutManager().onRestoreInstanceState(savedState);
-            getDataHolder().recyclerViewStates.remove(getCurrentDirectory());
+            ((FileExplorerTabDataHolder)getDataHolder()).recyclerViewStates.remove(getCurrentDirectory());
         }
     }
 
@@ -356,8 +314,8 @@ public class FileExplorerTabFragment extends BaseTabFragment {
         pathRootRv.getAdapter().notifyDataSetChanged();
         pathRootRv.scrollToPosition(pathRootRv.getAdapter().getItemCount() - 1);
         fileList.scrollToPosition(0);
-        if (toolbar != null)
-            toolbar.setSubtitle(FileUtil.getFormattedFileCount(getCurrentDirectory()));
+        if (getToolbar() != null)
+            getToolbar().setSubtitle(FileUtil.getFormattedFileCount(getCurrentDirectory()));
     }
 
     /**
@@ -470,12 +428,12 @@ public class FileExplorerTabFragment extends BaseTabFragment {
         previousDirectory = currentDirectory;
         currentDirectory = dir;
         // Save only when previousDirectory is set (so that it can restore the state before onDestroy())
-        if (previousDirectory != null) getDataHolder()
+        if (previousDirectory != null) ((FileExplorerTabDataHolder)getDataHolder())
                 .recyclerViewStates.put(previousDirectory, fileList.getLayoutManager().onSaveInstanceState());
         prepareSortedFiles();
         updateTabTitle();
         refreshFileList();
-        getDataHolder().activeDirectory = getCurrentDirectory();
+        ((FileExplorerTabDataHolder)getDataHolder()).activeDirectory = getCurrentDirectory();
     }
 
     public File getPreviousDirectory() {
