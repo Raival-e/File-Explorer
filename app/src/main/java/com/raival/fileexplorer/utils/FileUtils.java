@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Locale;
 
-public class FileUtil {
+public class FileUtils {
     public final static String INTERNAL_STORAGE = "Internal Storage";
 
     public static Comparator<File> sortFoldersFirst() {
@@ -63,48 +63,48 @@ public class FileUtil {
 
     public static String getFileDetails(File file) {
         final StringBuilder sb = new StringBuilder();
-        sb.append(TimeUtil.getLastModifiedDate(file, TimeUtil.REGULAR_DATE_FORMAT));
+        sb.append(Utils.getLastModifiedDate(file, Utils.REGULAR_DATE_FORMAT));
         sb.append("  |  ");
         if (file.isFile()) {
-            sb.append(FileUtil.getFormattedFileSize(file));
+            sb.append(FileUtils.getFormattedFileSize(file));
         } else {
-            sb.append(FileUtil.getFormattedFileCount(file));
+            sb.append(FileUtils.getFormattedFileCount(file));
         }
         return sb.toString();
     }
 
     public static ArrayList<Comparator<File>> getComparators() {
         ArrayList<Comparator<File>> list = new ArrayList<>();
-        switch (PrefsUtil.getSortingMethod()) {
-            case PrefsUtil.SORT_NAME_A2Z: {
-                list.add(FileUtil.sortNameAsc());
+        switch (PrefsUtils.getSortingMethod()) {
+            case PrefsUtils.SORT_NAME_A2Z: {
+                list.add(FileUtils.sortNameAsc());
                 break;
             }
-            case PrefsUtil.SORT_NAME_Z2A: {
-                list.add(FileUtil.sortNameDesc());
+            case PrefsUtils.SORT_NAME_Z2A: {
+                list.add(FileUtils.sortNameDesc());
                 break;
             }
-            case PrefsUtil.SORT_SIZE_SMALLER: {
-                list.add(FileUtil.sortSizeAsc());
+            case PrefsUtils.SORT_SIZE_SMALLER: {
+                list.add(FileUtils.sortSizeAsc());
                 break;
             }
-            case PrefsUtil.SORT_SIZE_BIGGER: {
-                list.add(FileUtil.sortSizeDesc());
+            case PrefsUtils.SORT_SIZE_BIGGER: {
+                list.add(FileUtils.sortSizeDesc());
                 break;
             }
-            case PrefsUtil.SORT_DATE_NEWER: {
-                list.add(FileUtil.sortDateDesc());
+            case PrefsUtils.SORT_DATE_NEWER: {
+                list.add(FileUtils.sortDateDesc());
                 break;
             }
-            case PrefsUtil.SORT_DATE_OLDER: {
-                list.add(FileUtil.sortDateAsc());
+            case PrefsUtils.SORT_DATE_OLDER: {
+                list.add(FileUtils.sortDateAsc());
                 break;
             }
         }
-        if (PrefsUtil.listFoldersFirst()) {
-            list.add(FileUtil.sortFoldersFirst());
+        if (PrefsUtils.listFoldersFirst()) {
+            list.add(FileUtils.sortFoldersFirst());
         } else {
-            list.add(FileUtil.sortFilesFirst());
+            list.add(FileUtils.sortFilesFirst());
         }
         return list;
     }
@@ -135,8 +135,8 @@ public class FileUtil {
 
     public static String getShortLabel(File file, int maxLength) {
         String name = Uri.parse(file.getAbsolutePath()).getLastPathSegment();
-        if (FileUtil.isExternalStorageFolder(file)) {
-            name = FileUtil.INTERNAL_STORAGE;
+        if (FileUtils.isExternalStorageFolder(file)) {
+            name = FileUtils.INTERNAL_STORAGE;
         }
         if (name.length() > maxLength) {
             name = name.substring(0, maxLength - 3) + "...";
@@ -635,7 +635,7 @@ public class FileUtil {
     }
 
     public static String getFileNameWithoutExtension(File file) {
-        return file.getName().substring(0, file.getName().lastIndexOf(FileUtil.getFileExtension(file)) - 1);
+        return file.getName().substring(0, file.getName().lastIndexOf(FileUtils.getFileExtension(file)) - 1);
     }
 
     public static String copyFromInputStream(InputStream inputStream) {

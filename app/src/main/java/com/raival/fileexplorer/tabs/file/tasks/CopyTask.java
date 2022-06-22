@@ -4,7 +4,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.raival.fileexplorer.tabs.file.model.Task;
-import com.raival.fileexplorer.utils.FileUtil;
+import com.raival.fileexplorer.utils.FileUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -73,7 +73,7 @@ public class CopyTask extends Task {
                                     + "Copying "
                                     + file.getName());
                         });
-                        FileUtil.copy(file, activeDirectory);
+                        FileUtils.copy(file, activeDirectory);
                     } catch (Exception exception) {
                         error = true;
                     }

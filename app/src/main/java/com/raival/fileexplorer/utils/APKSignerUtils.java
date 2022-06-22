@@ -1,12 +1,12 @@
 package com.raival.fileexplorer.utils;
 
-import static com.raival.fileexplorer.utils.D8Util.unzipFromAssets;
+import static com.raival.fileexplorer.utils.D8Utils.unzipFromAssets;
 
 import com.raival.fileexplorer.App;
 
 import java.io.File;
 
-public class APKSignerUtil {
+public class APKSignerUtils {
     public static File getPk8() {
         File check = new File(App.appContext.getFilesDir() + "/build/testkey.pk8");
         if (check.exists()) {

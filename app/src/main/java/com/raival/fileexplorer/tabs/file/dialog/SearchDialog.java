@@ -24,7 +24,7 @@ import com.raival.fileexplorer.R;
 import com.raival.fileexplorer.tabs.file.FileExplorerTabFragment;
 import com.raival.fileexplorer.tabs.file.holder.FileExplorerTabDataHolder;
 import com.raival.fileexplorer.tabs.file.model.FileItem;
-import com.raival.fileexplorer.utils.FileUtil;
+import com.raival.fileexplorer.utils.FileUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -144,14 +144,14 @@ public class SearchDialog extends BottomSheetDialogFragment {
             if (isDeepSearch) {
                 if (useRegex) {
                     try {
-                        if (Pattern.compile(query).matcher(FileUtil.readFile(file)).find())
+                        if (Pattern.compile(query).matcher(FileUtils.readFile(file)).find())
                             addFileItem(file);
                     } catch (Exception exception) {
                         exception.printStackTrace();
                     }
                 } else {
                     try {
-                        if (FileUtil.readFile(file).contains(query))
+                        if (FileUtils.readFile(file).contains(query))
                             addFileItem(file);
                     } catch (Exception exception) {
                         exception.printStackTrace();
@@ -233,9 +233,9 @@ public class SearchDialog extends BottomSheetDialogFragment {
                 final FileItem fileItem =  ((FileExplorerTabDataHolder)tab.getDataHolder()).searchList.get(position);
 
                 name.setText(fileItem.file.getName());
-                details.setText(FileUtil.getFileDetails(fileItem.file));
+                details.setText(FileUtils.getFileDetails(fileItem.file));
 
-                FileUtil.setFileIcon(icon, fileItem.file);
+                FileUtils.setFileIcon(icon, fileItem.file);
 
                 icon.setAlpha(fileItem.file.isHidden() ? 0.5f : 1f);
 

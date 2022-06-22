@@ -2,7 +2,7 @@ package com.raival.fileexplorer.utils;
 
 import com.pixplicity.easyprefs.library.Prefs;
 
-public class PrefsUtil {
+public class PrefsUtils {
     public final static int SORT_NAME_A2Z = 1;
     public final static int SORT_NAME_Z2A = 2;
     public final static int SORT_SIZE_SMALLER = 3;

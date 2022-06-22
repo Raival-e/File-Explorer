@@ -12,8 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.raival.fileexplorer.R;
-import com.raival.fileexplorer.utils.AndroidUtil;
-import com.raival.fileexplorer.utils.UiUtil;
+import com.raival.fileexplorer.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -54,8 +53,8 @@ public class TabView extends HorizontalScrollView {
         setVerticalScrollBarEnabled(false);
         setHorizontalScrollBarEnabled(false);
 
-        textColor = AndroidUtil.getColorAttribute(R.attr.colorPrimary, getContext());
-        indicatorColor = AndroidUtil.getColorAttribute(R.attr.colorPrimary, getContext());
+        textColor = Utils.getColorAttribute(R.attr.colorPrimary, getContext());
+        indicatorColor = Utils.getColorAttribute(R.attr.colorPrimary, getContext());
         textSize = 14;
     }
 
@@ -284,17 +283,17 @@ public class TabView extends HorizontalScrollView {
         switch (event) {
             case "onSelect": {
                 View indicator = v.findViewWithTag("tab_indicator");
-                ObjectAnimator.ofFloat(indicator, "translationY", UiUtil.pxToDp(2), -UiUtil.pxToDp(2), 0).setDuration(250).start();
+                ObjectAnimator.ofFloat(indicator, "translationY", Utils.pxToDp(2), -Utils.pxToDp(2), 0).setDuration(250).start();
                 break;
             }
             case "onReselect": {
                 View indicator = v.findViewWithTag("tab_indicator");
-                ObjectAnimator.ofFloat(indicator, "translationY", 0, -UiUtil.pxToDp(2), 0).setDuration(250).start();
+                ObjectAnimator.ofFloat(indicator, "translationY", 0, -Utils.pxToDp(2), 0).setDuration(250).start();
                 break;
             }
             case "onUnselect": {
                 View indicator = v.findViewWithTag("tab_indicator");
-                ObjectAnimator.ofFloat(indicator, "translationY", 0, UiUtil.pxToDp(2)).setDuration(250).start();
+                ObjectAnimator.ofFloat(indicator, "translationY", 0, Utils.pxToDp(2)).setDuration(250).start();
                 break;
             }
         }
@@ -305,7 +304,7 @@ public class TabView extends HorizontalScrollView {
     }
 
     private View createTabView() {
-        int padding = (int) UiUtil.pxToDp(8);
+        int padding = (int) Utils.pxToDp(8);
         LinearLayout bg = new LinearLayout(getContext());
         bg.setOrientation(LinearLayout.VERTICAL);
         bg.setTag("tab_background");
@@ -329,7 +328,7 @@ public class TabView extends HorizontalScrollView {
         line.setTag("tab_indicator");
 
         bg.addView(text, new LinearLayout.LayoutParams(-2, 0, 1));
-        bg.addView(line, new LinearLayout.LayoutParams(-1, (int) UiUtil.pxToDp(2), 0));
+        bg.addView(line, new LinearLayout.LayoutParams(-1, (int) Utils.pxToDp(2), 0));
 
         return bg;
     }

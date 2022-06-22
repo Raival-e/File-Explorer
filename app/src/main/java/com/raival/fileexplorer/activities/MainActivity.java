@@ -24,8 +24,8 @@ import com.raival.fileexplorer.tabs.checklist.ChecklistTabDataHolder;
 import com.raival.fileexplorer.tabs.checklist.ChecklistTabFragment;
 import com.raival.fileexplorer.tabs.file.FileExplorerTabFragment;
 import com.raival.fileexplorer.tabs.file.holder.FileExplorerTabDataHolder;
-import com.raival.fileexplorer.utils.FileUtil;
-import com.raival.fileexplorer.utils.TextUtil;
+import com.raival.fileexplorer.utils.FileUtils;
+import com.raival.fileexplorer.utils.TextUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -71,10 +71,10 @@ public class MainActivity extends BaseActivity {
                 // Handle FileExplorerTabDataHolder
                 if (dataHolder instanceof FileExplorerTabDataHolder) {
                     tabView.insertNewTabAt(i, dataHolder.getTag(), false)
-                            .setName(FileUtil.getShortLabel(((FileExplorerTabDataHolder) dataHolder).activeDirectory, FileExplorerTabFragment.MAX_NAME_LENGTH));
+                            .setName(FileUtils.getShortLabel(((FileExplorerTabDataHolder) dataHolder).activeDirectory, FileExplorerTabFragment.MAX_NAME_LENGTH));
                 } else if (dataHolder instanceof ChecklistTabDataHolder) {
                     tabView.insertNewTabAt(i, dataHolder.getTag(), false)
-                            .setName(FileUtil.getShortLabel(((ChecklistTabDataHolder) dataHolder).file, FileExplorerTabFragment.MAX_NAME_LENGTH));
+                            .setName(FileUtils.getShortLabel(((ChecklistTabDataHolder) dataHolder).file, FileExplorerTabFragment.MAX_NAME_LENGTH));
                 }
                 // handle other types of DataHolders here
             }
@@ -90,7 +90,7 @@ public class MainActivity extends BaseActivity {
     }
 
     public String generateRandomTag() {
-        return TextUtil.getRandomString(16);
+        return TextUtils.getRandomString(16);
     }
 
     @Override

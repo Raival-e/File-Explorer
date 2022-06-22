@@ -14,7 +14,7 @@ import com.raival.fileexplorer.R;
 import com.raival.fileexplorer.tabs.file.FileExplorerTabFragment;
 import com.raival.fileexplorer.tabs.file.model.FileItem;
 import com.raival.fileexplorer.tabs.file.observer.FileListObserver;
-import com.raival.fileexplorer.utils.FileUtil;
+import com.raival.fileexplorer.utils.FileUtils;
 
 public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHolder> {
     private final FileExplorerTabFragment parentFragment;
@@ -63,9 +63,9 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
             final int position = getAdapterPosition();
             final FileItem fileItem = parentFragment.getFiles().get(position);
 
-            FileUtil.setFileIcon(icon, fileItem.file);
+            FileUtils.setFileIcon(icon, fileItem.file);
             name.setText(fileItem.file.getName());
-            details.setText(FileUtil.getFileDetails(fileItem.file));
+            details.setText(FileUtils.getFileDetails(fileItem.file));
 
             // Hidden files will be 50% transparent
             icon.setAlpha(fileItem.file.isHidden() ? 0.5f : 1f);

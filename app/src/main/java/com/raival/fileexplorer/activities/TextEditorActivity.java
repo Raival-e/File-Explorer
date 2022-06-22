@@ -19,9 +19,9 @@ import com.raival.fileexplorer.activities.model.TextEditorViewModel;
 import com.raival.fileexplorer.common.BackgroundTask;
 import com.raival.fileexplorer.common.dialog.CustomDialog;
 import com.raival.fileexplorer.tabs.file.executor.JavaExecutor;
-import com.raival.fileexplorer.utils.AndroidUtil;
-import com.raival.fileexplorer.utils.FileUtil;
-import com.raival.fileexplorer.utils.PrefsUtil;
+import com.raival.fileexplorer.utils.Utils;
+import com.raival.fileexplorer.utils.FileUtils;
+import com.raival.fileexplorer.utils.PrefsUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -60,8 +60,8 @@ public class TextEditorActivity extends BaseActivity {
 
         SymbolInputView inputView = findViewById(R.id.symbol_input);
         inputView.bindEditor(editor);
-        inputView.setBackgroundColor(AndroidUtil.getColorAttribute(android.R.attr.colorBackground, this));
-        inputView.setTextColor(AndroidUtil.getColorAttribute(android.R.attr.colorBackground, this));
+        inputView.setBackgroundColor(Utils.getColorAttribute(android.R.attr.colorBackground, this));
+        inputView.setTextColor(Utils.getColorAttribute(android.R.attr.colorBackground, this));
         inputView.addSymbols(new String[]{"->", "_", "=", "{", "}", "<", ">", "|", "\\", "?", "+", "-", "*", "/"},
                 new String[]{"\t", "_", "=", "{", "}", "<", ">", "|", "\\", "?", "+", "-", "*", "/"});
 
@@ -103,7 +103,7 @@ public class TextEditorActivity extends BaseActivity {
         }
 
         try {
-            editor.setText(FileUtil.readFile(editorViewModel.file));
+            editor.setText(FileUtils.readFile(editorViewModel.file));
         } catch (Exception exception) {
             exception.printStackTrace();
             App.showMsg("Failed to read file: " + editorViewModel.file.getAbsolutePath());
@@ -112,7 +112,7 @@ public class TextEditorActivity extends BaseActivity {
         }
 
         editor.post(() -> {
-            if (FileUtil.isEmpty(editor.getText().toString())) {
+            if (FileUtils.isEmpty(editor.getText().toString())) {
                 if ("Main.java".equalsIgnoreCase(editorViewModel.file.getName())) {
                     askToLoadCodeSample();
                 }
@@ -132,7 +132,7 @@ public class TextEditorActivity extends BaseActivity {
 
     private String getCodeSample() {
         try {
-            return FileUtil.copyFromInputStream(getAssets().open("java_exe_sample_code.txt"));
+            return FileUtils.copyFromInputStream(getAssets().open("java_exe_sample_code.txt"));
         } catch (IOException e) {
             App.log(e);
             App.showWarning("Failed to load sample code");
@@ -141,7 +141,7 @@ public class TextEditorActivity extends BaseActivity {
     }
 
     private void detectLanguage(File file) {
-        String ext = FileUtil.getFileExtension(file).toLowerCase();
+        String ext = FileUtils.getFileExtension(file).toLowerCase();
         switch (ext) {
             case "java":
             case "kt":
@@ -202,7 +202,7 @@ public class TextEditorActivity extends BaseActivity {
             return;
         }
         try {
-            if (!FileUtil.readFile(editorViewModel.file).equals(editor.getText().toString())) {
+            if (!FileUtils.readFile(editorViewModel.file).equals(editor.getText().toString())) {
                 new CustomDialog()
                         .setTitle("Save File")
                         .setMsg("Do you want to save this file before exit?")
@@ -227,26 +227,26 @@ public class TextEditorActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.text_editor_menu, menu);
 
-        menu.findItem(R.id.editor_option_wordwrap).setChecked(PrefsUtil.getTextEditorWordwrap());
-        menu.findItem(R.id.editor_option_magnifier).setChecked(PrefsUtil.getTextEditorMagnifier());
-        menu.findItem(R.id.editor_option_light_mode).setChecked(PrefsUtil.getTextEditorLightTheme());
-        menu.findItem(R.id.editor_option_pin_line_number).setChecked(PrefsUtil.getTextEditorPinLineNumber());
-        menu.findItem(R.id.editor_option_line_number).setChecked(PrefsUtil.getTextEditorShowLineNumber());
-        menu.findItem(R.id.editor_option_read_only).setChecked(PrefsUtil.getTextEditorReadOnly());
+        menu.findItem(R.id.editor_option_wordwrap).setChecked(PrefsUtils.getTextEditorWordwrap());
+        menu.findItem(R.id.editor_option_magnifier).setChecked(PrefsUtils.getTextEditorMagnifier());
+        menu.findItem(R.id.editor_option_light_mode).setChecked(PrefsUtils.getTextEditorLightTheme());
+        menu.findItem(R.id.editor_option_pin_line_number).setChecked(PrefsUtils.getTextEditorPinLineNumber());
+        menu.findItem(R.id.editor_option_line_number).setChecked(PrefsUtils.getTextEditorShowLineNumber());
+        menu.findItem(R.id.editor_option_read_only).setChecked(PrefsUtils.getTextEditorReadOnly());
 
-        if ("java".equalsIgnoreCase(FileUtil.getFileExtension(editorViewModel.file)))
+        if ("java".equalsIgnoreCase(FileUtils.getFileExtension(editorViewModel.file)))
             menu.add("Format");
         if (!canExecute()) menu.findItem(R.id.editor_execute).setVisible(false);
         return super.onCreateOptionsMenu(menu);
     }
 
     private void loadEditorPrefs() {
-        editor.setPinLineNumber(PrefsUtil.getTextEditorPinLineNumber());
-        editor.setWordwrap(PrefsUtil.getTextEditorWordwrap());
-        editor.setLineNumberEnabled(PrefsUtil.getTextEditorShowLineNumber());
-        editor.getComponent(Magnifier.class).setEnabled(PrefsUtil.getTextEditorMagnifier());
-        editor.setColorScheme(PrefsUtil.getTextEditorLightTheme() ? new SchemeGitHub() : new SchemeDarcula());
-        editor.setEditable(!PrefsUtil.getTextEditorReadOnly());
+        editor.setPinLineNumber(PrefsUtils.getTextEditorPinLineNumber());
+        editor.setWordwrap(PrefsUtils.getTextEditorWordwrap());
+        editor.setLineNumberEnabled(PrefsUtils.getTextEditorShowLineNumber());
+        editor.getComponent(Magnifier.class).setEnabled(PrefsUtils.getTextEditorMagnifier());
+        editor.setColorScheme(PrefsUtils.getTextEditorLightTheme() ? new SchemeGitHub() : new SchemeDarcula());
+        editor.setEditable(!PrefsUtils.getTextEditorReadOnly());
     }
 
     @Override
@@ -270,7 +270,7 @@ public class TextEditorActivity extends BaseActivity {
             item.setChecked(true);
         } else if (id == R.id.editor_option_read_only) {
             item.setChecked(!item.isChecked());
-            PrefsUtil.setTextEditorReadOnly(item.isChecked());
+            PrefsUtils.setTextEditorReadOnly(item.isChecked());
             editor.setEditable(!item.isChecked());
         } else if (id == R.id.editor_option_search) {
             if (searchPanel.getVisibility() == View.GONE) {
@@ -288,23 +288,23 @@ public class TextEditorActivity extends BaseActivity {
             editor.redo();
         } else if (id == R.id.editor_option_wordwrap) {
             item.setChecked(!item.isChecked());
-            PrefsUtil.setTextEditorWordwrap(item.isChecked());
+            PrefsUtils.setTextEditorWordwrap(item.isChecked());
             editor.setWordwrap(item.isChecked());
         } else if (id == R.id.editor_option_magnifier) {
             item.setChecked(!item.isChecked());
             editor.getComponent(Magnifier.class).setEnabled(item.isChecked());
-            PrefsUtil.setTextEditorMagnifier(item.isChecked());
+            PrefsUtils.setTextEditorMagnifier(item.isChecked());
         } else if (id == R.id.editor_option_line_number) {
             item.setChecked(!item.isChecked());
-            PrefsUtil.setTextEditorShowLineNumber(item.isChecked());
+            PrefsUtils.setTextEditorShowLineNumber(item.isChecked());
             editor.setLineNumberEnabled(item.isChecked());
         } else if (id == R.id.editor_option_pin_line_number) {
             item.setChecked(!item.isChecked());
-            PrefsUtil.setTextEditorPinLineNumber(item.isChecked());
+            PrefsUtils.setTextEditorPinLineNumber(item.isChecked());
             editor.setPinLineNumber(item.isChecked());
         } else if (id == R.id.editor_option_light_mode) {
             item.setChecked(!item.isChecked());
-            PrefsUtil.setTextEditorLightTheme(item.isChecked());
+            PrefsUtils.setTextEditorLightTheme(item.isChecked());
             if (item.isChecked()) {
                 editor.setColorScheme(new SchemeGitHub());
             } else {
@@ -357,7 +357,7 @@ public class TextEditorActivity extends BaseActivity {
 
     private void saveFile(String content) {
         try {
-            FileUtil.writeFile(editorViewModel.file, content);
+            FileUtils.writeFile(editorViewModel.file, content);
         } catch (IOException e) {
             e.printStackTrace();
             App.showMsg("Something went wrong, check app debug for more details");

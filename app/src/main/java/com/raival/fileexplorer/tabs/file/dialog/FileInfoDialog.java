@@ -12,8 +12,8 @@ import androidx.annotation.Nullable;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.raival.fileexplorer.App;
 import com.raival.fileexplorer.R;
-import com.raival.fileexplorer.utils.FileUtil;
-import com.raival.fileexplorer.utils.TimeUtil;
+import com.raival.fileexplorer.utils.FileUtils;
+import com.raival.fileexplorer.utils.Utils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ public class FileInfoDialog extends BottomSheetDialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         ((TextView) view.findViewById(R.id.file_name)).setText(file.getName());
-        FileUtil.setFileIcon(view.findViewById(R.id.file_icon), file);
+        FileUtils.setFileIcon(view.findViewById(R.id.file_icon), file);
 
         container = view.findViewById(R.id.container);
 
@@ -64,27 +64,27 @@ public class FileInfoDialog extends BottomSheetDialogFragment {
 
     private void addDefaultFolderInfo() {
         addItemView(new InfoHolder("Path:", file.getAbsolutePath(), true), container);
-        addItemView(new InfoHolder("Modified:", TimeUtil.getLastModifiedDate(file, TimeUtil.REGULAR_DATE_FORMAT), true), container);
-        addItemView(new InfoHolder("Content:", FileUtil.getFormattedFileCount(file), true), container);
+        addItemView(new InfoHolder("Modified:", Utils.getLastModifiedDate(file, Utils.REGULAR_DATE_FORMAT), true), container);
+        addItemView(new InfoHolder("Content:", FileUtils.getFormattedFileCount(file), true), container);
         addItemView(new InfoHolder("Type:", file.isFile() ? "File" : "Folder", true), container);
         addItemView(new InfoHolder("Read:", file.canRead() ? "Yes" : "No", true), container);
         addItemView(new InfoHolder("Write:", file.canWrite() ? "Yes" : "No", true), container);
 
         TextView size = addItemView(new InfoHolder("Size:", "Counting...", true), container);
         new Thread(() -> {
-            String s = FileUtil.getFormattedFileSize(file);
+            String s = FileUtils.getFormattedFileSize(file);
             size.post(() -> size.setText(s));
         }).start();
     }
 
     private void addDefaultFileInfo() {
         addItemView(new InfoHolder("Path:", file.getAbsolutePath(), true), container);
-        addItemView(new InfoHolder("Extension:", FileUtil.getFileExtension(file), true), container);
-        addItemView(new InfoHolder("Modified:", TimeUtil.getLastModifiedDate(file, TimeUtil.REGULAR_DATE_FORMAT), true), container);
+        addItemView(new InfoHolder("Extension:", FileUtils.getFileExtension(file), true), container);
+        addItemView(new InfoHolder("Modified:", Utils.getLastModifiedDate(file, Utils.REGULAR_DATE_FORMAT), true), container);
         addItemView(new InfoHolder("Type:", file.isFile() ? "File" : "Folder", true), container);
         addItemView(new InfoHolder("Read:", file.canRead() ? "Yes" : "No", true), container);
         addItemView(new InfoHolder("Write:", file.canWrite() ? "Yes" : "No", true), container);
-        addItemView(new InfoHolder("Size:", FileUtil.getFormattedFileSize(file), true), container);
+        addItemView(new InfoHolder("Size:", FileUtils.getFormattedFileSize(file), true), container);
     }
 
     private TextView addItemView(InfoHolder holder, ViewGroup container) {

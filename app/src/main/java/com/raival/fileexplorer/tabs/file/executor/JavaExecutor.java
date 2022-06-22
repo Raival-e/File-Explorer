@@ -4,8 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.tools.r8.D8;
 import com.raival.fileexplorer.App;
-import com.raival.fileexplorer.utils.D8Util;
-import com.raival.fileexplorer.utils.FileUtil;
+import com.raival.fileexplorer.utils.D8Utils;
+import com.raival.fileexplorer.utils.FileUtils;
 
 import java.io.File;
 import java.io.OutputStream;
@@ -81,10 +81,10 @@ public class JavaExecutor {
 
         opt.add("--intermediate");
         opt.add("--lib");
-        opt.add(D8Util.getBootstrapJarFile().getAbsolutePath());
+        opt.add(D8Utils.getBootstrapJarFile().getAbsolutePath());
         opt.add("--output");
         opt.add(output.getAbsolutePath());
-        ArrayList<String> classes = FileUtil.getAllFilesInDir(new File(output, "classes"), "class");
+        ArrayList<String> classes = FileUtils.getAllFilesInDir(new File(output, "classes"), "class");
         if (classes != null && classes.size() > 0)
             opt.addAll(classes);
 
@@ -108,9 +108,9 @@ public class JavaExecutor {
             sb.append(":").append(jar.getAbsolutePath());
 
         sb.append(":")
-                .append(D8Util.getLambdaStubsJarFile().getAbsolutePath())
+                .append(D8Utils.getLambdaStubsJarFile().getAbsolutePath())
                 .append(":")
-                .append(D8Util.getBootstrapJarFile().getAbsolutePath());
+                .append(D8Utils.getBootstrapJarFile().getAbsolutePath());
         opt.add(sb.substring(1));
 
         opt.add("-proc:none");
@@ -151,7 +151,7 @@ public class JavaExecutor {
             return output.mkdir();
         }
 
-        FileUtil.deleteFile(output);
+        FileUtils.deleteFile(output);
         return output.mkdir();
     }
 

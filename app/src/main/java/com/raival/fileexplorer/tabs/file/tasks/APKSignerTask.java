@@ -5,7 +5,7 @@ import android.os.Looper;
 
 import com.android.apksigner.ApkSignerTool;
 import com.raival.fileexplorer.tabs.file.model.Task;
-import com.raival.fileexplorer.utils.APKSignerUtil;
+import com.raival.fileexplorer.utils.APKSignerUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -70,9 +70,9 @@ public class APKSignerTask extends Task {
         args.add("--out");
         args.add(signedAPK.getAbsolutePath());
         args.add("--key");
-        args.add(APKSignerUtil.getPk8().getAbsolutePath());
+        args.add(APKSignerUtils.getPk8().getAbsolutePath());
         args.add("--cert");
-        args.add(APKSignerUtil.getPem().getAbsolutePath());
+        args.add(APKSignerUtils.getPem().getAbsolutePath());
         ApkSignerTool.main(args.toArray(new String[0]));
     }
 }

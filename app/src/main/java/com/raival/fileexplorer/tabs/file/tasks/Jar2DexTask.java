@@ -9,7 +9,7 @@ import com.android.tools.r8.D8Command;
 import com.android.tools.r8.OutputMode;
 import com.raival.fileexplorer.tabs.file.d8.DexDiagnosticHandler;
 import com.raival.fileexplorer.tabs.file.model.Task;
-import com.raival.fileexplorer.utils.D8Util;
+import com.raival.fileexplorer.utils.D8Utils;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -64,8 +64,8 @@ public class Jar2DexTask extends Task {
 
     private void runD8(File file, File currentPath) throws Exception {
         List<Path> path = new ArrayList<>();
-        path.add(D8Util.getLambdaStubsJarFile().toPath());
-        path.add(D8Util.getBootstrapJarFile().toPath());
+        path.add(D8Utils.getLambdaStubsJarFile().toPath());
+        path.add(D8Utils.getBootstrapJarFile().toPath());
 
         D8Command command = D8Command.builder(new DexDiagnosticHandler())
                 .addLibraryFiles(path)

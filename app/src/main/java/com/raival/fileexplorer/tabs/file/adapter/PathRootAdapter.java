@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.raival.fileexplorer.R;
 import com.raival.fileexplorer.tabs.file.FileExplorerTabFragment;
-import com.raival.fileexplorer.utils.AndroidUtil;
-import com.raival.fileexplorer.utils.FileUtil;
+import com.raival.fileexplorer.utils.Utils;
+import com.raival.fileexplorer.utils.FileUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -62,12 +62,12 @@ public class PathRootAdapter extends RecyclerView.Adapter<PathRootAdapter.ViewHo
 
         public void bind() {
             final int position = getAdapterPosition();
-            label.setText(FileUtil.isExternalStorageFolder(getRootList(parentFragment.getCurrentDirectory()).get(position))
-                    ? FileUtil.INTERNAL_STORAGE
+            label.setText(FileUtils.isExternalStorageFolder(getRootList(parentFragment.getCurrentDirectory()).get(position))
+                    ? FileUtils.INTERNAL_STORAGE
                     : getRootList(parentFragment.getCurrentDirectory()).get(position).getName());
             label.setTextColor((position == getItemCount() - 1)
-                    ? AndroidUtil.getColorAttribute(R.attr.colorPrimary, parentFragment.requireActivity())
-                    : AndroidUtil.getColorAttribute(R.attr.colorOutline, parentFragment.requireActivity()));
+                    ? Utils.getColorAttribute(R.attr.colorPrimary, parentFragment.requireActivity())
+                    : Utils.getColorAttribute(R.attr.colorOutline, parentFragment.requireActivity()));
             itemView.setOnClickListener(view -> {
                 parentFragment.setCurrentDirectory(getRootList(parentFragment.getCurrentDirectory()).get(position));
                 // Restore RecyclerView state

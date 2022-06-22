@@ -5,7 +5,7 @@ import net.lingala.zip4j.ZipFile;
 import java.io.File;
 import java.util.ArrayList;
 
-public class ZipUtil {
+public class ZipUtils {
 
     public static void archive(ArrayList<File> filesToCompress, File zipFile) throws Exception {
         ZipFile zip = new ZipFile(zipFile);

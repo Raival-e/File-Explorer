@@ -7,7 +7,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.widget.Toast;
 
-import com.raival.fileexplorer.utils.FileUtil;
+import com.raival.fileexplorer.utils.FileUtils;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -46,7 +46,7 @@ public class App extends Application {
     public static void log(String exception) {
         final File logFile = new File(appContext.getExternalFilesDir(null).getAbsolutePath() + "/debug/log.txt");
         try {
-            FileUtil.writeFile(logFile, exception);
+            FileUtils.writeFile(logFile, exception);
         } catch (Exception e) {
             showMsg(e.toString());
         }

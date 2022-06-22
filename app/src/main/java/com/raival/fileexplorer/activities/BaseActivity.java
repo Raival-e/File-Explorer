@@ -16,8 +16,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.raival.fileexplorer.App;
-import com.raival.fileexplorer.R;
-import com.raival.fileexplorer.utils.AndroidUtil;
+import com.raival.fileexplorer.utils.Utils;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -26,7 +25,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setStatusBarColor(AndroidUtil.getColorAttribute(android.R.attr.colorBackground, this));
+        getWindow().setStatusBarColor(Utils.getColorAttribute(android.R.attr.colorBackground, this));
     }
 
     protected void checkPermissions() {

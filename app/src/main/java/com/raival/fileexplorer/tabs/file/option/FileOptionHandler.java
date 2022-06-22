@@ -29,7 +29,7 @@ import com.raival.fileexplorer.tabs.file.tasks.CopyTask;
 import com.raival.fileexplorer.tabs.file.tasks.CutTask;
 import com.raival.fileexplorer.tabs.file.tasks.ExtractTask;
 import com.raival.fileexplorer.tabs.file.tasks.Jar2DexTask;
-import com.raival.fileexplorer.utils.FileUtil;
+import com.raival.fileexplorer.utils.FileUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -62,7 +62,7 @@ public class FileOptionHandler {
 
         //______________| Options |_______________\\
 
-        if (FileUtil.isSingleFile(selectedFiles)) {
+        if (FileUtils.isSingleFile(selectedFiles)) {
             if (selectedFiles.get(0).getName().toLowerCase().endsWith(".java")) {
                 bottomDialog.addOption("Execute", R.drawable.ic_round_code_24, view1 -> {
                     exeJava(selectedFiles.get(0).getParentFile());
@@ -70,7 +70,7 @@ public class FileOptionHandler {
             }
         }
 
-        if (FileUtil.isSingleFolder(selectedFiles)) {
+        if (FileUtils.isSingleFolder(selectedFiles)) {
             bottomDialog.addOption("Open in a new tab", R.drawable.ic_round_tab_24, view1 -> {
                 if (parentFragment.requireActivity() instanceof MainActivity) {
                     FileExplorerTabFragment fragment = new FileExplorerTabFragment(selectedFiles.get(0));
@@ -79,16 +79,16 @@ public class FileOptionHandler {
             }, true);
         }
 
-        if (FileUtil.isOnlyFiles(selectedFiles)) {
+        if (FileUtils.isOnlyFiles(selectedFiles)) {
             bottomDialog.addOption("Share", R.drawable.ic_round_share_24, view1 -> {
-                FileUtil.shareFiles(selectedFiles, parentFragment.requireActivity());
+                FileUtils.shareFiles(selectedFiles, parentFragment.requireActivity());
                 parentFragment.setSelectAll(false);
             }, true);
         }
 
-        if (FileUtil.isSingleFile(selectedFiles)) {
+        if (FileUtils.isSingleFile(selectedFiles)) {
             bottomDialog.addOption("Open with", R.drawable.ic_baseline_open_in_new_24, view1 -> {
-                FileUtil.openFileWith(selectedFiles.get(0), true);
+                FileUtils.openFileWith(selectedFiles.get(0), true);
                 parentFragment.setSelectAll(false);
             }, true);
         }
@@ -115,13 +115,13 @@ public class FileOptionHandler {
             confirmDeletion(selectedFiles);
         }, true);
 
-        if (FileUtil.isSingleFile(selectedFiles)) {
+        if (FileUtils.isSingleFile(selectedFiles)) {
             bottomDialog.addOption("Edit with code editor", R.drawable.ic_round_edit_note_24, view1 -> {
                 openWithTextEditor(selectedFiles.get(0));
             }, true);
         }
 
-        if (FileUtil.isArchiveFiles(selectedFiles)) {
+        if (FileUtils.isArchiveFiles(selectedFiles)) {
             bottomDialog.addOption("Extract", R.drawable.ic_baseline_logout_24, view1 -> {
                 getMainViewModel().tasks.add(new ExtractTask(selectedFiles));
                 parentFragment.setSelectAll(false);
@@ -133,16 +133,16 @@ public class FileOptionHandler {
             compressFiles(new CompressTask(selectedFiles));
         }, true);
 
-        if (FileUtil.isSingleFile(selectedFiles)) {
-            if (FileUtil.getFileExtension(selectedFiles.get(0)).equalsIgnoreCase("jar")) {
+        if (FileUtils.isSingleFile(selectedFiles)) {
+            if (FileUtils.getFileExtension(selectedFiles.get(0)).equalsIgnoreCase("jar")) {
                 bottomDialog.addOption("Jar2Dex", R.drawable.ic_round_code_24, view1 -> {
                     jar2Dex(new Jar2DexTask(selectedFiles.get(0)));
                 }, true);
             }
         }
 
-        if (FileUtil.isSingleFile(selectedFiles)) {
-            if (FileUtil.getFileExtension(selectedFiles.get(0)).equalsIgnoreCase("apk")) {
+        if (FileUtils.isSingleFile(selectedFiles)) {
+            if (FileUtils.getFileExtension(selectedFiles.get(0)).equalsIgnoreCase("apk")) {
                 bottomDialog.addOption("Sign with test key", R.drawable.ic_round_key_24, view1 -> {
                     signApkWithTestKey(new APKSignerTask(selectedFiles.get(0)));
                 }, true);
@@ -186,7 +186,7 @@ public class FileOptionHandler {
         TextInputLayout input = (TextInputLayout) parentFragment.requireActivity().getLayoutInflater().inflate(R.layout.input, null, false);
         input.setHint("Archive name");
         input.getEditText().setText(".zip");
-        FileUtil.setFileInvalidator(input, parentFragment.getCurrentDirectory());
+        FileUtils.setFileInvalidator(input, parentFragment.getCurrentDirectory());
 
         new CustomDialog()
                 .setTitle("Compress")
@@ -307,14 +307,14 @@ public class FileOptionHandler {
         input.setHint("File name");
         input.getEditText().setText(selectedFiles.get(0).getName());
         input.getEditText().setSingleLine();
-        FileUtil.setFileInvalidator(input, selectedFiles.get(0), selectedFiles.get(0).getParentFile());
+        FileUtils.setFileInvalidator(input, selectedFiles.get(0), selectedFiles.get(0).getParentFile());
 
         new CustomDialog()
                 .setTitle("Rename")
                 .addView(input)
                 .setPositiveButton("Save", view -> {
                     if (input.getError() == null) {
-                        if (!FileUtil.rename(selectedFiles.get(0), input.getEditText().getText().toString())) {
+                        if (!FileUtils.rename(selectedFiles.get(0), input.getEditText().getText().toString())) {
                             App.showMsg("Cannot rename this file");
                         } else {
                             App.showMsg("File has been renamed");
@@ -340,7 +340,7 @@ public class FileOptionHandler {
         BackgroundTask backgroundTask = new BackgroundTask();
         backgroundTask.setTasks(() -> {
             backgroundTask.showProgressDialog("Deleting files...", parentFragment.requireActivity());
-        }, () -> FileUtil.deleteFiles(selectedFiles), () -> {
+        }, () -> FileUtils.deleteFiles(selectedFiles), () -> {
             backgroundTask.dismiss();
             App.showMsg("Files have been deleted");
             parentFragment.refresh();

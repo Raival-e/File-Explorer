@@ -4,7 +4,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.raival.fileexplorer.tabs.file.model.Task;
-import com.raival.fileexplorer.utils.ZipUtil;
+import com.raival.fileexplorer.utils.ZipUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -60,7 +60,7 @@ public class CompressTask extends Task {
         new Thread(() -> {
             new Handler(Looper.getMainLooper()).post(() -> onUpdateListener.onUpdate("Compressing...."));
             try {
-                ZipUtil.archive(filesToCompress, zipFile);
+                ZipUtils.archive(filesToCompress, zipFile);
                 new Handler(Looper.getMainLooper()).post(() -> onFinishListener.onFinish("Files have been compressed successfully"));
             } catch (Exception e) {
                 e.printStackTrace();

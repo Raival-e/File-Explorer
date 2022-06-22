@@ -30,8 +30,8 @@ import com.raival.fileexplorer.tabs.file.dialog.TasksDialog;
 import com.raival.fileexplorer.tabs.file.holder.FileExplorerTabDataHolder;
 import com.raival.fileexplorer.tabs.file.model.FileItem;
 import com.raival.fileexplorer.tabs.file.option.FileOptionHandler;
-import com.raival.fileexplorer.utils.FileUtil;
-import com.raival.fileexplorer.utils.PrefsUtil;
+import com.raival.fileexplorer.utils.FileUtils;
+import com.raival.fileexplorer.utils.PrefsUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -105,48 +105,48 @@ public class FileExplorerTabFragment extends BaseTabFragment {
 
         popupMenu.getMenu().add("Sort by:").setEnabled(false);
 
-        popupMenu.getMenu().add("Name (A-Z)").setCheckable(true).setChecked(PrefsUtil.getSortingMethod() == PrefsUtil.SORT_NAME_A2Z);
-        popupMenu.getMenu().add("Name (Z-A)").setCheckable(true).setChecked(PrefsUtil.getSortingMethod() == PrefsUtil.SORT_NAME_Z2A);
+        popupMenu.getMenu().add("Name (A-Z)").setCheckable(true).setChecked(PrefsUtils.getSortingMethod() == PrefsUtils.SORT_NAME_A2Z);
+        popupMenu.getMenu().add("Name (Z-A)").setCheckable(true).setChecked(PrefsUtils.getSortingMethod() == PrefsUtils.SORT_NAME_Z2A);
 
-        popupMenu.getMenu().add("Size (Bigger)").setCheckable(true).setChecked(PrefsUtil.getSortingMethod() == PrefsUtil.SORT_SIZE_BIGGER);
-        popupMenu.getMenu().add("Size (Smaller)").setCheckable(true).setChecked(PrefsUtil.getSortingMethod() == PrefsUtil.SORT_SIZE_SMALLER);
+        popupMenu.getMenu().add("Size (Bigger)").setCheckable(true).setChecked(PrefsUtils.getSortingMethod() == PrefsUtils.SORT_SIZE_BIGGER);
+        popupMenu.getMenu().add("Size (Smaller)").setCheckable(true).setChecked(PrefsUtils.getSortingMethod() == PrefsUtils.SORT_SIZE_SMALLER);
 
-        popupMenu.getMenu().add("Date (Newer)").setCheckable(true).setChecked(PrefsUtil.getSortingMethod() == PrefsUtil.SORT_DATE_NEWER);
-        popupMenu.getMenu().add("Date (Older)").setCheckable(true).setChecked(PrefsUtil.getSortingMethod() == PrefsUtil.SORT_DATE_OLDER);
+        popupMenu.getMenu().add("Date (Newer)").setCheckable(true).setChecked(PrefsUtils.getSortingMethod() == PrefsUtils.SORT_DATE_NEWER);
+        popupMenu.getMenu().add("Date (Older)").setCheckable(true).setChecked(PrefsUtils.getSortingMethod() == PrefsUtils.SORT_DATE_OLDER);
 
         popupMenu.getMenu().add("Other options:").setEnabled(false);
 
-        popupMenu.getMenu().add("Folders first").setCheckable(true).setChecked(PrefsUtil.listFoldersFirst());
+        popupMenu.getMenu().add("Folders first").setCheckable(true).setChecked(PrefsUtils.listFoldersFirst());
 
         popupMenu.setOnMenuItemClickListener(menuItem -> {
             menuItem.setChecked(!menuItem.isChecked());
             switch (menuItem.getTitle().toString()) {
                 case "Name (A-Z)": {
-                    PrefsUtil.setSortingMethod(PrefsUtil.SORT_NAME_A2Z);
+                    PrefsUtils.setSortingMethod(PrefsUtils.SORT_NAME_A2Z);
                     break;
                 }
                 case "Name (Z-A)": {
-                    PrefsUtil.setSortingMethod(PrefsUtil.SORT_NAME_Z2A);
+                    PrefsUtils.setSortingMethod(PrefsUtils.SORT_NAME_Z2A);
                     break;
                 }
                 case "Size (Bigger)": {
-                    PrefsUtil.setSortingMethod(PrefsUtil.SORT_SIZE_BIGGER);
+                    PrefsUtils.setSortingMethod(PrefsUtils.SORT_SIZE_BIGGER);
                     break;
                 }
                 case "Size (Smaller)": {
-                    PrefsUtil.setSortingMethod(PrefsUtil.SORT_SIZE_SMALLER);
+                    PrefsUtils.setSortingMethod(PrefsUtils.SORT_SIZE_SMALLER);
                     break;
                 }
                 case "Date (Older)": {
-                    PrefsUtil.setSortingMethod(PrefsUtil.SORT_DATE_OLDER);
+                    PrefsUtils.setSortingMethod(PrefsUtils.SORT_DATE_OLDER);
                     break;
                 }
                 case "Date (Newer)": {
-                    PrefsUtil.setSortingMethod(PrefsUtil.SORT_DATE_NEWER);
+                    PrefsUtils.setSortingMethod(PrefsUtils.SORT_DATE_NEWER);
                     break;
                 }
                 case "Folders first": {
-                    PrefsUtil.setListFoldersFirst(menuItem.isChecked());
+                    PrefsUtils.setListFoldersFirst(menuItem.isChecked());
                     break;
                 }
             }
@@ -315,7 +315,7 @@ public class FileExplorerTabFragment extends BaseTabFragment {
         pathRootRv.scrollToPosition(pathRootRv.getAdapter().getItemCount() - 1);
         fileList.scrollToPosition(0);
         if (getToolbar() != null)
-            getToolbar().setSubtitle(FileUtil.getFormattedFileCount(getCurrentDirectory()));
+            getToolbar().setSubtitle(FileUtils.getFormattedFileCount(getCurrentDirectory()));
     }
 
     /**
@@ -341,7 +341,7 @@ public class FileExplorerTabFragment extends BaseTabFragment {
         // Load all files in the current File
         File[] files = getCurrentDirectory().listFiles();
         if (files != null) {
-            for (Comparator<File> comparator : FileUtil.getComparators()) {
+            for (Comparator<File> comparator : FileUtils.getComparators()) {
                 Arrays.sort(files, comparator);
             }
             for (File file : files) {
@@ -363,7 +363,7 @@ public class FileExplorerTabFragment extends BaseTabFragment {
      * @return the name associated with this tab (currently used for tabView)
      */
     public String getName() {
-        return FileUtil.getShortLabel(getCurrentDirectory(), MAX_NAME_LENGTH);
+        return FileUtils.getShortLabel(getCurrentDirectory(), MAX_NAME_LENGTH);
     }
 
     public void showFileOptions(FileItem fileItem) {
@@ -375,19 +375,19 @@ public class FileExplorerTabFragment extends BaseTabFragment {
 
     public void openFile(FileItem fileItem) {
         if (!handleKnownFileExtensions(fileItem)) {
-            FileUtil.openFileWith(fileItem.file, false);
+            FileUtils.openFileWith(fileItem.file, false);
         }
     }
 
     private boolean handleKnownFileExtensions(FileItem fileItem) {
-        if (FileUtil.isTextFile(fileItem.file) || FileUtil.isCodeFile(fileItem.file)) {
+        if (FileUtils.isTextFile(fileItem.file) || FileUtils.isCodeFile(fileItem.file)) {
             Intent intent = new Intent();
             intent.setClass(requireActivity(), TextEditorActivity.class);
             intent.putExtra("file", fileItem.file.getAbsolutePath());
             requireActivity().startActivity(intent);
             return true;
         }
-        if (FileUtil.getFileExtension(fileItem.file).equals("checklist")) {
+        if (FileUtils.getFileExtension(fileItem.file).equals("checklist")) {
             ((MainActivity) requireActivity()).addNewTab(new ChecklistTabFragment(fileItem.file)
                     , "ChecklistTabFragment_" + ((MainActivity) requireActivity()).generateRandomTag());
             return true;

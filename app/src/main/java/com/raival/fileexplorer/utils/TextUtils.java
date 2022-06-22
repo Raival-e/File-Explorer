@@ -2,7 +2,7 @@ package com.raival.fileexplorer.utils;
 
 import java.util.Random;
 
-public class TextUtil {
+public class TextUtils {
     private static final String ALLOWED_CHARACTERS = "0123456789qwertyuiopasdfghjklzxcvbnm_";
 
     public static String getRandomString(final int sizeOfRandomString) {

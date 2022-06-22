@@ -12,7 +12,7 @@ import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-public class D8Util {
+public class D8Utils {
     private static final int BUFFER_SIZE = 1024 * 10;
     private static final String TAG = "Decompress";
 

@@ -7,19 +7,13 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.dvdb.materialchecklist.MaterialChecklist;
 import com.raival.fileexplorer.App;
 import com.raival.fileexplorer.R;
-import com.raival.fileexplorer.activities.MainActivity;
-import com.raival.fileexplorer.activities.model.MainViewModel;
-import com.raival.fileexplorer.common.view.BottomBarView;
-import com.raival.fileexplorer.common.view.TabView;
-import com.raival.fileexplorer.tabs.BaseDataHolder;
 import com.raival.fileexplorer.tabs.BaseTabFragment;
 import com.raival.fileexplorer.tabs.file.FileExplorerTabFragment;
-import com.raival.fileexplorer.utils.FileUtil;
+import com.raival.fileexplorer.utils.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,7 +39,7 @@ public class ChecklistTabFragment extends BaseTabFragment {
         materialChecklist = view.findViewById(R.id.checklist);
 
         try {
-            materialChecklist.setItems(FileUtil.readFile(((ChecklistTabDataHolder)getDataHolder()).file));
+            materialChecklist.setItems(FileUtils.readFile(((ChecklistTabDataHolder)getDataHolder()).file));
         } catch (Exception e) {
             e.printStackTrace();
             App.log(e);
@@ -64,7 +58,7 @@ public class ChecklistTabFragment extends BaseTabFragment {
     private void saveFile() {
         if (getDataHolder() == null) return;
         try {
-            FileUtil.writeFile(((ChecklistTabDataHolder)getDataHolder()).file, materialChecklist.getItems(true, true));
+            FileUtils.writeFile(((ChecklistTabDataHolder)getDataHolder()).file, materialChecklist.getItems(true, true));
         } catch (IOException e) {
             e.printStackTrace();
             App.log(e);
@@ -85,7 +79,7 @@ public class ChecklistTabFragment extends BaseTabFragment {
     }
 
     private void updateTabTitle() {
-        getTabView().setName(FileUtil.getShortLabel(((ChecklistTabDataHolder)getDataHolder()).file, FileExplorerTabFragment.MAX_NAME_LENGTH));
+        getTabView().setName(FileUtils.getShortLabel(((ChecklistTabDataHolder)getDataHolder()).file, FileExplorerTabFragment.MAX_NAME_LENGTH));
     }
 
     private void prepareBottomBarView() {
