@@ -12,6 +12,7 @@ import android.view.inputmethod.EditorInfo;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.elevation.SurfaceColors;
 import com.google.android.material.textfield.TextInputLayout;
 import com.raival.fileexplorer.App;
 import com.raival.fileexplorer.R;
@@ -60,8 +61,8 @@ public class TextEditorActivity extends BaseActivity {
 
         SymbolInputView inputView = findViewById(R.id.symbol_input);
         inputView.bindEditor(editor);
-        inputView.setBackgroundColor(Utils.getColorAttribute(android.R.attr.colorBackground, this));
-        inputView.setTextColor(Utils.getColorAttribute(android.R.attr.colorBackground, this));
+        inputView.setBackgroundColor(SurfaceColors.SURFACE_1.getColor(this));
+        inputView.setTextColor(Utils.getColorAttribute(R.attr.colorOnSurface, this));
         inputView.addSymbols(new String[]{"->", "_", "=", "{", "}", "<", ">", "|", "\\", "?", "+", "-", "*", "/"},
                 new String[]{"\t", "_", "=", "{", "}", "<", ">", "|", "\\", "?", "+", "-", "*", "/"});
 
