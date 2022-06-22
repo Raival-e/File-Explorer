@@ -9,7 +9,8 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:attr/colorBackground" />
+        android:elevation="1dp"
+        style="@style/Widget.Material3.Toolbar.Surface"/>
     <io.github.rosemoe.sora.widget.CodeEditor
         android:id="@+id/editor"
         android:layout_width="match_parent"

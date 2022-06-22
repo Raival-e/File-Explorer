@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.material.elevation.SurfaceColors;
 import com.raival.fileexplorer.App;
 import com.raival.fileexplorer.utils.Utils;
 
@@ -25,7 +26,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setStatusBarColor(Utils.getColorAttribute(android.R.attr.colorBackground, this));
+        getWindow().setStatusBarColor(SurfaceColors.SURFACE_1.getColor(this));
     }
 
     protected void checkPermissions() {

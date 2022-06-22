@@ -11,34 +11,35 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:subtitleTextAppearance="@style/TextAppearance.Material3.LabelSmall"
-        android:background="?android:attr/colorBackground" />
-    <LinearLayout
+        android:elevation="1dp"
+        style="@style/Widget.Material3.Toolbar.Surface"/>
+    <com.google.android.material.card.MaterialCardView
+        style="@style/Widget.Material3.CardView.Elevated"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:background="?android:attr/colorBackground">
-        <ImageView
-            android:id="@+id/tabs_options"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_baseline_add_24"
-            android:background="?android:attr/selectableItemBackground"
-            android:clickable="true"
-            android:rotation="90"
-            android:scaleType="centerInside"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"/>
-        <com.raival.fileexplorer.common.view.TabView
-            android:id="@+id/tabs"
+        app:cardCornerRadius="0dp">
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="?android:attr/colorBackground"/>
-    </LinearLayout>
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="1dp" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <ImageView
+                android:id="@+id/tabs_options"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_baseline_add_24"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:rotation="90"
+                android:scaleType="centerInside"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"/>
+            <com.raival.fileexplorer.common.view.TabView
+                android:id="@+id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="40dp" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container"
@@ -46,13 +47,17 @@
         android:layout_height="0dp"
         android:layout_weight="1"/>
 
-    <Space
+    <com.google.android.material.card.MaterialCardView
+        style="@style/Widget.Material3.CardView.Elevated"
         android:layout_width="match_parent"
-        android:layout_height="1dp" />
-
-    <com.raival.fileexplorer.common.view.BottomBarView
-        android:id="@+id/bottom_bar_view"
-        android:layout_width="match_parent"
-        android:layout_height="48dp" />
+        android:layout_height="48dp"
+        app:cardCornerRadius="0dp">
+        <com.raival.fileexplorer.common.view.BottomBarView
+            android:id="@+id/bottom_bar_view"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:elevation="2dp"
+            style="@style/Widget.Material3.CardView.Elevated"/>
+    </com.google.android.material.card.MaterialCardView>
 
 </LinearLayout>
