@@ -1,5 +1,8 @@
 package com.raival.fileexplorer.tabs.file.executor;
 
+import android.app.Activity;
+import android.content.Context;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.tools.r8.D8;
@@ -45,19 +48,31 @@ public class JavaExecutor {
 
     public void invoke() throws Exception {
         final String optimizedDir = App.appContext.getCodeCacheDir().getAbsolutePath();
+
         DexClassLoader dexClassLoader = new DexClassLoader(
                 getDexFiles(),
                 optimizedDir,
                 null,
                 App.appContext.getClassLoader());
         Class<?> clazz = dexClassLoader.loadClass("com.main.Main");
+
         for (Method method : clazz.getMethods()) {
             if (method.getName().equals("main")) {
-                if (method.getParameterTypes().length == 2) {
-                    method.invoke(null, activity, project);
-                } else if (method.getParameterTypes().length == 3) {
-                    method.invoke(null, activity, activity, project);
+                ArrayList<Object> params = new ArrayList<>();
+                for(Object obj : method.getParameterTypes()){
+                    if(obj.equals(AppCompatActivity.class)){
+                        params.add(activity);
+                    } else if(obj.equals(Activity.class)){
+                        params.add(activity);
+                    } else if(obj.equals(Context.class)){
+                        params.add(activity);
+                    } else if(obj.equals(File.class)){
+                        params.add(project);
+                    } else {
+                        params.add(null);
+                    }
                 }
+                method.invoke(null, params.toArray(new Object[0]));
             }
         }
     }
