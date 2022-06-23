@@ -19,8 +19,10 @@ A full-featured file manager with Material You design.
 To use this feature, all you need to do is to create Main.java file (it is recommended to create it in an empty folder),
 then open it, a dialog will show asking you if you want to use a sample code, click Yes. Now you can run you code by clicking
 run button in the toolbar. The main method gives you the activity and the folder where the Main.java is located.
+
 You can add java files to the same directory. You can also add .dex/.jar files to the same directory if you want to use 
 additional libraries.
+
 After running the code, an output folder will be created. In this folder, you can see the output dex file(s), you
 can run these dex files directly without the need to compile your code, all you need to do is to rename them 
 to any name that ends with .exe.dex (e.g. classes.exe.dex, classes2.exe.dex,.. etc).
