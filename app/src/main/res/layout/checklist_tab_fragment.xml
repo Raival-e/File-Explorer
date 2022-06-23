@@ -9,7 +9,7 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:text_color="?android:attr/colorBackground"
+        app:text_color="?attr/colorOnSurface"
         app:text_size="16sp"
         app:icon_alpha_drag_indicator="0.8"
         app:icon_alpha_delete="0.8"
