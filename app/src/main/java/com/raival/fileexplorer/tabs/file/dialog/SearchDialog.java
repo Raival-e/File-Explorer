@@ -22,7 +22,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.textfield.TextInputLayout;
 import com.raival.fileexplorer.R;
 import com.raival.fileexplorer.tabs.file.FileExplorerTabFragment;
-import com.raival.fileexplorer.tabs.file.holder.FileExplorerTabDataHolder;
+import com.raival.fileexplorer.tabs.file.FileExplorerTabDataHolder;
 import com.raival.fileexplorer.tabs.file.model.FileItem;
 import com.raival.fileexplorer.utils.FileUtils;
 

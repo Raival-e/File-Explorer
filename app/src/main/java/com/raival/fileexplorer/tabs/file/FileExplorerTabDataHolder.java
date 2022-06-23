@@ -1,4 +1,4 @@
-package com.raival.fileexplorer.tabs.file.holder;
+package com.raival.fileexplorer.tabs.file;
 
 import android.os.Parcelable;
 

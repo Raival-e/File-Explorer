@@ -27,7 +27,6 @@ import com.raival.fileexplorer.tabs.file.adapter.FileListAdapter;
 import com.raival.fileexplorer.tabs.file.adapter.PathRootAdapter;
 import com.raival.fileexplorer.tabs.file.dialog.SearchDialog;
 import com.raival.fileexplorer.tabs.file.dialog.TasksDialog;
-import com.raival.fileexplorer.tabs.file.holder.FileExplorerTabDataHolder;
 import com.raival.fileexplorer.tabs.file.model.FileItem;
 import com.raival.fileexplorer.tabs.file.option.FileOptionHandler;
 import com.raival.fileexplorer.utils.FileUtils;

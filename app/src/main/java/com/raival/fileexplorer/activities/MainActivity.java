@@ -23,7 +23,7 @@ import com.raival.fileexplorer.tabs.BaseTabFragment;
 import com.raival.fileexplorer.tabs.checklist.ChecklistTabDataHolder;
 import com.raival.fileexplorer.tabs.checklist.ChecklistTabFragment;
 import com.raival.fileexplorer.tabs.file.FileExplorerTabFragment;
-import com.raival.fileexplorer.tabs.file.holder.FileExplorerTabDataHolder;
+import com.raival.fileexplorer.tabs.file.FileExplorerTabDataHolder;
 import com.raival.fileexplorer.utils.FileUtils;
 import com.raival.fileexplorer.utils.TextUtils;
 

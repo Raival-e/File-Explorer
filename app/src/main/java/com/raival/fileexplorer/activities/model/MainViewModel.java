@@ -3,7 +3,7 @@ package com.raival.fileexplorer.activities.model;
 import androidx.lifecycle.ViewModel;
 
 import com.raival.fileexplorer.tabs.BaseDataHolder;
-import com.raival.fileexplorer.tabs.file.holder.FileExplorerTabDataHolder;
+import com.raival.fileexplorer.tabs.file.FileExplorerTabDataHolder;
 import com.raival.fileexplorer.tabs.file.model.Task;
 
 import java.util.ArrayList;
