@@ -15,6 +15,7 @@ public class FileExplorerTabDataHolder extends BaseDataHolder {
     public File activeDirectory;
     public Map<File, Parcelable> recyclerViewStates = new HashMap<>();
     public ArrayList<FileItem> searchList = new ArrayList<>();
+    public ArrayList<File> selectedFiles = new ArrayList<>();
 
     public FileExplorerTabDataHolder(String tag) {
         this.tag = tag;

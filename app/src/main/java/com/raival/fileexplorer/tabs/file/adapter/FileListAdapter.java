@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.raival.fileexplorer.R;
 import com.raival.fileexplorer.tabs.file.FileExplorerTabFragment;
+import com.raival.fileexplorer.tabs.file.holder.FileExplorerTabDataHolder;
 import com.raival.fileexplorer.tabs.file.model.FileItem;
 import com.raival.fileexplorer.tabs.file.observer.FileListObserver;
 import com.raival.fileexplorer.utils.FileUtils;
@@ -83,6 +84,11 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
             // Select/unselect item by pressing the icon
             itemView.findViewById(R.id.icon_container).setOnClickListener(view -> {
                 fileItem.isSelected = !fileItem.isSelected;
+                if(fileItem.isSelected){
+                    ((FileExplorerTabDataHolder)parentFragment.getDataHolder()).selectedFiles.add(fileItem.file);
+                } else {
+                    ((FileExplorerTabDataHolder)parentFragment.getDataHolder()).selectedFiles.remove(fileItem.file);
+                }
                 notifyItemChanged(position);
             });
 
@@ -92,6 +98,9 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
                     parentFragment.openFile(fileItem);
                 } else {
                     parentFragment.setCurrentDirectory(fileItem.file);
+                    // Clear any selected files from the DataHolder (it also gets cleared
+                    // in onBackPressed (when go back)
+                    ((FileExplorerTabDataHolder)parentFragment.getDataHolder()).selectedFiles.clear();
                 }
             });
 

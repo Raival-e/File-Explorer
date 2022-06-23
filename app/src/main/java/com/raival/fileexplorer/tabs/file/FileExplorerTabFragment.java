@@ -210,6 +210,9 @@ public class FileExplorerTabFragment extends BaseTabFragment {
             setCurrentDirectory(getCurrentDirectory().getParentFile());
             // restore RecyclerView state
             restoreRecyclerViewState();
+            // Clear any selected files from the DataHolder (it also gets cleared
+            // when a FileItem is clicked)
+            ((FileExplorerTabDataHolder)getDataHolder()).selectedFiles.clear();
             return true;
         }
         // Close the tab (if not default tab)
@@ -235,8 +238,13 @@ public class FileExplorerTabFragment extends BaseTabFragment {
     }
 
     public void setSelectAll(boolean select) {
+        if(!select) ((FileExplorerTabDataHolder)getDataHolder()).selectedFiles.clear();
+
         for (FileItem item : files) {
             item.isSelected = select;
+            if(select) {
+                ((FileExplorerTabDataHolder)getDataHolder()).selectedFiles.add(item.file);
+            }
         }
         // Don't call refresh(), because it will recreate the tab and reset the selection
         fileList.getAdapter().notifyDataSetChanged();
@@ -331,7 +339,7 @@ public class FileExplorerTabFragment extends BaseTabFragment {
         return Environment.getExternalStorageDirectory();
     }
 
-    private void prepareSortedFiles() {
+    private void prepareFiles() {
         // Make sure current file is ready
         if (getCurrentDirectory() == null) {
             loadData();
@@ -346,7 +354,11 @@ public class FileExplorerTabFragment extends BaseTabFragment {
                 Arrays.sort(files, comparator);
             }
             for (File file : files) {
-                this.files.add(new FileItem(file));
+                FileItem fileItem = new FileItem(file);
+                if(((FileExplorerTabDataHolder)getDataHolder()).selectedFiles.contains(fileItem.file)){
+                    fileItem.isSelected = true;
+                }
+                this.files.add(fileItem);
             }
         }
     }
@@ -431,7 +443,7 @@ public class FileExplorerTabFragment extends BaseTabFragment {
         // Save only when previousDirectory is set (so that it can restore the state before onDestroy())
         if (previousDirectory != null) ((FileExplorerTabDataHolder)getDataHolder())
                 .recyclerViewStates.put(previousDirectory, fileList.getLayoutManager().onSaveInstanceState());
-        prepareSortedFiles();
+        prepareFiles();
         updateTabTitle();
         refreshFileList();
         ((FileExplorerTabDataHolder)getDataHolder()).activeDirectory = getCurrentDirectory();
