@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,6 +28,7 @@ import com.raival.fileexplorer.tabs.file.adapter.FileListAdapter;
 import com.raival.fileexplorer.tabs.file.adapter.PathRootAdapter;
 import com.raival.fileexplorer.tabs.file.dialog.SearchDialog;
 import com.raival.fileexplorer.tabs.file.dialog.TasksDialog;
+import com.raival.fileexplorer.tabs.file.executor.DexRunner;
 import com.raival.fileexplorer.tabs.file.model.FileItem;
 import com.raival.fileexplorer.tabs.file.option.FileOptionHandler;
 import com.raival.fileexplorer.utils.FileUtils;
@@ -402,6 +404,10 @@ public class FileExplorerTabFragment extends BaseTabFragment {
         if (FileUtils.getFileExtension(fileItem.file).equals("checklist")) {
             ((MainActivity) requireActivity()).addNewTab(new ChecklistTabFragment(fileItem.file)
                     , "ChecklistTabFragment_" + ((MainActivity) requireActivity()).generateRandomTag());
+            return true;
+        }
+        if(fileItem.file.getName().toLowerCase().endsWith(".exe.dex")){
+            new DexRunner(fileItem.file, getCurrentDirectory(), (AppCompatActivity) requireActivity()).run();
             return true;
         }
         return false;
