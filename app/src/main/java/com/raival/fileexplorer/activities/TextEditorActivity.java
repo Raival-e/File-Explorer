@@ -19,7 +19,7 @@ import com.raival.fileexplorer.R;
 import com.raival.fileexplorer.activities.model.TextEditorViewModel;
 import com.raival.fileexplorer.common.BackgroundTask;
 import com.raival.fileexplorer.common.dialog.CustomDialog;
-import com.raival.fileexplorer.tabs.file.executor.JavaExecutor;
+import com.raival.fileexplorer.tabs.file.executor.Executor;
 import com.raival.fileexplorer.utils.Utils;
 import com.raival.fileexplorer.utils.FileUtils;
 import com.raival.fileexplorer.utils.PrefsUtils;
@@ -232,7 +232,8 @@ public class TextEditorActivity extends BaseActivity {
     }
 
     private boolean canExecute() {
-        return new File(editorViewModel.file.getParentFile(), "Main.java").exists();
+        return new File(editorViewModel.file.getParentFile(), "Main.java").exists()
+                || new File (editorViewModel.file.getParentFile(), "Main.kt").exists();
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -245,7 +246,7 @@ public class TextEditorActivity extends BaseActivity {
         menu.findItem(R.id.editor_option_line_number).setChecked(PrefsUtils.getTextEditorShowLineNumber());
         menu.findItem(R.id.editor_option_read_only).setChecked(PrefsUtils.getTextEditorReadOnly());
 
-        if ("java".equalsIgnoreCase(FileUtils.getFileExtension(editorViewModel.file)))
+        if ("java".equals(FileUtils.getFileExtension(editorViewModel.file)) || "kt".equals(FileUtils.getFileExtension(editorViewModel.file)))
             menu.add("Format");
         if (!canExecute()) menu.findItem(R.id.editor_execute).setVisible(false);
         return super.onCreateOptionsMenu(menu);
@@ -326,7 +327,7 @@ public class TextEditorActivity extends BaseActivity {
     }
 
     private void executeFile() {
-        JavaExecutor javaExecutor = new JavaExecutor(editorViewModel.file.getParentFile(), this);
+        Executor executor = new Executor(editorViewModel.file.getParentFile(), this);
         BackgroundTask backgroundTask = new BackgroundTask();
 
         AtomicReference<String> error = new AtomicReference<>("");
@@ -335,7 +336,7 @@ public class TextEditorActivity extends BaseActivity {
             backgroundTask.showProgressDialog("compiling files...", this);
         }, () -> {
             try {
-                javaExecutor.execute();
+                executor.execute();
             } catch (Exception exception) {
                 error.set(App.getStackTrace(exception));
             }
@@ -347,7 +348,7 @@ public class TextEditorActivity extends BaseActivity {
                     showDialog("Error", error.get());
                     return;
                 }
-                javaExecutor.invoke();
+                executor.invoke();
                 backgroundTask.dismiss();
             } catch (Exception exception) {
                 backgroundTask.dismiss();

@@ -31,7 +31,8 @@
         style="@style/Widget.Material3.CardView.Elevated"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="0dp">
+        app:cardCornerRadius="0dp"
+        android:elevation="1dp">
         <LinearLayout
             tools:ignore="HardcodedText"
             android:id="@+id/search_panel"
@@ -41,8 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="gone"
-            android:background="?android:attr/colorBackground">
+            android:visibility="gone">
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/find_input"
                 android:layout_width="match_parent"

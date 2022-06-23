@@ -21,7 +21,7 @@ import com.raival.fileexplorer.common.dialog.OptionsDialog;
 import com.raival.fileexplorer.tabs.file.FileExplorerTabFragment;
 import com.raival.fileexplorer.tabs.file.dialog.FileInfoDialog;
 import com.raival.fileexplorer.tabs.file.dialog.SearchDialog;
-import com.raival.fileexplorer.tabs.file.executor.JavaExecutor;
+import com.raival.fileexplorer.tabs.file.executor.Executor;
 import com.raival.fileexplorer.tabs.file.model.FileItem;
 import com.raival.fileexplorer.tabs.file.tasks.APKSignerTask;
 import com.raival.fileexplorer.tabs.file.tasks.CompressTask;
@@ -269,7 +269,7 @@ public class FileOptionHandler {
     }
 
     private void exeJava(File file) {
-        JavaExecutor javaExecutor = new JavaExecutor(file, (AppCompatActivity) parentFragment.requireActivity());
+        Executor executor = new Executor(file, (AppCompatActivity) parentFragment.requireActivity());
         BackgroundTask backgroundTask = new BackgroundTask();
 
         AtomicReference<String> error = new AtomicReference<>("");
@@ -278,7 +278,7 @@ public class FileOptionHandler {
             backgroundTask.showProgressDialog("compiling files...", parentFragment.requireActivity());
         }, () -> {
             try {
-                javaExecutor.execute();
+                executor.execute();
             } catch (Exception exception) {
                 error.set(App.getStackTrace(exception));
             }
@@ -290,7 +290,7 @@ public class FileOptionHandler {
                     parentFragment.showDialog("Error", error.get());
                     return;
                 }
-                javaExecutor.invoke();
+                executor.invoke();
                 backgroundTask.dismiss();
             } catch (Exception exception) {
                 backgroundTask.dismiss();

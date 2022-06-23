@@ -8,3 +8,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Quick tools"
 include ':app'
+include ':kotlinc'
+include ':build-logic'
