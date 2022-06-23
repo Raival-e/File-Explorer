@@ -27,72 +27,76 @@
             android:layout_height="36dp" />
     </HorizontalScrollView>
 
-    <LinearLayout
-        tools:ignore="HardcodedText"
-        android:id="@+id/search_panel"
-        android:paddingTop="8dp"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
+    <com.google.android.material.card.MaterialCardView
+        style="@style/Widget.Material3.CardView.Elevated"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone"
-        android:background="?android:attr/colorBackground">
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/find_input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/replace_input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
+        app:cardCornerRadius="0dp">
         <LinearLayout
+            tools:ignore="HardcodedText"
+            android:id="@+id/search_panel"
+            android:paddingTop="8dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/replace"
-                android:layout_marginEnd="2dp"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:background="?android:attr/colorBackground">
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/find_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/replace_input"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Rep"
-                android:layout_margin="3dp"/>
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/replace_all"
-                android:layout_marginEnd="2dp"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_marginTop="8dp">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="All"
-                android:layout_margin="3dp"/>
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/previous"
-                android:layout_marginEnd="2dp"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="Prev"
-                android:layout_margin="3dp"/>
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/next"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="Next"
-                android:layout_margin="3dp"
-                />
+                android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/replace"
+                    android:layout_marginEnd="2dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Rep"
+                    android:layout_margin="3dp"/>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/replace_all"
+                    android:layout_marginEnd="2dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="All"
+                    android:layout_margin="3dp"/>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/previous"
+                    android:layout_marginEnd="2dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Prev"
+                    android:layout_margin="3dp"/>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/next"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Next"
+                    android:layout_margin="3dp"
+                    />
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-
-
+    </com.google.android.material.card.MaterialCardView>
 </LinearLayout>
