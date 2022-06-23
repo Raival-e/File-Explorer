@@ -35,15 +35,15 @@ public class Main {
 	}
 
 	public static void showMsg(String s){
-		Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
+		Toast.makeText(activity, s, Toast.LENGTH_SHORT).show();
 	}
 
 	private static int Dp(int i){
-		return (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,i, context.getResources().getDisplayMetrics());
+		return (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,i, activity.getResources().getDisplayMetrics());
 	}
 
 	private static void showDialog(String title, String msg){
-		AlertDialog dialog = new AlertDialog.Builder(context).create();
+		AlertDialog dialog = new AlertDialog.Builder(activity).create();
 		dialog.setTitle(title);
 		dialog.setMessage(msg);
 		dialog.setButton(-1, "OK", (v,i)->{
@@ -58,6 +58,6 @@ public class Main {
 	/////////////////////////////
 
 	private static void init(){
-		showMsg("Hello World!);
+		showMsg("Hello World!");
 	}
 }
