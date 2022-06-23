@@ -160,6 +160,7 @@ public class FileExplorerTabFragment extends BaseTabFragment {
         TextInputLayout input = (TextInputLayout) getLayoutInflater().inflate(R.layout.input, null, false);
         input.setHint("File name");
         input.getEditText().setSingleLine();
+        FileUtils.setFileValidator(input, getCurrentDirectory());
 
         new CustomDialog()
                 .setTitle("Create new file")

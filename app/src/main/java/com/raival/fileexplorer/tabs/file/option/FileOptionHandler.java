@@ -186,7 +186,7 @@ public class FileOptionHandler {
         TextInputLayout input = (TextInputLayout) parentFragment.requireActivity().getLayoutInflater().inflate(R.layout.input, null, false);
         input.setHint("Archive name");
         input.getEditText().setText(".zip");
-        FileUtils.setFileInvalidator(input, parentFragment.getCurrentDirectory());
+        FileUtils.setFileValidator(input, parentFragment.getCurrentDirectory());
 
         new CustomDialog()
                 .setTitle("Compress")
@@ -307,7 +307,7 @@ public class FileOptionHandler {
         input.setHint("File name");
         input.getEditText().setText(selectedFiles.get(0).getName());
         input.getEditText().setSingleLine();
-        FileUtils.setFileInvalidator(input, selectedFiles.get(0), selectedFiles.get(0).getParentFile());
+        FileUtils.setFileValidator(input, selectedFiles.get(0), selectedFiles.get(0).getParentFile());
 
         new CustomDialog()
                 .setTitle("Rename")

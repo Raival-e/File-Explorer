@@ -518,11 +518,11 @@ public class FileUtils {
         }
     }
 
-    public static void setFileInvalidator(TextInputLayout input, File directory) {
-        setFileInvalidator(input, null, directory);
+    public static void setFileValidator(TextInputLayout input, File directory) {
+        setFileValidator(input, null, directory);
     }
 
-    public static void setFileInvalidator(TextInputLayout input, File file, File directory) {
+    public static void setFileValidator(TextInputLayout input, File file, File directory) {
         input.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
