@@ -104,7 +104,11 @@ public class TextEditorActivity extends BaseActivity {
         }
 
         try {
-            editor.setText(FileUtils.readFile(editorViewModel.file));
+            if(editorViewModel.content != null){
+                editor.setText(editorViewModel.content);
+            } else {
+                editor.setText(FileUtils.readFile(editorViewModel.file));
+            }
         } catch (Exception exception) {
             exception.printStackTrace();
             App.showMsg("Failed to read file: " + editorViewModel.file.getAbsolutePath());
@@ -193,6 +197,12 @@ public class TextEditorActivity extends BaseActivity {
                 editor.getSearcher().replaceAll(replaceInput.getEditText().getText().toString());
         });
 
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        editorViewModel.content =   editor.getText();
     }
 
     @Override
