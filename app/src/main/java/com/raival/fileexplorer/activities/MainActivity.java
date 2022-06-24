@@ -22,8 +22,8 @@ import com.raival.fileexplorer.tabs.BaseDataHolder;
 import com.raival.fileexplorer.tabs.BaseTabFragment;
 import com.raival.fileexplorer.tabs.checklist.ChecklistTabDataHolder;
 import com.raival.fileexplorer.tabs.checklist.ChecklistTabFragment;
-import com.raival.fileexplorer.tabs.file.FileExplorerTabFragment;
 import com.raival.fileexplorer.tabs.file.FileExplorerTabDataHolder;
+import com.raival.fileexplorer.tabs.file.FileExplorerTabFragment;
 import com.raival.fileexplorer.utils.FileUtils;
 import com.raival.fileexplorer.utils.TextUtils;
 
@@ -32,11 +32,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends BaseActivity {
+    private final boolean confirmExit = false;
     private TabView tabView;
     private FragmentContainerView fragmentContainerView;
     private MaterialToolbar toolbar;
     private BottomBarView bottomBarView;
-    private final boolean confirmExit = false;
 
     /**
      * Called after read & write permissions are granted

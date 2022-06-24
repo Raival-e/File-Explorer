@@ -82,7 +82,7 @@ public class FileExplorerTabFragment extends BaseTabFragment {
     }
 
     private void loadData() {
-        setCurrentDirectory(((FileExplorerTabDataHolder)getDataHolder()).activeDirectory);
+        setCurrentDirectory(((FileExplorerTabDataHolder) getDataHolder()).activeDirectory);
     }
 
     public void prepareBottomBarView() {
@@ -213,7 +213,7 @@ public class FileExplorerTabFragment extends BaseTabFragment {
             restoreRecyclerViewState();
             // Clear any selected files from the DataHolder (it also gets cleared
             // when a FileItem is clicked)
-            ((FileExplorerTabDataHolder)getDataHolder()).selectedFiles.clear();
+            ((FileExplorerTabDataHolder) getDataHolder()).selectedFiles.clear();
             return true;
         }
         // Close the tab (if not default tab)
@@ -239,12 +239,12 @@ public class FileExplorerTabFragment extends BaseTabFragment {
     }
 
     public void setSelectAll(boolean select) {
-        if(!select) ((FileExplorerTabDataHolder)getDataHolder()).selectedFiles.clear();
+        if (!select) ((FileExplorerTabDataHolder) getDataHolder()).selectedFiles.clear();
 
         for (FileItem item : files) {
             item.isSelected = select;
-            if(select) {
-                ((FileExplorerTabDataHolder)getDataHolder()).selectedFiles.add(item.file);
+            if (select) {
+                ((FileExplorerTabDataHolder) getDataHolder()).selectedFiles.add(item.file);
             }
         }
         // Don't call refresh(), because it will recreate the tab and reset the selection
@@ -309,10 +309,10 @@ public class FileExplorerTabFragment extends BaseTabFragment {
      * - when select a directory from pathRoot RecyclerView
      */
     public void restoreRecyclerViewState() {
-        Parcelable savedState = ((FileExplorerTabDataHolder)getDataHolder()).recyclerViewStates.get(getCurrentDirectory());
+        Parcelable savedState = ((FileExplorerTabDataHolder) getDataHolder()).recyclerViewStates.get(getCurrentDirectory());
         if (savedState != null) {
             fileList.getLayoutManager().onRestoreInstanceState(savedState);
-            ((FileExplorerTabDataHolder)getDataHolder()).recyclerViewStates.remove(getCurrentDirectory());
+            ((FileExplorerTabDataHolder) getDataHolder()).recyclerViewStates.remove(getCurrentDirectory());
         }
     }
 
@@ -356,7 +356,7 @@ public class FileExplorerTabFragment extends BaseTabFragment {
             }
             for (File file : files) {
                 FileItem fileItem = new FileItem(file);
-                if(((FileExplorerTabDataHolder)getDataHolder()).selectedFiles.contains(fileItem.file)){
+                if (((FileExplorerTabDataHolder) getDataHolder()).selectedFiles.contains(fileItem.file)) {
                     fileItem.isSelected = true;
                 }
                 this.files.add(fileItem);
@@ -406,7 +406,7 @@ public class FileExplorerTabFragment extends BaseTabFragment {
                     , "ChecklistTabFragment_" + ((MainActivity) requireActivity()).generateRandomTag());
             return true;
         }
-        if(fileItem.file.getName().toLowerCase().endsWith(".exe.dex")){
+        if (fileItem.file.getName().toLowerCase().endsWith(".exe.dex")) {
             new DexRunner(fileItem.file, getCurrentDirectory(), (AppCompatActivity) requireActivity()).run();
             return true;
         }
@@ -446,12 +446,12 @@ public class FileExplorerTabFragment extends BaseTabFragment {
         previousDirectory = currentDirectory;
         currentDirectory = dir;
         // Save only when previousDirectory is set (so that it can restore the state before onDestroy())
-        if (previousDirectory != null) ((FileExplorerTabDataHolder)getDataHolder())
+        if (previousDirectory != null) ((FileExplorerTabDataHolder) getDataHolder())
                 .recyclerViewStates.put(previousDirectory, fileList.getLayoutManager().onSaveInstanceState());
         prepareFiles();
         updateTabTitle();
         refreshFileList();
-        ((FileExplorerTabDataHolder)getDataHolder()).activeDirectory = getCurrentDirectory();
+        ((FileExplorerTabDataHolder) getDataHolder()).activeDirectory = getCurrentDirectory();
     }
 
     public File getPreviousDirectory() {

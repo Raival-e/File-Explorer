@@ -20,9 +20,9 @@ import com.raival.fileexplorer.activities.model.TextEditorViewModel;
 import com.raival.fileexplorer.common.BackgroundTask;
 import com.raival.fileexplorer.common.dialog.CustomDialog;
 import com.raival.fileexplorer.tabs.file.executor.Executor;
-import com.raival.fileexplorer.utils.Utils;
 import com.raival.fileexplorer.utils.FileUtils;
 import com.raival.fileexplorer.utils.PrefsUtils;
+import com.raival.fileexplorer.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -104,7 +104,7 @@ public class TextEditorActivity extends BaseActivity {
         }
 
         try {
-            if(editorViewModel.content != null){
+            if (editorViewModel.content != null) {
                 editor.setText(editorViewModel.content);
             } else {
                 editor.setText(FileUtils.readFile(editorViewModel.file));
@@ -200,9 +200,9 @@ public class TextEditorActivity extends BaseActivity {
     }
 
     @Override
-    public void onStop(){
+    public void onStop() {
         super.onStop();
-        editorViewModel.content =   editor.getText();
+        editorViewModel.content = editor.getText();
     }
 
     @Override
@@ -233,7 +233,7 @@ public class TextEditorActivity extends BaseActivity {
 
     private boolean canExecute() {
         return new File(editorViewModel.file.getParentFile(), "Main.java").exists()
-                || new File (editorViewModel.file.getParentFile(), "Main.kt").exists();
+                || new File(editorViewModel.file.getParentFile(), "Main.kt").exists();
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

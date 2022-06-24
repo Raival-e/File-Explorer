@@ -1,9 +1,7 @@
 package com.raival.fileexplorer.tabs;
 
 import android.os.Bundle;
-import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -25,19 +23,20 @@ public abstract class BaseTabFragment extends Fragment {
     private TabView.Tab tabView;
     private BaseDataHolder dataHolder;
 
-    public abstract boolean onBackPressed();
-    public abstract BaseDataHolder createNewDataHolder();
-
     public BaseTabFragment() {
         super();
     }
+
+    public abstract boolean onBackPressed();
+
+    public abstract BaseDataHolder createNewDataHolder();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
-    public BaseDataHolder getDataHolder(){
+    public BaseDataHolder getDataHolder() {
         if (dataHolder == null && (dataHolder = getMainViewModel().getDataHolder(getTag())) == null) {
             dataHolder = createNewDataHolder();
             getMainViewModel().addDataHolder(dataHolder);
@@ -45,29 +44,32 @@ public abstract class BaseTabFragment extends Fragment {
         return dataHolder;
     }
 
-    public MainViewModel getMainViewModel(){
+    public MainViewModel getMainViewModel() {
         if (mainViewModel == null) {
             mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         }
         return mainViewModel;
     }
-    public BottomBarView getBottomBarView(){
+
+    public BottomBarView getBottomBarView() {
         if (bottomBarView == null)
             bottomBarView = ((MainActivity) requireActivity()).getBottomBarView();
         return bottomBarView;
     }
-    public MaterialToolbar getToolbar(){
+
+    public MaterialToolbar getToolbar() {
         if (toolbar == null) toolbar = ((MainActivity) requireActivity()).getToolbar();
         return toolbar;
     }
-    public TabView.Tab getTabView(){
-        if(tabView == null && (tabView = ((MainActivity) requireActivity()).getTabView().getTabByTag(getTag())) == null){
+
+    public TabView.Tab getTabView() {
+        if (tabView == null && (tabView = ((MainActivity) requireActivity()).getTabView().getTabByTag(getTag())) == null) {
             tabView = ((MainActivity) requireActivity()).getTabView().addNewTab(getTag());
         }
         return tabView;
     }
 
-    public void closeTab(){
+    public void closeTab() {
         getMainViewModel().getDataHolders().removeIf(dataHolder1 -> dataHolder1.getTag().equals(getTag()));
         ((MainActivity) requireActivity()).closeTab(getTag());
     }

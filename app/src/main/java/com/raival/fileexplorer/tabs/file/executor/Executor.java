@@ -51,10 +51,10 @@ public class Executor {
         if (!clearOutput()) {
             throw new Exception("Failed cleaning output folder");
         }
-        if(kotlinFiles.size() > 0) {
+        if (kotlinFiles.size() > 0) {
             compileKotlin();
         }
-        if(javaFiles.size() > 0) {
+        if (javaFiles.size() > 0) {
             runECJ();
         }
         runD8();
@@ -73,14 +73,14 @@ public class Executor {
         for (Method method : clazz.getMethods()) {
             if (method.getName().equals("main")) {
                 ArrayList<Object> params = new ArrayList<>();
-                for(Object obj : method.getParameterTypes()){
-                    if(obj.equals(AppCompatActivity.class)){
+                for (Object obj : method.getParameterTypes()) {
+                    if (obj.equals(AppCompatActivity.class)) {
                         params.add(activity);
-                    } else if(obj.equals(Activity.class)){
+                    } else if (obj.equals(Activity.class)) {
                         params.add(activity);
-                    } else if(obj.equals(Context.class)){
+                    } else if (obj.equals(Context.class)) {
                         params.add(activity);
-                    } else if(obj.equals(File.class)){
+                    } else if (obj.equals(File.class)) {
                         params.add(project);
                     } else {
                         params.add(null);
@@ -142,10 +142,10 @@ public class Executor {
         sb.append(":").append(D8Utils.getBootstrapJarFile().getAbsolutePath());
         args.add(sb.substring(1));
 
-        for(File file : kotlinFiles){
+        for (File file : kotlinFiles) {
             args.add(file.getAbsolutePath());
         }
-        for(File file : javaFiles){
+        for (File file : javaFiles) {
             args.add(file.getAbsolutePath());
         }
 
@@ -163,7 +163,7 @@ public class Executor {
         k2JVMCompiler.exec(messageCollector, Services.EMPTY, compilerArguments);
 
         final File file = new File(classes, "META-INF");
-        if(file.exists()) FileUtils.deleteFile(file);
+        if (file.exists()) FileUtils.deleteFile(file);
 
         if (messageCollector.hasErrors()) {
             throw new Exception(messageCollector.getDiagnostics());
@@ -244,7 +244,7 @@ public class Executor {
                 jarFiles.add(file);
             } else if (file.getName().toLowerCase().endsWith(".java")) {
                 javaFiles.add(file);
-            } else if(file.getName().toLowerCase().endsWith(".kt")) {
+            } else if (file.getName().toLowerCase().endsWith(".kt")) {
                 kotlinFiles.add(file);
             } else if (file.isDirectory() && file.getName().equals("output")) {
                 output = file;
@@ -272,17 +272,17 @@ public class Executor {
 
         @Override
         public boolean hasErrors() {
-            for(Diagnostic diagnostic : diagnostics){
-                if(diagnostic.compilerMessageSeverity.isError()) return true;
+            for (Diagnostic diagnostic : diagnostics) {
+                if (diagnostic.compilerMessageSeverity.isError()) return true;
             }
             return false;
         }
 
-        public String getDiagnostics(){
+        public String getDiagnostics() {
             final StringBuilder sb = new StringBuilder();
             int i = 1;
-            for(Diagnostic diagnostic : diagnostics){
-                if(diagnostic.compilerMessageSeverity.isError()){
+            for (Diagnostic diagnostic : diagnostics) {
+                if (diagnostic.compilerMessageSeverity.isError()) {
                     sb.append("----------");
                     sb.append(System.lineSeparator());
                     sb.append(i);
@@ -320,11 +320,11 @@ public class Executor {
 
         @NonNull
         @Override
-        public String toString(){
+        public String toString() {
             final StringBuilder stringBuilder = new StringBuilder();
 
             stringBuilder.append(compilerMessageSeverity.getPresentableName());
-            if(compilerMessageSourceLocation != null){
+            if (compilerMessageSourceLocation != null) {
                 stringBuilder.append(" in ");
                 stringBuilder.append(compilerMessageSourceLocation.getPath());
                 stringBuilder.append(" (at ");
@@ -334,7 +334,7 @@ public class Executor {
                 stringBuilder.append(")");
                 stringBuilder.append(System.lineSeparator());
                 final String content = compilerMessageSourceLocation.getLineContent();
-                if(content != null) stringBuilder.append(content);
+                if (content != null) stringBuilder.append(content);
             }
             stringBuilder.append(System.lineSeparator());
             stringBuilder.append(message);

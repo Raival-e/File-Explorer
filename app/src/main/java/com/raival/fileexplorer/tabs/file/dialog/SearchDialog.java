@@ -21,8 +21,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.textfield.TextInputLayout;
 import com.raival.fileexplorer.R;
-import com.raival.fileexplorer.tabs.file.FileExplorerTabFragment;
 import com.raival.fileexplorer.tabs.file.FileExplorerTabDataHolder;
+import com.raival.fileexplorer.tabs.file.FileExplorerTabFragment;
 import com.raival.fileexplorer.tabs.file.model.FileItem;
 import com.raival.fileexplorer.utils.FileUtils;
 
@@ -106,7 +106,7 @@ public class SearchDialog extends BottomSheetDialogFragment {
             } else {
                 setCancelable(false);
                 searchButton.setText("Stop");
-                ((FileExplorerTabDataHolder)tab.getDataHolder()).searchList.clear();
+                ((FileExplorerTabDataHolder) tab.getDataHolder()).searchList.clear();
                 recyclerView.getAdapter().notifyDataSetChanged();
                 progress.setVisibility(View.VISIBLE);
                 loseFocus(input);
@@ -128,7 +128,7 @@ public class SearchDialog extends BottomSheetDialogFragment {
             }
         });
 
-        if ( ((FileExplorerTabDataHolder)tab.getDataHolder()).searchList.size() > 0) {
+        if (((FileExplorerTabDataHolder) tab.getDataHolder()).searchList.size() > 0) {
             fileCount.setVisibility(View.VISIBLE);
             updateFileCount();
         }
@@ -136,7 +136,7 @@ public class SearchDialog extends BottomSheetDialogFragment {
 
     @SuppressLint("SetTextI18n")
     private void updateFileCount() {
-        fileCount.setText( ((FileExplorerTabDataHolder)tab.getDataHolder()).searchList.size() + " results found");
+        fileCount.setText(((FileExplorerTabDataHolder) tab.getDataHolder()).searchList.size() + " results found");
     }
 
     private void searchIn(File file, boolean isDeepSearch, boolean useRegex, boolean startWith, boolean endWith) {
@@ -180,7 +180,7 @@ public class SearchDialog extends BottomSheetDialogFragment {
     }
 
     private void addFileItem(File file) {
-        ((FileExplorerTabDataHolder)tab.getDataHolder()).searchList.add(new FileItem(file));
+        ((FileExplorerTabDataHolder) tab.getDataHolder()).searchList.add(new FileItem(file));
         recyclerView.post(() -> {
             updateFileCount();
             recyclerView.getAdapter().notifyDataSetChanged();
@@ -211,7 +211,7 @@ public class SearchDialog extends BottomSheetDialogFragment {
 
         @Override
         public int getItemCount() {
-            return  ((FileExplorerTabDataHolder)tab.getDataHolder()).searchList.size();
+            return ((FileExplorerTabDataHolder) tab.getDataHolder()).searchList.size();
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
@@ -230,7 +230,7 @@ public class SearchDialog extends BottomSheetDialogFragment {
 
             public void bind() {
                 final int position = getAdapterPosition();
-                final FileItem fileItem =  ((FileExplorerTabDataHolder)tab.getDataHolder()).searchList.get(position);
+                final FileItem fileItem = ((FileExplorerTabDataHolder) tab.getDataHolder()).searchList.get(position);
 
                 name.setText(fileItem.file.getName());
                 details.setText(FileUtils.getFileDetails(fileItem.file));

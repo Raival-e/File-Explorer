@@ -6,7 +6,6 @@ import android.content.Context;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.raival.fileexplorer.App;
-import com.raival.fileexplorer.utils.FileUtils;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -20,18 +19,18 @@ public class DexRunner {
     private final File directory;
     private final ArrayList<File> relatedDexFiles = new ArrayList<>();
 
-    public DexRunner(File dexFile, File directory, AppCompatActivity activity){
+    public DexRunner(File dexFile, File directory, AppCompatActivity activity) {
         this.activity = activity;
         this.directory = directory;
-        for(File file : directory.listFiles()){
-            if(file.getName().endsWith(".exe.dex")){
+        for (File file : directory.listFiles()) {
+            if (file.getName().endsWith(".exe.dex")) {
                 //TODO: only execute files with the same name as dexFile
                 relatedDexFiles.add(file);
             }
         }
     }
 
-    public void run(){
+    public void run() {
         final String optimizedDir = App.appContext.getCodeCacheDir().getAbsolutePath();
 
         DexClassLoader dexClassLoader = new DexClassLoader(
@@ -52,14 +51,14 @@ public class DexRunner {
         for (Method method : clazz.getMethods()) {
             if (method.getName().equals("main")) {
                 ArrayList<Object> params = new ArrayList<>();
-                for(Object obj : method.getParameterTypes()){
-                    if(obj.equals(AppCompatActivity.class)){
+                for (Object obj : method.getParameterTypes()) {
+                    if (obj.equals(AppCompatActivity.class)) {
                         params.add(activity);
-                    } else if(obj.equals(Activity.class)){
+                    } else if (obj.equals(Activity.class)) {
                         params.add(activity);
-                    } else if(obj.equals(Context.class)){
+                    } else if (obj.equals(Context.class)) {
                         params.add(activity);
-                    } else if(obj.equals(File.class)){
+                    } else if (obj.equals(File.class)) {
                         params.add(directory);
                     } else {
                         params.add(null);
@@ -76,7 +75,7 @@ public class DexRunner {
         }
     }
 
-    private String getDexFiles(){
+    private String getDexFiles() {
         final StringBuilder stringBuilder = new StringBuilder();
         for (File file : relatedDexFiles) {
             stringBuilder.append(":");

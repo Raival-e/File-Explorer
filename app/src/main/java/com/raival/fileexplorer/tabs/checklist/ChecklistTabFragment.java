@@ -39,7 +39,7 @@ public class ChecklistTabFragment extends BaseTabFragment {
         materialChecklist = view.findViewById(R.id.checklist);
 
         try {
-            materialChecklist.setItems(FileUtils.readFile(((ChecklistTabDataHolder)getDataHolder()).file));
+            materialChecklist.setItems(FileUtils.readFile(((ChecklistTabDataHolder) getDataHolder()).file));
         } catch (Exception e) {
             e.printStackTrace();
             App.log(e);
@@ -58,7 +58,7 @@ public class ChecklistTabFragment extends BaseTabFragment {
     private void saveFile() {
         if (getDataHolder() == null) return;
         try {
-            FileUtils.writeFile(((ChecklistTabDataHolder)getDataHolder()).file, materialChecklist.getItems(true, true));
+            FileUtils.writeFile(((ChecklistTabDataHolder) getDataHolder()).file, materialChecklist.getItems(true, true));
         } catch (IOException e) {
             e.printStackTrace();
             App.log(e);
@@ -79,7 +79,7 @@ public class ChecklistTabFragment extends BaseTabFragment {
     }
 
     private void updateTabTitle() {
-        getTabView().setName(FileUtils.getShortLabel(((ChecklistTabDataHolder)getDataHolder()).file, FileExplorerTabFragment.MAX_NAME_LENGTH));
+        getTabView().setName(FileUtils.getShortLabel(((ChecklistTabDataHolder) getDataHolder()).file, FileExplorerTabFragment.MAX_NAME_LENGTH));
     }
 
     private void prepareBottomBarView() {

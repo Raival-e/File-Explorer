@@ -17,7 +17,6 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.material.elevation.SurfaceColors;
 import com.raival.fileexplorer.App;
-import com.raival.fileexplorer.utils.Utils;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
