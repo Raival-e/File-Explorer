@@ -57,6 +57,11 @@
                 android:title="Read only"/>
         </menu>
     </item>
+
+    <item
+        android:id="@+id/editor_format"
+        android:title="Format" />
+
     <item
         android:id="@+id/editor_option_text_undo"
         android:title="Undo"

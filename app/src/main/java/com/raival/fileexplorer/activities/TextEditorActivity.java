@@ -246,8 +246,9 @@ public class TextEditorActivity extends BaseActivity {
         menu.findItem(R.id.editor_option_line_number).setChecked(PrefsUtils.getTextEditorShowLineNumber());
         menu.findItem(R.id.editor_option_read_only).setChecked(PrefsUtils.getTextEditorReadOnly());
 
-        if ("java".equals(FileUtils.getFileExtension(editorViewModel.file)) || "kt".equals(FileUtils.getFileExtension(editorViewModel.file)))
-            menu.add("Format");
+        if (!"java".equals(FileUtils.getFileExtension(editorViewModel.file)) || !"kt".equals(FileUtils.getFileExtension(editorViewModel.file))) {
+            menu.findItem(R.id.editor_format).setVisible(false);
+        }
         if (!canExecute()) menu.findItem(R.id.editor_execute).setVisible(false);
         return super.onCreateOptionsMenu(menu);
     }
@@ -264,9 +265,9 @@ public class TextEditorActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (item.getTitle().equals("Format")) {
+        if (id == R.id.editor_format) {
             editor.formatCodeAsync();
-        } else if (item.getTitle().equals("Execute")) {
+        } else if (id == R.id.editor_execute) {
             saveFile(editor.getText().toString());
             executeFile();
         } else if (id == R.id.editor_language_def) {
@@ -275,7 +276,6 @@ public class TextEditorActivity extends BaseActivity {
         } else if (id == R.id.editor_language_java) {
             item.setChecked(true);
             editor.setEditorLanguage(new JavaLanguage());
-
         } else if (id == R.id.editor_language_kotlin) {
             item.setChecked(true);
             editor.setEditorLanguage(new JavaLanguage());
