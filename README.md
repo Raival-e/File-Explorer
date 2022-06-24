@@ -12,16 +12,17 @@ A full-featured file manager with Material You design.
 - Additional features:
   - Jar2Dex: you can convert .jar files to .dex files
   - Built-in checklist: you can add checklists by using .checklist extension.
-  - JavaExecutor: you can run java projects. see JavaExecutor bellow.
+  - Executor: you can run java/kotlin projects. see Executor bellow.
 
-# JavaExecutor
+# Executor
 
-To use this feature, all you need to do is to create Main.java file (it is recommended to create it in an empty folder),
-then open it, a dialog will show asking you if you want to use a sample code, click Yes. Now you can run you code by clicking
-run button in the toolbar. The main method gives you the activity and the folder where the Main.java is located.
+To use this feature, all you need to do is to create Main.java/.kt file (it is recommended to create
+it in an empty folder), then open it, a dialog will show asking you if you want to use a sample
+code, click Yes. Now you can run you code by clicking run button in the toolbar. The main method
+gives you the activity and the folder where the Main.java/.kt is located.
 
-You can add java files to the same directory. You can also add .dex/.jar files to the same directory if you want to use 
-additional libraries.
+You can add java files to the same directory. You can also add .dex/.jar files to the same directory
+if you want to use additional libraries.
 
 After running the code, an output folder will be created. In this folder, you can see the output dex file(s), you
 can run these dex files directly without the need to compile your code, all you need to do is to rename them 
