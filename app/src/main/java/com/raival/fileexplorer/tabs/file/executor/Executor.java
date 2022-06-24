@@ -54,7 +54,9 @@ public class Executor {
         if(kotlinFiles.size() > 0) {
             compileKotlin();
         }
-        runECJ();
+        if(javaFiles.size() > 0) {
+            runECJ();
+        }
         runD8();
     }
 
