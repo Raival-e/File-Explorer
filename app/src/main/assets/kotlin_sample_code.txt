@@ -1,0 +1,11 @@
+package com.main
+
+import android.widget.Toast
+import android.content.Context
+import java.io.File
+
+object Main {
+	@JvmStatic fun main(context: Context, directory: File) {
+		Toast.makeText(context, "Hello World!", Toast.LENGTH_SHORT).show();
+	}
+}

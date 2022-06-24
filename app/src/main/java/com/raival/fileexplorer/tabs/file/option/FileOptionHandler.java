@@ -63,7 +63,8 @@ public class FileOptionHandler {
         //______________| Options |_______________\\
 
         if (FileUtils.isSingleFile(selectedFiles)) {
-            if (selectedFiles.get(0).getName().toLowerCase().endsWith(".java")) {
+            if (selectedFiles.get(0).getName().toLowerCase().endsWith(".java")
+                    || selectedFiles.get(0).getName().toLowerCase().endsWith(".kt")) {
                 bottomDialog.addOption("Execute", R.drawable.ic_round_code_24, view1 -> {
                     exeJava(selectedFiles.get(0).getParentFile());
                 }, true);
@@ -337,6 +338,7 @@ public class FileOptionHandler {
     }
 
     private void doDelete(ArrayList<File> selectedFiles) {
+        parentFragment.setSelectAll(false);
         BackgroundTask backgroundTask = new BackgroundTask();
         backgroundTask.setTasks(() -> {
             backgroundTask.showProgressDialog("Deleting files...", parentFragment.requireActivity());

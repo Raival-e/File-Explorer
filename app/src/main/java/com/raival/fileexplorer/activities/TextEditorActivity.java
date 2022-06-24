@@ -119,25 +119,29 @@ public class TextEditorActivity extends BaseActivity {
         editor.post(() -> {
             if (FileUtils.isEmpty(editor.getText().toString())) {
                 if ("Main.java".equalsIgnoreCase(editorViewModel.file.getName())) {
-                    askToLoadCodeSample();
+                    askToLoadCodeSample(true);
+                } else if ("Main.kt".equalsIgnoreCase(editorViewModel.file.getName())) {
+                    askToLoadCodeSample(false);
                 }
             }
 
         });
     }
 
-    private void askToLoadCodeSample() {
+    private void askToLoadCodeSample(boolean isJava) {
         new CustomDialog()
                 .setTitle("Help")
                 .setMsg("Do you want to use an executable code sample in this file?")
-                .setPositiveButton("Yes", (v) -> editor.setText(getCodeSample()), true)
+                .setPositiveButton("Yes", (v) -> editor.setText(getCodeSample(isJava)), true)
                 .setNegativeButton("No", null, true)
                 .showDialog(getSupportFragmentManager(), "");
     }
 
-    private String getCodeSample() {
+    private String getCodeSample(boolean isJava) {
         try {
-            return FileUtils.copyFromInputStream(getAssets().open("java_exe_sample_code.txt"));
+            return isJava
+                    ? FileUtils.copyFromInputStream(getAssets().open("java_sample_code.txt"))
+                    : FileUtils.copyFromInputStream(getAssets().open("kotlin_sample_code.txt"));
         } catch (IOException e) {
             App.log(e);
             App.showWarning("Failed to load sample code");
@@ -246,7 +250,8 @@ public class TextEditorActivity extends BaseActivity {
         menu.findItem(R.id.editor_option_line_number).setChecked(PrefsUtils.getTextEditorShowLineNumber());
         menu.findItem(R.id.editor_option_read_only).setChecked(PrefsUtils.getTextEditorReadOnly());
 
-        if (!"java".equals(FileUtils.getFileExtension(editorViewModel.file)) || !"kt".equals(FileUtils.getFileExtension(editorViewModel.file))) {
+        if (!"java".equals(FileUtils.getFileExtension(editorViewModel.file))
+                && !"kt".equals(FileUtils.getFileExtension(editorViewModel.file))) {
             menu.findItem(R.id.editor_format).setVisible(false);
         }
         if (!canExecute()) menu.findItem(R.id.editor_execute).setVisible(false);
