@@ -1,7 +1,34 @@
+# Original at https://github.com/Sketchware-Pro/Sketchware-Pro/blob/main/.github/workflows/android.yml
+
 name: Android CI
 
 on:
+  push:
+    paths:
+      - '.github/workflows/android.yml'
+      - 'app/**'
+      - 'build-logic/**'
+      - 'kotlinc/**'
+      - 'gradle/**'
+      - 'build.gradle'
+      - 'gradle.properties'
+      - 'gradlew'
+      - 'gradlew.bat'
+      - 'public-stable-ids.txt'
+      - 'settings.gradle'
   pull_request:
+    paths:
+      - '.github/workflows/android.yml'
+      - 'app/**'
+      - 'build-logic/**'
+      - 'kotlinc/**'
+      - 'gradle/**'
+      - 'build.gradle'
+      - 'gradle.properties'
+      - 'gradlew'
+      - 'gradlew.bat'
+      - 'public-stable-ids.txt'
+      - 'settings.gradle'
   workflow_dispatch:
 
 jobs:
@@ -28,7 +55,7 @@ jobs:
           distributions-cache-enabled: true
           dependencies-cache-enabled: true
           configuration-cache-enabled: true
-      
+
       - name: Upload APK
         uses: actions/upload-artifact@v3
         with:
