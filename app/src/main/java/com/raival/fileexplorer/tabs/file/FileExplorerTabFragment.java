@@ -199,6 +199,14 @@ public class FileExplorerTabFragment extends BaseTabFragment {
     }
 
     @Override
+    public void closeTab() {
+        // Close the tab (if not default tab)
+        if (!getTag().startsWith("0_")) {
+            super.closeTab();
+        }
+    }
+
+    @Override
     public boolean onBackPressed() {
         //  Unselect selected files (if any)
         if (getSelectedFiles().size() > 0) {

@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.lifecycle.ViewModelProvider;
@@ -127,7 +128,19 @@ public class MainActivity extends BaseActivity {
                                 .commit();
                     }
                 }
-                // Handle other types here...
+                // Handle other types of tabs here...
+            } else if (event == TabView.ON_LONG_CLICK) {
+                PopupMenu popupMenu = new PopupMenu(this, tab.view);
+                popupMenu.inflate(R.menu.tab_menu);
+                popupMenu.setOnMenuItemClickListener(item -> {
+                    if (item.getItemId() == R.id.close) {
+                        BaseTabFragment fragment = getActiveFragment();
+                        fragment.closeTab();
+                        return true;
+                    }
+                    return false;
+                });
+                popupMenu.show();
             }
         });
 
@@ -136,6 +149,10 @@ public class MainActivity extends BaseActivity {
         });
 
         checkPermissions();
+    }
+
+    private BaseTabFragment getActiveFragment() {
+        return (BaseTabFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
     }
 
     public void addNewTab(BaseTabFragment fragment, String tag) {
@@ -174,11 +191,8 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        BaseTabFragment fragment = (BaseTabFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        if (fragment != null) {
-            if (fragment.onBackPressed()) {
-                return;
-            }
+        if (getActiveFragment().onBackPressed()) {
+            return;
         }
         super.onBackPressed();
     }
