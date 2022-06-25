@@ -1,6 +1,5 @@
 package com.raival.fileexplorer.activities;
 
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,7 +12,6 @@ import androidx.fragment.app.FragmentContainerView;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.appbar.MaterialToolbar;
-import com.pixplicity.easyprefs.library.Prefs;
 import com.raival.fileexplorer.App;
 import com.raival.fileexplorer.R;
 import com.raival.fileexplorer.activities.model.MainViewModel;
@@ -45,7 +43,6 @@ public class MainActivity extends BaseActivity {
      */
     @Override
     public void init() {
-        initPrefs();
         if (getTabFragments().isEmpty()) {
             loadDefaultTab();
         } else {
@@ -235,14 +232,6 @@ public class MainActivity extends BaseActivity {
             return;
         }
         super.onBackPressed();
-    }
-
-    private void initPrefs() {
-        new Prefs.Builder()
-                .setContext(this)
-                .setPrefsName("Prefs")
-                .setMode(ContextWrapper.MODE_PRIVATE)
-                .build();
     }
 
     public MaterialToolbar getToolbar() {

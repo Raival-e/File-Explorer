@@ -18,9 +18,9 @@
         android:largeHeap="true"
         android:theme="@style/Theme.FileExplorer">
         <activity
+            android:exported="true"
             android:name="com.raival.fileexplorer.activities.TextEditorActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait"/>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="com.raival.fileexplorer.activities.MainActivity"
             android:windowSoftInputMode="adjustResize"

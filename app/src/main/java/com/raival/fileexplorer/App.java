@@ -4,9 +4,11 @@ import android.app.Application;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.os.Handler;
 import android.widget.Toast;
 
+import com.pixplicity.easyprefs.library.Prefs;
 import com.raival.fileexplorer.utils.FileUtils;
 
 import java.io.File;
@@ -62,5 +64,11 @@ public class App extends Application {
         super.onCreate();
         appContext = this;
         appHandler = new Handler(appContext.getMainLooper());
+
+        new Prefs.Builder()
+                .setContext(getApplicationContext())
+                .setPrefsName("Prefs")
+                .setMode(ContextWrapper.MODE_PRIVATE)
+                .build();
     }
 }

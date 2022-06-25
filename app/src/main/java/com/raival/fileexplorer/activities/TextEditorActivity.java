@@ -7,7 +7,6 @@ import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
@@ -24,20 +23,25 @@ import com.raival.fileexplorer.utils.FileUtils;
 import com.raival.fileexplorer.utils.PrefsUtils;
 import com.raival.fileexplorer.utils.Utils;
 
+import org.eclipse.tm4e.core.internal.theme.reader.ThemeReader;
+
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.github.rosemoe.sora.langs.java.JavaLanguage;
+import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
+import io.github.rosemoe.sora.langs.textmate.TextMateLanguage;
 import io.github.rosemoe.sora.widget.CodeEditor;
 import io.github.rosemoe.sora.widget.EditorSearcher;
 import io.github.rosemoe.sora.widget.SymbolInputView;
 import io.github.rosemoe.sora.widget.component.EditorAutoCompletion;
 import io.github.rosemoe.sora.widget.component.Magnifier;
-import io.github.rosemoe.sora.widget.schemes.SchemeDarcula;
-import io.github.rosemoe.sora.widget.schemes.SchemeGitHub;
 
 public class TextEditorActivity extends BaseActivity {
+    private static final int LANGUAGE_JAVA = 0;
+    private static final int LANGUAGE_KOTLIN = 1;
+
     private CodeEditor editor;
     private View searchPanel;
     private TextEditorViewModel editorViewModel;
@@ -66,24 +70,21 @@ public class TextEditorActivity extends BaseActivity {
         inputView.addSymbols(new String[]{"->", "_", "=", "{", "}", "<", ">", "|", "\\", "?", "+", "-", "*", "/"},
                 new String[]{"\t", "_", "=", "{", "}", "<", ">", "|", "\\", "?", "+", "-", "*", "/"});
 
-        editor.setHardwareAcceleratedDrawAllowed(true);
         editor.getComponent(EditorAutoCompletion.class).setEnabled(false);
         editor.setTextSize(14);
-        editor.setLigatureEnabled(true);
         editor.setHighlightCurrentBlock(true);
-        editor.setStickyTextSelection(true);
         editor.setTypefaceText(Typeface.MONOSPACE);
+        editor.getProps().useICULibToSelectWords = false;
 
         editor.getProps().symbolPairAutoCompletion = false;
         editor.getProps().deleteMultiSpaces = -1;
         editor.getProps().deleteEmptyLineFast = false;
-        editor.setInputType(EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_FLAG_MULTI_LINE);
-        editor.setImportantForAutofill(View.IMPORTANT_FOR_AUTOFILL_NO);
 
         loadEditorPrefs();
 
         if (editorViewModel.file == null)
             editorViewModel.file = new File(getIntent().getStringExtra("file"));
+
         detectLanguage(editorViewModel.file);
 
         materialToolbar.setTitle(editorViewModel.file.getName());
@@ -140,8 +141,8 @@ public class TextEditorActivity extends BaseActivity {
     private String getCodeSample(boolean isJava) {
         try {
             return isJava
-                    ? FileUtils.copyFromInputStream(getAssets().open("java_sample_code.txt"))
-                    : FileUtils.copyFromInputStream(getAssets().open("kotlin_sample_code.txt"));
+                    ? FileUtils.copyFromInputStream(getAssets().open("sample_code/java_sample_code.txt"))
+                    : FileUtils.copyFromInputStream(getAssets().open("sample_code/kotlin_sample_code.txt"));
         } catch (IOException e) {
             App.log(e);
             App.showWarning("Failed to load sample code");
@@ -153,8 +154,10 @@ public class TextEditorActivity extends BaseActivity {
         String ext = FileUtils.getFileExtension(file).toLowerCase();
         switch (ext) {
             case "java":
+                setEditorLanguage(LANGUAGE_JAVA);
+                break;
             case "kt":
-                editor.setEditorLanguage(new JavaLanguage());
+                setEditorLanguage(LANGUAGE_KOTLIN);
                 break;
         }
     }
@@ -263,7 +266,11 @@ public class TextEditorActivity extends BaseActivity {
         editor.setWordwrap(PrefsUtils.getTextEditorWordwrap());
         editor.setLineNumberEnabled(PrefsUtils.getTextEditorShowLineNumber());
         editor.getComponent(Magnifier.class).setEnabled(PrefsUtils.getTextEditorMagnifier());
-        editor.setColorScheme(PrefsUtils.getTextEditorLightTheme() ? new SchemeGitHub() : new SchemeDarcula());
+        try {
+            editor.setColorScheme(PrefsUtils.getTextEditorLightTheme() ? getLightScheme() : getDarkScheme());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         editor.setEditable(!PrefsUtils.getTextEditorReadOnly());
     }
 
@@ -280,11 +287,10 @@ public class TextEditorActivity extends BaseActivity {
             editor.setEditorLanguage(null);
         } else if (id == R.id.editor_language_java) {
             item.setChecked(true);
-            editor.setEditorLanguage(new JavaLanguage());
+            setEditorLanguage(LANGUAGE_JAVA);
         } else if (id == R.id.editor_language_kotlin) {
             item.setChecked(true);
-            editor.setEditorLanguage(new JavaLanguage());
-            item.setChecked(true);
+            setEditorLanguage(LANGUAGE_KOTLIN);
         } else if (id == R.id.editor_option_read_only) {
             item.setChecked(!item.isChecked());
             PrefsUtils.setTextEditorReadOnly(item.isChecked());
@@ -322,14 +328,52 @@ public class TextEditorActivity extends BaseActivity {
         } else if (id == R.id.editor_option_light_mode) {
             item.setChecked(!item.isChecked());
             PrefsUtils.setTextEditorLightTheme(item.isChecked());
-            if (item.isChecked()) {
-                editor.setColorScheme(new SchemeGitHub());
-            } else {
-                editor.setColorScheme(new SchemeDarcula());
+            try {
+                editor.setColorScheme(item.isChecked() ? getLightScheme() : getDarkScheme());
+            } catch (Exception e) {
+                e.printStackTrace();
+                App.log(e);
             }
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private void setEditorLanguage(int language) {
+        if (language == LANGUAGE_JAVA) {
+            try {
+                editor.setEditorLanguage(TextMateLanguage.create("java.tmLanguage.json",
+                        getAssets().open("textmate/java/syntaxes/java.tmLanguage.json"),
+                        new InputStreamReader(getAssets().open("textmate/java/language-configuration.json")),
+                        ((TextMateColorScheme) editor.getColorScheme()).getRawTheme()));
+            } catch (Exception e) {
+                e.printStackTrace();
+                App.log(e);
+                App.showMsg("Unable to load language");
+            }
+        } else if (language == LANGUAGE_KOTLIN) {
+            try {
+                editor.setEditorLanguage(TextMateLanguage.create("Kotlin.tmLanguage",
+                        getAssets().open("textmate/kotlin/syntaxes/Kotlin.tmLanguage"),
+                        new InputStreamReader(getAssets().open("textmate/kotlin/language-configuration.json")),
+                        ((TextMateColorScheme) editor.getColorScheme()).getRawTheme()));
+            } catch (Exception e) {
+                e.printStackTrace();
+                App.log(e);
+                App.showMsg("Unable to load language");
+            }
+        }
+    }
+
+    private TextMateColorScheme getLightScheme() throws Exception {
+        return TextMateColorScheme.create(ThemeReader.readThemeSync("Light.tmTheme",
+                getAssets().open("textmate/Light.tmTheme")));
+    }
+
+    private TextMateColorScheme getDarkScheme() throws Exception {
+        return TextMateColorScheme.create(ThemeReader.readThemeSync("Dark.json",
+                getAssets().open("textmate/Dark.json")));
+    }
+
 
     private void executeFile() {
         Executor executor = new Executor(editorViewModel.file.getParentFile(), this);
