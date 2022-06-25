@@ -3,4 +3,10 @@
     <item
         android:id="@+id/close"
         android:title="Close" />
+    <item
+        android:id="@+id/close_others"
+        android:title="Close Others" />
+    <item
+        android:id="@+id/close_all"
+        android:title="Close all" />
 </menu>

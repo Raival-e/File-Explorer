@@ -38,6 +38,7 @@ public class MainActivity extends BaseActivity {
     private FragmentContainerView fragmentContainerView;
     private MaterialToolbar toolbar;
     private BottomBarView bottomBarView;
+    private MainViewModel mainViewModel;
 
     /**
      * Called after read & write permissions are granted
@@ -62,14 +63,20 @@ public class MainActivity extends BaseActivity {
         return list;
     }
 
-    private void restoreTabs() {
-        final String activeFragmentTag = getTabFragments().get(0).getTag();
-        MainViewModel mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+    private MainViewModel getMainViewModel() {
+        if (mainViewModel == null) {
+            mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        }
+        return mainViewModel;
+    }
 
-        for (int i = 0; i < mainViewModel.getDataHolders().size(); i++) {
-            BaseDataHolder dataHolder = mainViewModel.getDataHolders().get(i);
+    private void restoreTabs() {
+        final String activeFragmentTag = getActiveFragment().getTag();
+
+        for (int i = 0; i < getMainViewModel().getDataHolders().size(); i++) {
+            BaseDataHolder dataHolder = getMainViewModel().getDataHolders().get(i);
+            // The active fragment will create its own TabView, so we skip it
             if (!dataHolder.getTag().equals(activeFragmentTag)) {
-                // Handle FileExplorerTabDataHolder
                 if (dataHolder instanceof FileExplorerTabDataHolder) {
                     tabView.insertNewTabAt(i, dataHolder.getTag(), false)
                             .setName(FileUtils.getShortLabel(((FileExplorerTabDataHolder) dataHolder).activeDirectory, FileExplorerTabFragment.MAX_NAME_LENGTH));
@@ -132,10 +139,43 @@ public class MainActivity extends BaseActivity {
             } else if (event == TabView.ON_LONG_CLICK) {
                 PopupMenu popupMenu = new PopupMenu(this, tab.view);
                 popupMenu.inflate(R.menu.tab_menu);
+                // Default tab is unclosable
+                if (tab.tag.startsWith("0_")) {
+                    popupMenu.getMenu().findItem(R.id.close).setVisible(false);
+                    popupMenu.getMenu().findItem(R.id.close_all).setVisible(false);
+                }
+
                 popupMenu.setOnMenuItemClickListener(item -> {
                     if (item.getItemId() == R.id.close) {
-                        BaseTabFragment fragment = getActiveFragment();
-                        fragment.closeTab();
+                        BaseTabFragment activeFragment = getActiveFragment();
+                        if (tab.tag.equals(activeFragment.getTag())) {
+                            activeFragment.closeTab();
+                        } else {
+                            getMainViewModel().getDataHolders().removeIf(dataHolder1 -> dataHolder1.getTag().equals(tab.tag));
+                            closeTab(tab.tag);
+                        }
+                        return true;
+                    } else if (item.getItemId() == R.id.close_all) {
+                        BaseTabFragment activeFragment = getActiveFragment();
+                        // Remove unselected tabs
+                        for (String tag : tabView.getTags()) {
+                            if (!tag.startsWith("0_") && !tag.equals(activeFragment.getTag())) {
+                                getMainViewModel().getDataHolders().removeIf(dataHolder1 -> dataHolder1.getTag().equals(tag));
+                                closeTab(tag);
+                            }
+                        }
+                        // Remove the active tab
+                        activeFragment.closeTab();
+                        return true;
+                    } else if (item.getItemId() == R.id.close_others) {
+                        BaseTabFragment activeFragment = getActiveFragment();
+                        for (String tag : tabView.getTags()) {
+                            if (!tag.startsWith("0_") && !tag.equals(activeFragment.getTag()) && !tag.equals(tab.tag)) {
+                                getMainViewModel().getDataHolders().removeIf(dataHolder1 -> dataHolder1.getTag().equals(tag));
+                                closeTab(tag);
+                            }
+                        }
+                        if (!activeFragment.getTag().equals(tab.tag)) activeFragment.closeTab();
                         return true;
                     }
                     return false;

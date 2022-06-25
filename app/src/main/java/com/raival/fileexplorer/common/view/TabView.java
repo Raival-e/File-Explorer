@@ -342,6 +342,14 @@ public class TabView extends HorizontalScrollView {
         });
     }
 
+    public ArrayList<String> getTags() {
+        final ArrayList<String> tags = new ArrayList<>();
+        for (Tab tab : tabsArray) {
+            tags.add(tab.tag);
+        }
+        return tags;
+    }
+
 
     /**
      * Interface
