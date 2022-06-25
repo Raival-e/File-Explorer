@@ -49,7 +49,6 @@ public class CustomDialog extends BottomSheetDialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
         TextView titleView = view.findViewById(R.id.dialog_title);
         TextView msgView = view.findViewById(R.id.dialog_msg);
@@ -121,10 +120,6 @@ public class CustomDialog extends BottomSheetDialogFragment {
     public CustomDialog setTitle(String title) {
         this.title = title;
         return this;
-    }
-
-    public String getMsg() {
-        return msg;
     }
 
     public CustomDialog setMsg(String msg) {
