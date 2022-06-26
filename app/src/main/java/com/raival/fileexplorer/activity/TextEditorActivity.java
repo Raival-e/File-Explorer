@@ -25,11 +25,18 @@ import com.raival.fileexplorer.util.FileUtils;
 import com.raival.fileexplorer.util.PrefsUtils;
 import com.raival.fileexplorer.util.Utils;
 
+import org.eclipse.tm4e.core.internal.theme.reader.ThemeReader;
+
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.concurrent.atomic.AtomicReference;
 
+import io.github.rosemoe.sora.lang.EmptyLanguage;
+import io.github.rosemoe.sora.lang.Language;
 import io.github.rosemoe.sora.langs.java.JavaLanguage;
+import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
+import io.github.rosemoe.sora.langs.textmate.TextMateLanguage;
 import io.github.rosemoe.sora.widget.CodeEditor;
 import io.github.rosemoe.sora.widget.EditorSearcher;
 import io.github.rosemoe.sora.widget.SymbolInputView;
@@ -40,6 +47,8 @@ import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
 public class TextEditorActivity extends BaseActivity {
     private static final int LANGUAGE_JAVA = 0;
     private static final int LANGUAGE_KOTLIN = 1;
+    private static final int LANGUAGE_JSON = 2;
+    private static final int LANGUAGE_XML = 3;
 
     private CodeEditor editor;
     private View searchPanel;
@@ -158,6 +167,14 @@ public class TextEditorActivity extends BaseActivity {
             case "kt":
                 setEditorLanguage(LANGUAGE_KOTLIN);
                 break;
+            case "json":
+                setEditorLanguage(LANGUAGE_JSON);
+                break;
+            case "xml":
+                setEditorLanguage(LANGUAGE_XML);
+                break;
+            default:
+                setEditorLanguage(-1);
         }
     }
 
@@ -251,8 +268,7 @@ public class TextEditorActivity extends BaseActivity {
         menu.findItem(R.id.editor_option_line_number).setChecked(PrefsUtils.getTextEditorShowLineNumber());
         menu.findItem(R.id.editor_option_read_only).setChecked(PrefsUtils.getTextEditorReadOnly());
 
-        if (!"java".equals(FileUtils.getFileExtension(editorViewModel.file))
-                && !"kt".equals(FileUtils.getFileExtension(editorViewModel.file))) {
+        if (!"java".equals(FileUtils.getFileExtension(editorViewModel.file))) {
             menu.findItem(R.id.editor_format).setVisible(false);
         }
         if (!canExecute()) menu.findItem(R.id.editor_execute).setVisible(false);
@@ -264,7 +280,6 @@ public class TextEditorActivity extends BaseActivity {
         editor.setWordwrap(PrefsUtils.getTextEditorWordwrap());
         editor.setLineNumberEnabled(PrefsUtils.getTextEditorShowLineNumber());
         editor.getComponent(Magnifier.class).setEnabled(PrefsUtils.getTextEditorMagnifier());
-        editor.setColorScheme(Utils.isDarkMode() ? getDarkScheme() : getLightScheme());
         editor.setEditable(!PrefsUtils.getTextEditorReadOnly());
     }
 
@@ -325,20 +340,99 @@ public class TextEditorActivity extends BaseActivity {
 
     private void setEditorLanguage(int language) {
         if (language == LANGUAGE_JAVA) {
+            editor.setColorScheme(getColorScheme(false));
             editor.setEditorLanguage(new JavaLanguage());
         } else if (language == LANGUAGE_KOTLIN) {
-            editor.setEditorLanguage(new JavaLanguage());
+            editor.setColorScheme(getColorScheme(true));
+            editor.setEditorLanguage(getKotlinLang());
+        } else if (language == LANGUAGE_XML) {
+            editor.setColorScheme(getColorScheme(true));
+            editor.setEditorLanguage(getXmlLang());
+        } else if (language == LANGUAGE_JSON) {
+            editor.setColorScheme(getColorScheme(true));
+            editor.setEditorLanguage(getJsonLang());
+        } else {
+            editor.setColorScheme(getColorScheme(false));
+            editor.setEditorLanguage(new EmptyLanguage());
         }
     }
 
-    private EditorColorScheme getLightScheme() {
+    private Language getJsonLang() {
+        try {
+            return TextMateLanguage.create("json.tmLanguage.json",
+                    getAssets().open("textmate/json/syntaxes/json.tmLanguage.json"),
+                    new InputStreamReader(getAssets().open("textmate/json/language-configuration.json")),
+                    ((TextMateColorScheme) getColorScheme(true)).getRawTheme());
+        } catch (IOException e) {
+            e.printStackTrace();
+            App.log(e);
+            App.showMsg("Unable to set the language: textmate/json/syntaxes/kotlin.tmLanguage.json");
+            return new EmptyLanguage();
+        }
+    }
+
+    private Language getXmlLang() {
+        try {
+            return TextMateLanguage.create("xml.tmLanguage.json",
+                    getAssets().open("textmate/xml/syntaxes/xml.tmLanguage.json"),
+                    new InputStreamReader(getAssets().open("textmate/xml/language-configuration.json")),
+                    ((TextMateColorScheme) getColorScheme(true)).getRawTheme());
+        } catch (IOException e) {
+            e.printStackTrace();
+            App.log(e);
+            App.showMsg("Unable to set the language: textmate/xml/syntaxes/xml.tmLanguage.json");
+            return new EmptyLanguage();
+        }
+    }
+
+    private Language getKotlinLang() {
+        try {
+            return TextMateLanguage.create("kotlin.tmLanguage",
+                    getAssets().open("textmate/kotlin/syntaxes/kotlin.tmLanguage"),
+                    new InputStreamReader(getAssets().open("textmate/kotlin/language-configuration.json")),
+                    ((TextMateColorScheme) getColorScheme(true)).getRawTheme());
+        } catch (IOException e) {
+            e.printStackTrace();
+            App.log(e);
+            App.showMsg("Unable to set the language: textmate/kotlin/syntaxes/kotlin.tmLanguage");
+            return new EmptyLanguage();
+        }
+    }
+
+    private EditorColorScheme getColorScheme(boolean isTextmate) {
+        return Utils.isDarkMode()
+                ? getDarkScheme(isTextmate)
+                : getLightScheme(isTextmate);
+    }
+
+    private EditorColorScheme getLightScheme(boolean isTextmate) {
+        if (isTextmate) {
+            try {
+                return TextMateColorScheme.create(ThemeReader.readThemeSync("light.tmTheme",
+                        getAssets().open("textmate/light.tmTheme")));
+            } catch (Exception e) {
+                e.printStackTrace();
+                App.log(e);
+                App.showMsg("Unable to load: textmate/light.tmTheme");
+            }
+        }
         EditorColorScheme scheme = new LightScheme();
         scheme.setColor(EditorColorScheme.WHOLE_BACKGROUND, SurfaceColors.SURFACE_0.getColor(this));
         scheme.setColor(EditorColorScheme.LINE_NUMBER_BACKGROUND, SurfaceColors.SURFACE_0.getColor(this));
         return scheme;
     }
 
-    private EditorColorScheme getDarkScheme() {
+    private EditorColorScheme getDarkScheme(boolean isTextmate) {
+        if (isTextmate) {
+            try {
+                return TextMateColorScheme.create(ThemeReader.readThemeSync("dark.json",
+                        getAssets().open("textmate/dark.json")));
+            } catch (Exception e) {
+                e.printStackTrace();
+                App.log(e);
+                App.showMsg("Unable to load: textmate/dark.json");
+            }
+        }
         EditorColorScheme scheme = new DarkScheme();
         scheme.setColor(EditorColorScheme.WHOLE_BACKGROUND, SurfaceColors.SURFACE_0.getColor(this));
         scheme.setColor(EditorColorScheme.LINE_NUMBER_BACKGROUND, SurfaceColors.SURFACE_0.getColor(this));
