@@ -332,7 +332,10 @@ public class TextEditorActivity extends BaseActivity {
     }
 
     private EditorColorScheme getLightScheme() {
-        return new SchemeGitHub();
+        EditorColorScheme scheme = new SchemeGitHub();
+        scheme.setColor(EditorColorScheme.WHOLE_BACKGROUND, SurfaceColors.SURFACE_0.getColor(this));
+        scheme.setColor(EditorColorScheme.LINE_NUMBER_BACKGROUND, SurfaceColors.SURFACE_0.getColor(this));
+        return scheme;
     }
 
     private EditorColorScheme getDarkScheme() {
