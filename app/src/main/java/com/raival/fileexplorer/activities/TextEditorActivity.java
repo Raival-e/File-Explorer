@@ -15,6 +15,8 @@ import com.google.android.material.elevation.SurfaceColors;
 import com.google.android.material.textfield.TextInputLayout;
 import com.raival.fileexplorer.App;
 import com.raival.fileexplorer.R;
+import com.raival.fileexplorer.activities.editor.schemes.DarkScheme;
+import com.raival.fileexplorer.activities.editor.schemes.LightScheme;
 import com.raival.fileexplorer.activities.model.TextEditorViewModel;
 import com.raival.fileexplorer.common.BackgroundTask;
 import com.raival.fileexplorer.common.dialog.CustomDialog;
@@ -34,8 +36,6 @@ import io.github.rosemoe.sora.widget.SymbolInputView;
 import io.github.rosemoe.sora.widget.component.EditorAutoCompletion;
 import io.github.rosemoe.sora.widget.component.Magnifier;
 import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
-import io.github.rosemoe.sora.widget.schemes.SchemeDarcula;
-import io.github.rosemoe.sora.widget.schemes.SchemeGitHub;
 
 public class TextEditorActivity extends BaseActivity {
     private static final int LANGUAGE_JAVA = 0;
@@ -332,14 +332,14 @@ public class TextEditorActivity extends BaseActivity {
     }
 
     private EditorColorScheme getLightScheme() {
-        EditorColorScheme scheme = new SchemeGitHub();
+        EditorColorScheme scheme = new LightScheme();
         scheme.setColor(EditorColorScheme.WHOLE_BACKGROUND, SurfaceColors.SURFACE_0.getColor(this));
         scheme.setColor(EditorColorScheme.LINE_NUMBER_BACKGROUND, SurfaceColors.SURFACE_0.getColor(this));
         return scheme;
     }
 
     private EditorColorScheme getDarkScheme() {
-        EditorColorScheme scheme = new SchemeDarcula();
+        EditorColorScheme scheme = new DarkScheme();
         scheme.setColor(EditorColorScheme.WHOLE_BACKGROUND, SurfaceColors.SURFACE_0.getColor(this));
         scheme.setColor(EditorColorScheme.LINE_NUMBER_BACKGROUND, SurfaceColors.SURFACE_0.getColor(this));
         return scheme;

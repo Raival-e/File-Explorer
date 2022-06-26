@@ -7,30 +7,31 @@ public class DarkScheme extends EditorColorScheme {
     @Override
     public void applyDefault() {
         super.applyDefault();
+
         setColor(ANNOTATION, 0xffbbb529);
-        setColor(FUNCTION_NAME, 0xFF67A6F4);
-        setColor(IDENTIFIER_NAME, 0xFF86A1DF);
-        setColor(IDENTIFIER_VAR, 0xFFE8BE7F);
-        setColor(LITERAL, 0xFF45CB40);
-        setColor(OPERATOR, 0xFFCDD9E5);
-        setColor(COMMENT, 0xff898888);
-        setColor(KEYWORD, 0xFFB496DE);
-        setColor(WHOLE_BACKGROUND, 0xFF2A2D3E);
-        setColor(TEXT_NORMAL, 0xFFCDD9E5);
-        setColor(LINE_NUMBER_BACKGROUND, 0xFF2A2D3E);
-        setColor(LINE_NUMBER, 0xFF5C7084);
-        setColor(LINE_DIVIDER, 0xFF5C7084);
-        setColor(SCROLL_BAR_THUMB, 0x77a6a6a6);
-        setColor(SCROLL_BAR_THUMB_PRESSED, 0x77565656);
+        setColor(FUNCTION_NAME, 0xffccd0d9);
+        setColor(IDENTIFIER_NAME, 0xffccd0d9);
+        setColor(IDENTIFIER_VAR, 0xff9876aa);
+        setColor(LITERAL, 0xff6a8759);
+        setColor(OPERATOR, 0xffccd0d9);
+        setColor(COMMENT, 0xff808080);
+        setColor(KEYWORD, 0xffcc7832);
+        setColor(WHOLE_BACKGROUND, 0xff2b2b2b);
+        setColor(TEXT_NORMAL, 0xffccd0d9);
+        setColor(LINE_NUMBER_BACKGROUND, 0xff313335);
+        setColor(LINE_NUMBER, 0xff606366);
+        setColor(LINE_DIVIDER, 0xff606366);
+        setColor(SCROLL_BAR_THUMB, 0xffa6a6a6);
+        setColor(SCROLL_BAR_THUMB_PRESSED, 0xff565656);
         setColor(SELECTED_TEXT_BACKGROUND, 0xff3676b8);
         setColor(MATCHED_TEXT_BACKGROUND, 0xff32593d);
-        setColor(CURRENT_LINE, 0xFF303844);
-        setColor(SELECTION_INSERT, 0xffffffff);
-        setColor(SELECTION_HANDLE, 0xffffffff);
-        setColor(BLOCK_LINE, 0xff454F59);
-        setColor(BLOCK_LINE_CURRENT, 0xdd454F59);
-        setColor(NON_PRINTABLE_CHAR, 0xFF5C7084);
-        setColor(TEXT_SELECTED, 0xffffffff);
+        setColor(CURRENT_LINE, 0xff323232);
+        setColor(SELECTION_INSERT, 0xffccd0d9);
+        setColor(SELECTION_HANDLE, 0xffccd0d9);
+        setColor(BLOCK_LINE, 0xff575757);
+        setColor(BLOCK_LINE_CURRENT, 0xdd575757);
+        setColor(NON_PRINTABLE_CHAR, 0xffdddddd);
+        setColor(TEXT_SELECTED, 0xffccd0d9);
     }
 
 }
