@@ -23,20 +23,19 @@ import com.raival.fileexplorer.utils.FileUtils;
 import com.raival.fileexplorer.utils.PrefsUtils;
 import com.raival.fileexplorer.utils.Utils;
 
-import org.eclipse.tm4e.core.internal.theme.reader.ThemeReader;
-
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
-import io.github.rosemoe.sora.langs.textmate.TextMateLanguage;
+import io.github.rosemoe.sora.langs.java.JavaLanguage;
 import io.github.rosemoe.sora.widget.CodeEditor;
 import io.github.rosemoe.sora.widget.EditorSearcher;
 import io.github.rosemoe.sora.widget.SymbolInputView;
 import io.github.rosemoe.sora.widget.component.EditorAutoCompletion;
 import io.github.rosemoe.sora.widget.component.Magnifier;
+import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
+import io.github.rosemoe.sora.widget.schemes.SchemeDarcula;
+import io.github.rosemoe.sora.widget.schemes.SchemeGitHub;
 
 public class TextEditorActivity extends BaseActivity {
     private static final int LANGUAGE_JAVA = 0;
@@ -266,11 +265,7 @@ public class TextEditorActivity extends BaseActivity {
         editor.setWordwrap(PrefsUtils.getTextEditorWordwrap());
         editor.setLineNumberEnabled(PrefsUtils.getTextEditorShowLineNumber());
         editor.getComponent(Magnifier.class).setEnabled(PrefsUtils.getTextEditorMagnifier());
-        try {
-            editor.setColorScheme(PrefsUtils.getTextEditorLightTheme() ? getLightScheme() : getDarkScheme());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        editor.setColorScheme(PrefsUtils.getTextEditorLightTheme() ? getLightScheme() : getDarkScheme());
         editor.setEditable(!PrefsUtils.getTextEditorReadOnly());
     }
 
@@ -328,50 +323,25 @@ public class TextEditorActivity extends BaseActivity {
         } else if (id == R.id.editor_option_light_mode) {
             item.setChecked(!item.isChecked());
             PrefsUtils.setTextEditorLightTheme(item.isChecked());
-            try {
-                editor.setColorScheme(item.isChecked() ? getLightScheme() : getDarkScheme());
-            } catch (Exception e) {
-                e.printStackTrace();
-                App.log(e);
-            }
+            editor.setColorScheme(item.isChecked() ? getLightScheme() : getDarkScheme());
         }
         return super.onOptionsItemSelected(item);
     }
 
     private void setEditorLanguage(int language) {
         if (language == LANGUAGE_JAVA) {
-            try {
-                editor.setEditorLanguage(TextMateLanguage.create("java.tmLanguage.json",
-                        getAssets().open("textmate/java/syntaxes/java.tmLanguage.json"),
-                        new InputStreamReader(getAssets().open("textmate/java/language-configuration.json")),
-                        ((TextMateColorScheme) editor.getColorScheme()).getRawTheme()));
-            } catch (Exception e) {
-                e.printStackTrace();
-                App.log(e);
-                App.showMsg("Unable to load language");
-            }
+            editor.setEditorLanguage(new JavaLanguage());
         } else if (language == LANGUAGE_KOTLIN) {
-            try {
-                editor.setEditorLanguage(TextMateLanguage.create("Kotlin.tmLanguage",
-                        getAssets().open("textmate/kotlin/syntaxes/Kotlin.tmLanguage"),
-                        new InputStreamReader(getAssets().open("textmate/kotlin/language-configuration.json")),
-                        ((TextMateColorScheme) editor.getColorScheme()).getRawTheme()));
-            } catch (Exception e) {
-                e.printStackTrace();
-                App.log(e);
-                App.showMsg("Unable to load language");
-            }
+            editor.setEditorLanguage(new JavaLanguage());
         }
     }
 
-    private TextMateColorScheme getLightScheme() throws Exception {
-        return TextMateColorScheme.create(ThemeReader.readThemeSync("Light.tmTheme",
-                getAssets().open("textmate/Light.tmTheme")));
+    private EditorColorScheme getLightScheme() {
+        return new SchemeGitHub();
     }
 
-    private TextMateColorScheme getDarkScheme() throws Exception {
-        return TextMateColorScheme.create(ThemeReader.readThemeSync("Dark.json",
-                getAssets().open("textmate/Dark.json")));
+    private EditorColorScheme getDarkScheme() {
+        return new SchemeDarcula();
     }
 
 
