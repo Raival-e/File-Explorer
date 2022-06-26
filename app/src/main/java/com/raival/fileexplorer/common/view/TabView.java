@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.raival.fileexplorer.R;
-import com.raival.fileexplorer.utils.Utils;
+import com.raival.fileexplorer.util.Utils;
 
 import java.util.ArrayList;
 

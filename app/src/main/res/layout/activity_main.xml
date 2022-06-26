@@ -5,14 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.raival.fileexplorer.activities.MainActivity">
+    tools:context="com.raival.fileexplorer.activity.MainActivity">
+
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:subtitleTextAppearance="@style/TextAppearance.Material3.LabelSmall"
         android:elevation="1dp"
-        style="@style/Widget.Material3.Toolbar.Surface"/>
+        style="@style/Widget.Material3.Toolbar.Surface" />
+
     <com.google.android.material.card.MaterialCardView
         style="@style/Widget.Material3.CardView.Elevated"
         android:layout_width="match_parent"
