@@ -46,11 +46,6 @@
                 android:checked="true"
                 android:title="Magnifier"/>
             <item
-                android:id="@+id/editor_option_light_mode"
-                android:checkable="true"
-                android:checked="false"
-                android:title="Light theme"/>
-            <item
                 android:id="@+id/editor_option_read_only"
                 android:checkable="true"
                 android:checked="false"

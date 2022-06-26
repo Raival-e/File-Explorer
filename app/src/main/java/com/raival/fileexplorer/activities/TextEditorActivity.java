@@ -247,7 +247,6 @@ public class TextEditorActivity extends BaseActivity {
 
         menu.findItem(R.id.editor_option_wordwrap).setChecked(PrefsUtils.getTextEditorWordwrap());
         menu.findItem(R.id.editor_option_magnifier).setChecked(PrefsUtils.getTextEditorMagnifier());
-        menu.findItem(R.id.editor_option_light_mode).setChecked(PrefsUtils.getTextEditorLightTheme());
         menu.findItem(R.id.editor_option_pin_line_number).setChecked(PrefsUtils.getTextEditorPinLineNumber());
         menu.findItem(R.id.editor_option_line_number).setChecked(PrefsUtils.getTextEditorShowLineNumber());
         menu.findItem(R.id.editor_option_read_only).setChecked(PrefsUtils.getTextEditorReadOnly());
@@ -265,7 +264,7 @@ public class TextEditorActivity extends BaseActivity {
         editor.setWordwrap(PrefsUtils.getTextEditorWordwrap());
         editor.setLineNumberEnabled(PrefsUtils.getTextEditorShowLineNumber());
         editor.getComponent(Magnifier.class).setEnabled(PrefsUtils.getTextEditorMagnifier());
-        editor.setColorScheme(PrefsUtils.getTextEditorLightTheme() ? getLightScheme() : getDarkScheme());
+        editor.setColorScheme(Utils.isDarkMode() ? getDarkScheme() : getLightScheme());
         editor.setEditable(!PrefsUtils.getTextEditorReadOnly());
     }
 
@@ -320,10 +319,6 @@ public class TextEditorActivity extends BaseActivity {
             item.setChecked(!item.isChecked());
             PrefsUtils.setTextEditorPinLineNumber(item.isChecked());
             editor.setPinLineNumber(item.isChecked());
-        } else if (id == R.id.editor_option_light_mode) {
-            item.setChecked(!item.isChecked());
-            PrefsUtils.setTextEditorLightTheme(item.isChecked());
-            editor.setColorScheme(item.isChecked() ? getLightScheme() : getDarkScheme());
         }
         return super.onOptionsItemSelected(item);
     }
@@ -341,7 +336,10 @@ public class TextEditorActivity extends BaseActivity {
     }
 
     private EditorColorScheme getDarkScheme() {
-        return new SchemeDarcula();
+        EditorColorScheme scheme = new SchemeDarcula();
+        scheme.setColor(EditorColorScheme.WHOLE_BACKGROUND, SurfaceColors.SURFACE_0.getColor(this));
+        scheme.setColor(EditorColorScheme.LINE_NUMBER_BACKGROUND, SurfaceColors.SURFACE_0.getColor(this));
+        return scheme;
     }
 
 

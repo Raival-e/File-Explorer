@@ -2,6 +2,7 @@ package com.raival.fileexplorer.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.util.TypedValue;
 
 import androidx.annotation.ColorInt;
@@ -28,5 +29,10 @@ public class Utils {
     @SuppressLint("SimpleDateFormat")
     public static String getLastModifiedDate(File file, String dateFormat) {
         return new SimpleDateFormat(REGULAR_DATE_FORMAT).format(file.lastModified());
+    }
+
+    public static boolean isDarkMode() {
+        return (App.appContext.getResources().getConfiguration().uiMode
+                & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
     }
 }

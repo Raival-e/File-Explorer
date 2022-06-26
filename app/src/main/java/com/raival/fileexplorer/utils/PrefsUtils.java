@@ -58,14 +58,6 @@ public class PrefsUtils {
         Prefs.putBoolean("text_editor_magnifier", magnifier);
     }
 
-    public static boolean getTextEditorLightTheme() {
-        return Prefs.getBoolean("text_editor_light_theme", false);
-    }
-
-    public static void setTextEditorLightTheme(boolean lightTheme) {
-        Prefs.putBoolean("text_editor_light_theme", lightTheme);
-    }
-
     public static boolean getTextEditorReadOnly() {
         return Prefs.getBoolean("text_editor_read_only", false);
     }
