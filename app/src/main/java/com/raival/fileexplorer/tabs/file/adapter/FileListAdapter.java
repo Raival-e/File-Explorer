@@ -48,6 +48,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
         TextView details;
         ImageView icon;
         View background;
+        View divider;
 
         public ViewHolder(View v) {
             super(v);
@@ -55,6 +56,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
             details = v.findViewById(R.id.file_details);
             icon = v.findViewById(R.id.file_icon);
             background = v.findViewById(R.id.background);
+            divider = v.findViewById(R.id.divider);
         }
 
         /**
@@ -67,6 +69,11 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
             FileUtils.setFileIcon(icon, fileItem.file);
             name.setText(fileItem.file.getName());
             details.setText(FileUtils.getFileDetails(fileItem.file));
+            if (position == getItemCount() - 1) {
+                divider.setVisibility(View.GONE);
+            } else {
+                divider.setVisibility(View.VISIBLE);
+            }
 
             // Hidden files will be 50% transparent
             icon.setAlpha(fileItem.file.isHidden() ? 0.5f : 1f);

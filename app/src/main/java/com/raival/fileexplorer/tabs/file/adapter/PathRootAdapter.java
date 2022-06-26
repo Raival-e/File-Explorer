@@ -26,7 +26,9 @@ public class PathRootAdapter extends RecyclerView.Adapter<PathRootAdapter.ViewHo
     @NonNull
     @Override
     public PathRootAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(parentFragment.requireActivity().getLayoutInflater().inflate(R.layout.file_explorer_tab_path_root_view, null));
+        View v = parentFragment.requireActivity().getLayoutInflater().inflate(R.layout.file_explorer_tab_path_root_view, null);
+        v.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        return new ViewHolder(v);
     }
 
     @Override

@@ -10,12 +10,11 @@
     <LinearLayout
         android:id="@+id/path_treeview_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:orientation="horizontal"
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
         android:gravity="center"
-        android:background="?android:attr/colorBackground"
         app:layout_constraintTop_toTopOf="parent">
         <ImageView
             android:id="@+id/home"
@@ -26,13 +25,21 @@
             android:src="@drawable/ic_round_home_24"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:clickable="true" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/path_root"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             tools:itemCount="2"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
     </LinearLayout>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:alpha="0.5"
+        app:layout_constraintTop_toBottomOf="@+id/path_treeview_layout" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv"
@@ -43,9 +50,9 @@
         android:scrollbarSize="10dp"
         android:scrollbarThumbVertical="@drawable/fastscroll_thumb"
         android:fadeScrollbars="true"
-        app:layout_constraintTop_toBottomOf="@+id/path_treeview_layout"
+        app:layout_constraintTop_toBottomOf="@+id/divider"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     <include
         android:id="@+id/place_holder"
