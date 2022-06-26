@@ -69,6 +69,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
             FileUtils.setFileIcon(icon, fileItem.file);
             name.setText(fileItem.file.getName());
             details.setText(FileUtils.getFileDetails(fileItem.file));
+
             if (position == getItemCount() - 1) {
                 divider.setVisibility(View.GONE);
             } else {
@@ -118,7 +119,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
 
             // Apply the listener for both the background and the icon
             itemView.findViewById(R.id.icon_container).setOnLongClickListener(longClickListener);
-            itemView.setOnLongClickListener(longClickListener);
+            background.setOnLongClickListener(longClickListener);
 
         }
     }
