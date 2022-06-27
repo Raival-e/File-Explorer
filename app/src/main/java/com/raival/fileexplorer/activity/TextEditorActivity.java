@@ -15,6 +15,8 @@ import com.google.android.material.elevation.SurfaceColors;
 import com.google.android.material.textfield.TextInputLayout;
 import com.raival.fileexplorer.App;
 import com.raival.fileexplorer.R;
+import com.raival.fileexplorer.activity.editor.autocomplete.CustomCompletionItemAdapter;
+import com.raival.fileexplorer.activity.editor.autocomplete.CustomCompletionLayout;
 import com.raival.fileexplorer.activity.editor.scheme.DarkScheme;
 import com.raival.fileexplorer.activity.editor.scheme.LightScheme;
 import com.raival.fileexplorer.activity.model.TextEditorViewModel;
@@ -78,9 +80,10 @@ public class TextEditorActivity extends BaseActivity {
         inputView.addSymbols(new String[]{"->", "_", "=", "{", "}", "<", ">", "|", "\\", "?", "+", "-", "*", "/"},
                 new String[]{"\t", "_", "=", "{", "}", "<", ">", "|", "\\", "?", "+", "-", "*", "/"});
 
+        editor.getComponent(EditorAutoCompletion.class).setLayout(new CustomCompletionLayout());
+        editor.getComponent(EditorAutoCompletion.class).setAdapter(new CustomCompletionItemAdapter());
         editor.setTypefaceText(Typeface.createFromAsset(getAssets(), "font/JetBrainsMono-Regular.ttf"));
         editor.getProps().useICULibToSelectWords = false;
-
         editor.getProps().symbolPairAutoCompletion = false;
         editor.getProps().deleteMultiSpaces = -1;
         editor.getProps().deleteEmptyLineFast = false;
@@ -93,7 +96,6 @@ public class TextEditorActivity extends BaseActivity {
         detectLanguage(editorViewModel.file);
 
         materialToolbar.setTitle(editorViewModel.file.getName());
-
         setSupportActionBar(materialToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -421,6 +423,7 @@ public class TextEditorActivity extends BaseActivity {
         EditorColorScheme scheme = new LightScheme();
         scheme.setColor(EditorColorScheme.WHOLE_BACKGROUND, SurfaceColors.SURFACE_0.getColor(this));
         scheme.setColor(EditorColorScheme.LINE_NUMBER_BACKGROUND, SurfaceColors.SURFACE_0.getColor(this));
+        scheme.setColor(EditorColorScheme.AUTO_COMP_PANEL_BG, SurfaceColors.SURFACE_1.getColor(this));
         return scheme;
     }
 
@@ -438,6 +441,7 @@ public class TextEditorActivity extends BaseActivity {
         EditorColorScheme scheme = new DarkScheme();
         scheme.setColor(EditorColorScheme.WHOLE_BACKGROUND, SurfaceColors.SURFACE_0.getColor(this));
         scheme.setColor(EditorColorScheme.LINE_NUMBER_BACKGROUND, SurfaceColors.SURFACE_0.getColor(this));
+        scheme.setColor(EditorColorScheme.AUTO_COMP_PANEL_BG, SurfaceColors.SURFACE_1.getColor(this));
         return scheme;
     }
 
