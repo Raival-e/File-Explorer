@@ -2,6 +2,7 @@ package com.raival.fileexplorer.tab.file.adapter;
 
 import android.annotation.SuppressLint;
 import android.graphics.drawable.ColorDrawable;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -19,10 +20,14 @@ import com.raival.fileexplorer.util.FileUtils;
 
 public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHolder> {
     private final FileExplorerTabFragment parentFragment;
+    private ColorDrawable selectedFileDrawable;
+    private ColorDrawable highlightedFileDrawable;
 
     public FileListAdapter(FileExplorerTabFragment parentFragment) {
         this.parentFragment = parentFragment;
         registerAdapterDataObserver(new FileListObserver(parentFragment, this));
+        selectedFileDrawable = new ColorDrawable(parentFragment.getContext().getColor(R.color.selectedFileHighlight));
+        highlightedFileDrawable = new ColorDrawable(parentFragment.getContext().getColor(R.color.previousFileHighlight));
     }
 
     @NonNull
@@ -67,8 +72,18 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
             final FileItem fileItem = parentFragment.getFiles().get(position);
 
             FileUtils.setFileIcon(icon, fileItem.file);
-            name.setText(fileItem.file.getName());
-            details.setText(FileUtils.getFileDetails(fileItem.file));
+
+            if (TextUtils.isEmpty(fileItem.name)) {
+                name.setText(fileItem.file.getName());
+            } else {
+                name.setText(fileItem.name);
+            }
+
+            if (TextUtils.isEmpty(fileItem.details)) {
+                details.setText(FileUtils.getFileDetails(fileItem.file));
+            } else {
+                details.setText(fileItem.details);
+            }
 
             if (position == getItemCount() - 1) {
                 divider.setVisibility(View.GONE);
@@ -77,16 +92,22 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
             }
 
             // Hidden files will be 50% transparent
-            icon.setAlpha(fileItem.file.isHidden() ? 0.5f : 1f);
+            if (fileItem.file.isHidden()) {
+                if (icon.getAlpha() == 1) icon.setAlpha(0.5f);
+            } else {
+                if (icon.getAlpha() < 1) icon.setAlpha(1f);
+            }
 
             // Set a proper background color
             if (fileItem.isSelected) {
-                background.setForeground(new ColorDrawable(parentFragment.getContext().getColor(R.color.selectedFileHighlight)));
+                if (background.getForeground() != selectedFileDrawable)
+                    background.setForeground(selectedFileDrawable);
             } else if (parentFragment.getPreviousDirectory() != null
                     && fileItem.file.getAbsolutePath().equals(parentFragment.getPreviousDirectory().getAbsolutePath())) {
-                background.setForeground(new ColorDrawable(parentFragment.getContext().getColor(R.color.previousFileHighlight)));
+                if (background.getForeground() != highlightedFileDrawable)
+                    background.setForeground(highlightedFileDrawable);
             } else {
-                background.setForeground(null);
+                if (background.getForeground() != null) background.setForeground(null);
             }
 
             // Select/unselect item by pressing the icon
