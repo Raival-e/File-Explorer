@@ -39,17 +39,22 @@
             <item
                 android:id="@+id/editor_option_pin_line_number"
                 android:checkable="true"
-                android:title="Pin line number"/>
+                android:title="Pin line number" />
             <item
                 android:id="@+id/editor_option_magnifier"
                 android:checkable="true"
                 android:checked="true"
-                android:title="Magnifier"/>
+                android:title="Magnifier" />
+            <item
+                android:id="@+id/editor_option_autocomplete"
+                android:checkable="true"
+                android:checked="false"
+                android:title="Autocomplete" />
             <item
                 android:id="@+id/editor_option_read_only"
                 android:checkable="true"
                 android:checked="false"
-                android:title="Read only"/>
+                android:title="Read only" />
         </menu>
     </item>
 

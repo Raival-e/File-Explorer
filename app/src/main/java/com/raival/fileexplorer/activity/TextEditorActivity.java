@@ -40,6 +40,7 @@ import io.github.rosemoe.sora.langs.textmate.TextMateLanguage;
 import io.github.rosemoe.sora.widget.CodeEditor;
 import io.github.rosemoe.sora.widget.EditorSearcher;
 import io.github.rosemoe.sora.widget.SymbolInputView;
+import io.github.rosemoe.sora.widget.component.EditorAutoCompletion;
 import io.github.rosemoe.sora.widget.component.Magnifier;
 import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
 
@@ -277,6 +278,7 @@ public class TextEditorActivity extends BaseActivity {
         editor.setLineNumberEnabled(PrefsUtils.getTextEditorShowLineNumber());
         editor.getComponent(Magnifier.class).setEnabled(PrefsUtils.getTextEditorMagnifier());
         editor.setEditable(!PrefsUtils.getTextEditorReadOnly());
+        editor.getComponent(EditorAutoCompletion.class).setEnabled(PrefsUtils.getTextEditorAutocomplete());
     }
 
     @Override
@@ -330,6 +332,10 @@ public class TextEditorActivity extends BaseActivity {
             item.setChecked(!item.isChecked());
             PrefsUtils.setTextEditorPinLineNumber(item.isChecked());
             editor.setPinLineNumber(item.isChecked());
+        } else if (id == R.id.editor_option_autocomplete) {
+            item.setChecked(!item.isChecked());
+            PrefsUtils.setTextEditorAutocomplete(item.isChecked());
+            editor.getComponent(EditorAutoCompletion.class).setEnabled(item.isChecked());
         }
         return super.onOptionsItemSelected(item);
     }

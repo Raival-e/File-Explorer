@@ -355,6 +355,7 @@ public class FileUtils {
                 App.showMsg("Couldn't find any app that can open this type of files");
             }
         } catch (Exception e) {
+            App.log(e);
             App.showMsg("Failed to open this file");
         }
     }
