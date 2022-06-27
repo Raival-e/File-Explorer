@@ -1,6 +1,7 @@
 package com.raival.fileexplorer.tab.file;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
@@ -31,6 +32,7 @@ import com.raival.fileexplorer.tab.file.dialog.TasksDialog;
 import com.raival.fileexplorer.tab.file.executor.DexRunner;
 import com.raival.fileexplorer.tab.file.model.FileItem;
 import com.raival.fileexplorer.tab.file.option.FileOptionHandler;
+import com.raival.fileexplorer.util.FileExtensions;
 import com.raival.fileexplorer.util.FileUtils;
 import com.raival.fileexplorer.util.PrefsUtils;
 
@@ -39,6 +41,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class FileExplorerTabFragment extends BaseTabFragment {
     public final static int MAX_NAME_LENGTH = 32;
@@ -49,6 +52,9 @@ public class FileExplorerTabFragment extends BaseTabFragment {
     private FileOptionHandler fileOptionHandler;
     private File previousDirectory;
     private File currentDirectory;
+
+    private IconResolver iconResolver;
+    private Thread iconResolverThread;
 
     public FileExplorerTabFragment() {
         super();
@@ -349,6 +355,10 @@ public class FileExplorerTabFragment extends BaseTabFragment {
     }
 
     private void prepareFiles() {
+        if (iconResolverThread != null) {
+            iconResolverThread.interrupt();
+            iconResolverThread = null;
+        }
         // Make sure current file is ready
         if (getCurrentDirectory() == null) {
             loadData();
@@ -370,6 +380,7 @@ public class FileExplorerTabFragment extends BaseTabFragment {
                 this.files.add(fileItem);
             }
         }
+        iconResolver = new IconResolver().start();
     }
 
     public void focusOn(File file) {
@@ -464,5 +475,26 @@ public class FileExplorerTabFragment extends BaseTabFragment {
 
     public File getPreviousDirectory() {
         return previousDirectory;
+    }
+
+    private class IconResolver {
+        public boolean isWorking = false;
+
+        public IconResolver start() {
+            isWorking = true;
+            AtomicInteger i = new AtomicInteger();
+            iconResolverThread = new Thread(() -> {
+                for (FileItem fileItem : files) {
+                    if (FileUtils.getFileExtension(fileItem.file).equalsIgnoreCase(FileExtensions.apkType)) {
+                        Drawable drawable = FileUtils.getApkIcon(fileItem.file);
+                        App.appHandler.post(() -> fileItem.img.setValue(drawable));
+                    }
+                    i.incrementAndGet();
+                }
+                isWorking = false;
+            });
+            iconResolverThread.start();
+            return this;
+        }
     }
 }

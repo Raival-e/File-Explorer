@@ -16,6 +16,7 @@ import com.raival.fileexplorer.tab.file.FileExplorerTabDataHolder;
 import com.raival.fileexplorer.tab.file.FileExplorerTabFragment;
 import com.raival.fileexplorer.tab.file.model.FileItem;
 import com.raival.fileexplorer.tab.file.observer.FileListObserver;
+import com.raival.fileexplorer.util.FileExtensions;
 import com.raival.fileexplorer.util.FileUtils;
 
 public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHolder> {
@@ -71,7 +72,11 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
             final int position = getAdapterPosition();
             final FileItem fileItem = parentFragment.getFiles().get(position);
 
-            FileUtils.setFileIcon(icon, fileItem.file);
+            if (!FileUtils.getFileExtension(fileItem.file).equalsIgnoreCase(FileExtensions.apkType)) {
+                FileUtils.setFileIcon(icon, fileItem.file);
+            } else {
+                fileItem.img.observe(parentFragment, (drawable -> icon.setImageDrawable(drawable)));
+            }
 
             if (TextUtils.isEmpty(fileItem.name)) {
                 name.setText(fileItem.file.getName());
