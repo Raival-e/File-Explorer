@@ -40,7 +40,6 @@ import io.github.rosemoe.sora.langs.textmate.TextMateLanguage;
 import io.github.rosemoe.sora.widget.CodeEditor;
 import io.github.rosemoe.sora.widget.EditorSearcher;
 import io.github.rosemoe.sora.widget.SymbolInputView;
-import io.github.rosemoe.sora.widget.component.EditorAutoCompletion;
 import io.github.rosemoe.sora.widget.component.Magnifier;
 import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
 
@@ -78,10 +77,7 @@ public class TextEditorActivity extends BaseActivity {
         inputView.addSymbols(new String[]{"->", "_", "=", "{", "}", "<", ">", "|", "\\", "?", "+", "-", "*", "/"},
                 new String[]{"\t", "_", "=", "{", "}", "<", ">", "|", "\\", "?", "+", "-", "*", "/"});
 
-        editor.getComponent(EditorAutoCompletion.class).setEnabled(false);
-        editor.setTextSize(14);
-        editor.setHighlightCurrentBlock(true);
-        editor.setTypefaceText(Typeface.MONOSPACE);
+        editor.setTypefaceText(Typeface.createFromAsset(getAssets(), "font/JetBrainsMono-Regular.ttf"));
         editor.getProps().useICULibToSelectWords = false;
 
         editor.getProps().symbolPairAutoCompletion = false;
@@ -360,13 +356,13 @@ public class TextEditorActivity extends BaseActivity {
     private Language getJsonLang() {
         try {
             return TextMateLanguage.create("json.tmLanguage.json",
-                    getAssets().open("textmate/json/syntaxes/json.tmLanguage.json"),
+                    getAssets().open("textmate/json/syntax/json.tmLanguage.json"),
                     new InputStreamReader(getAssets().open("textmate/json/language-configuration.json")),
                     ((TextMateColorScheme) getColorScheme(true)).getRawTheme());
         } catch (IOException e) {
             e.printStackTrace();
             App.log(e);
-            App.showMsg("Unable to set the language: textmate/json/syntaxes/kotlin.tmLanguage.json");
+            App.showMsg("Unable to set the language: textmate/json/syntax/kotlin.tmLanguage.json");
             return new EmptyLanguage();
         }
     }
@@ -374,13 +370,13 @@ public class TextEditorActivity extends BaseActivity {
     private Language getXmlLang() {
         try {
             return TextMateLanguage.create("xml.tmLanguage.json",
-                    getAssets().open("textmate/xml/syntaxes/xml.tmLanguage.json"),
+                    getAssets().open("textmate/xml/syntax/xml.tmLanguage.json"),
                     new InputStreamReader(getAssets().open("textmate/xml/language-configuration.json")),
                     ((TextMateColorScheme) getColorScheme(true)).getRawTheme());
         } catch (IOException e) {
             e.printStackTrace();
             App.log(e);
-            App.showMsg("Unable to set the language: textmate/xml/syntaxes/xml.tmLanguage.json");
+            App.showMsg("Unable to set the language: textmate/xml/syntax/xml.tmLanguage.json");
             return new EmptyLanguage();
         }
     }
@@ -388,13 +384,13 @@ public class TextEditorActivity extends BaseActivity {
     private Language getKotlinLang() {
         try {
             return TextMateLanguage.create("kotlin.tmLanguage",
-                    getAssets().open("textmate/kotlin/syntaxes/kotlin.tmLanguage"),
+                    getAssets().open("textmate/kotlin/syntax/kotlin.tmLanguage"),
                     new InputStreamReader(getAssets().open("textmate/kotlin/language-configuration.json")),
                     ((TextMateColorScheme) getColorScheme(true)).getRawTheme());
         } catch (IOException e) {
             e.printStackTrace();
             App.log(e);
-            App.showMsg("Unable to set the language: textmate/kotlin/syntaxes/kotlin.tmLanguage");
+            App.showMsg("Unable to set the language: textmate/kotlin/syntax/kotlin.tmLanguage");
             return new EmptyLanguage();
         }
     }
@@ -446,9 +442,7 @@ public class TextEditorActivity extends BaseActivity {
 
         AtomicReference<String> error = new AtomicReference<>("");
 
-        backgroundTask.setTasks(() -> {
-            backgroundTask.showProgressDialog("compiling files...", this);
-        }, () -> {
+        backgroundTask.setTasks(() -> backgroundTask.showProgressDialog("compiling files...", this), () -> {
             try {
                 executor.execute();
             } catch (Exception exception) {

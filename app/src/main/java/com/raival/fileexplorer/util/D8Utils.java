@@ -21,7 +21,7 @@ public class D8Utils {
         if (check.exists()) {
             return check;
         }
-        unzipFromAssets(App.appContext, "lambda-stubs.zip", check.getParentFile().getAbsolutePath());
+        unzipFromAssets(App.appContext, "build/lambda-stubs.zip", check.getParentFile().getAbsolutePath());
         return check;
     }
 
@@ -30,7 +30,7 @@ public class D8Utils {
         if (check.exists()) {
             return check;
         }
-        unzipFromAssets(App.appContext, "rt.zip", check.getParentFile().getAbsolutePath());
+        unzipFromAssets(App.appContext, "build/rt.zip", check.getParentFile().getAbsolutePath());
         return check;
     }
 

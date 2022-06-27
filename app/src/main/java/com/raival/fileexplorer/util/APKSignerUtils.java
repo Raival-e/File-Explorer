@@ -12,7 +12,7 @@ public class APKSignerUtils {
         if (check.exists()) {
             return check;
         }
-        unzipFromAssets(App.appContext, "testkey.pk8.zip", check.getParentFile().getAbsolutePath());
+        unzipFromAssets(App.appContext, "build/testkey.pk8.zip", check.getParentFile().getAbsolutePath());
         return check;
     }
 
@@ -21,7 +21,7 @@ public class APKSignerUtils {
         if (check.exists()) {
             return check;
         }
-        unzipFromAssets(App.appContext, "testkey.x509.pem.zip", check.getParentFile().getAbsolutePath());
+        unzipFromAssets(App.appContext, "build/testkey.x509.pem.zip", check.getParentFile().getAbsolutePath());
         return check;
     }
 }
