@@ -6,7 +6,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.lifecycle.ViewModelProvider;
@@ -36,6 +38,7 @@ public class MainActivity extends BaseActivity {
     private FragmentContainerView fragmentContainerView;
     private MaterialToolbar toolbar;
     private BottomBarView bottomBarView;
+    private DrawerLayout drawerLayout;
     private MainViewModel mainViewModel;
 
     /**
@@ -107,12 +110,17 @@ public class MainActivity extends BaseActivity {
         fragmentContainerView = findViewById(R.id.fragment_container);
         toolbar = findViewById(R.id.toolbar);
         bottomBarView = findViewById(R.id.bottom_bar_view);
+        drawerLayout = findViewById(R.id.drawer);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_round_menu_24);
         toolbar.setNavigationOnClickListener(null);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name, R.string.app_name);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
 
         tabView.setOnUpdateTabViewListener((tab, event) -> {
             if (event == TabView.ON_SELECT) {
@@ -186,6 +194,15 @@ public class MainActivity extends BaseActivity {
         });
 
         checkPermissions();
+        setupDrawer();
+    }
+
+    private void setupDrawer() {
+        MaterialToolbar materialToolbar = findViewById(R.id.drawer_layout).findViewById(R.id.toolbar);
+        materialToolbar.setTitle(R.string.app_name);
+        materialToolbar.setSubtitle("https://github.com/Raival-e/File-Explorer");
+        materialToolbar.getMenu().clear();
+        materialToolbar.getMenu().add("Settings").setIcon(R.drawable.ic_round_settings_24).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
     private BaseTabFragment getActiveFragment() {
