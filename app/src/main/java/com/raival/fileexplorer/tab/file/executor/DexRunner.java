@@ -19,13 +19,17 @@ public class DexRunner {
     private final File directory;
     private final ArrayList<File> relatedDexFiles = new ArrayList<>();
 
-    public DexRunner(File dexFile, File directory, AppCompatActivity activity) {
+    public DexRunner(File dexFile, AppCompatActivity activity) {
         this.activity = activity;
-        this.directory = directory;
-        for (File file : directory.listFiles()) {
-            if (file.getName().endsWith(".exe.dex")) {
-                //TODO: only execute files with the same name as dexFile
-                relatedDexFiles.add(file);
+        this.directory = dexFile.getParentFile();
+
+        final File[] files = directory.listFiles();
+        final String prefix = dexFile.getName().substring(0, dexFile.getName().indexOf(".exe.dex"));
+        if (files != null) {
+            for (File file : files) {
+                if (file.getName().endsWith(".exe.dex")) {
+                    if (file.getName().startsWith(prefix)) relatedDexFiles.add(file);
+                }
             }
         }
     }
