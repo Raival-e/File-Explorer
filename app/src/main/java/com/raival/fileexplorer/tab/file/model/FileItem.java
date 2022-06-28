@@ -4,6 +4,9 @@ import android.graphics.drawable.Drawable;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.raival.fileexplorer.util.FileExtensions;
+import com.raival.fileexplorer.util.FileUtils;
+
 import java.io.File;
 
 public class FileItem {
@@ -12,9 +15,12 @@ public class FileItem {
 
     public String details = "";
     public String name = "";
-    public MutableLiveData<Drawable> img = new MutableLiveData<>();
+    public MutableLiveData<Drawable> img;
 
     public FileItem(File file) {
         this.file = file;
+        if (FileUtils.getFileExtension(file).equalsIgnoreCase(FileExtensions.apkType)) {
+            img = new MutableLiveData<>();
+        }
     }
 }
