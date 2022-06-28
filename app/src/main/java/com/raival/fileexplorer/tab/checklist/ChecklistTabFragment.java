@@ -37,6 +37,7 @@ public class ChecklistTabFragment extends BaseTabFragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.checklist_tab_fragment, container, false);
         materialChecklist = view.findViewById(R.id.checklist);
+        getToolbar().setSubtitle(null);
 
         try {
             materialChecklist.setItems(FileUtils.readFile(((ChecklistTabDataHolder) getDataHolder()).file));
