@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center">
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/tabs_options"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -35,7 +35,7 @@
                 android:rotation="90"
                 android:scaleType="centerInside"
                 android:paddingStart="16dp"
-                android:paddingEnd="16dp"/>
+                android:paddingEnd="16dp" />
             <com.raival.fileexplorer.common.view.TabView
                 android:id="@+id/tabs"
                 android:layout_width="match_parent"

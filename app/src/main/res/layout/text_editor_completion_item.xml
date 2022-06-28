@@ -6,7 +6,7 @@
     android:gravity="center_vertical"
     android:background="?attr/selectableItemBackground">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:layout_height="match_parent"
         android:layout_width="30dp"
         android:gravity="center"
@@ -29,14 +29,14 @@
         android:gravity="center_vertical"
         android:padding="8dp">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Medium Text"
             android:id="@+id/result_item_label"
             android:textSize="16sp" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Small Text"

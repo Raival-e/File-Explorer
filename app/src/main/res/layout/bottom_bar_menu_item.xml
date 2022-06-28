@@ -8,7 +8,7 @@
     android:background="?android:attr/selectableItemBackground"
     android:clickable="true">
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/icon"
         android:layout_width="20dp"
         android:layout_height="20dp" />

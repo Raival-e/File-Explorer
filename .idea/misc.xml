@@ -94,8 +94,11 @@
         <entry key="..\:/Users/pavnv/OneDrive/Desktop/android_studio_projects/Quicktools/app/src/main/res/layout/file_explorer_tab_fragment.xml" value="0.25" />
         <entry key="..\:/Users/pavnv/OneDrive/Desktop/android_studio_projects/Quicktools/app/src/main/res/layout/file_explorer_tab_fragment_file_item.xml" value="0.25" />
         <entry key="..\:/Users/pavnv/OneDrive/Desktop/android_studio_projects/Quicktools/app/src/main/res/layout/file_explorer_tab_info_dialog.xml" value="0.25" />
+        <entry key="..\:/Users/pavnv/OneDrive/Desktop/android_studio_projects/Quicktools/app/src/main/res/layout/file_explorer_tab_info_dialog_item.xml" value="0.25" />
         <entry key="..\:/Users/pavnv/OneDrive/Desktop/android_studio_projects/Quicktools/app/src/main/res/layout/file_explorer_tab_path_root_view.xml" value="0.18703703703703703" />
+        <entry key="..\:/Users/pavnv/OneDrive/Desktop/android_studio_projects/Quicktools/app/src/main/res/layout/file_explorer_tab_placeholder.xml" value="0.25" />
         <entry key="..\:/Users/pavnv/OneDrive/Desktop/android_studio_projects/Quicktools/app/src/main/res/layout/file_explorer_tab_task_dialog.xml" value="0.25" />
+        <entry key="..\:/Users/pavnv/OneDrive/Desktop/android_studio_projects/Quicktools/app/src/main/res/layout/file_explorer_tab_task_dialog_item.xml" value="0.25" />
         <entry key="..\:/Users/pavnv/OneDrive/Desktop/android_studio_projects/Quicktools/app/src/main/res/layout/file_info_dialog_item.xml" value="0.25" />
         <entry key="..\:/Users/pavnv/OneDrive/Desktop/android_studio_projects/Quicktools/app/src/main/res/layout/file_info_dialog_layout.xml" value="0.25" />
         <entry key="..\:/Users/pavnv/OneDrive/Desktop/android_studio_projects/Quicktools/app/src/main/res/layout/input.xml" value="0.25" />
@@ -104,6 +107,7 @@
         <entry key="..\:/Users/pavnv/OneDrive/Desktop/android_studio_projects/Quicktools/app/src/main/res/layout/path_tree_view.xml" value="0.25" />
         <entry key="..\:/Users/pavnv/OneDrive/Desktop/android_studio_projects/Quicktools/app/src/main/res/layout/progress_view.xml" value="0.25" />
         <entry key="..\:/Users/pavnv/OneDrive/Desktop/android_studio_projects/Quicktools/app/src/main/res/layout/q_dialog_fragment_layout.xml" value="0.25" />
+        <entry key="..\:/Users/pavnv/OneDrive/Desktop/android_studio_projects/Quicktools/app/src/main/res/layout/search_fragment.xml" value="0.25" />
         <entry key="..\:/Users/pavnv/OneDrive/Desktop/android_studio_projects/Quicktools/app/src/main/res/layout/search_fragment_layout.xml" value="0.25" />
         <entry key="..\:/Users/pavnv/OneDrive/Desktop/android_studio_projects/Quicktools/app/src/main/res/layout/text_editor_activity.xml" value="0.10989583333333333" />
         <entry key="..\:/Users/pavnv/OneDrive/Desktop/android_studio_projects/Quicktools/app/src/main/res/layout/text_editor_activity_layout.xml" value="0.1638888888888889" />

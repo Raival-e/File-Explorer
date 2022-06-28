@@ -21,20 +21,13 @@
             android:gravity="center"
             android:padding="8dp">
 
-            <com.google.android.material.card.MaterialCardView
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/file_icon"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
-                app:cardCornerRadius="16dp"
                 android:layout_marginStart="4dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="0dp">
-
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/file_icon"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="fitXY" />
-            </com.google.android.material.card.MaterialCardView>
+                android:scaleType="fitXY"
+                app:shapeAppearanceOverlay="@style/circleImageView" />
         </LinearLayout>
 
 

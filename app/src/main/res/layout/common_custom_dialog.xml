@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:padding="12dp">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/dialog_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/dialog_msg"
                 android:textIsSelectable="true"
                 android:layout_width="match_parent"

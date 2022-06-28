@@ -17,34 +17,30 @@
            android:layout_height="wrap_content"
            android:gravity="center"
            android:padding="8dp">
-           <com.google.android.material.card.MaterialCardView
+
+           <com.google.android.material.imageview.ShapeableImageView
+               android:id="@+id/file_icon"
                android:layout_width="36dp"
                android:layout_height="36dp"
-               app:cardCornerRadius="16dp"
-               app:strokeWidth="0dp"
                android:layout_marginStart="4dp"
-               app:cardElevation="0dp">
-               <ImageView
-                   android:id="@+id/file_icon"
-                   android:layout_width="match_parent"
-                   android:layout_height="match_parent"
-                   android:src="@drawable/folder_icon"
-                   android:scaleType="fitXY"/>
-           </com.google.android.material.card.MaterialCardView>
+               android:src="@drawable/folder_icon"
+               android:scaleType="fitXY"
+               app:shapeAppearanceOverlay="@style/circleImageView" />
        </LinearLayout>
        <LinearLayout
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
            android:orientation="vertical"
            android:padding="8dp">
-           <TextView
+
+           <com.google.android.material.textview.MaterialTextView
                android:id="@+id/file_name"
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:paddingEnd="8dp"
                android:text="file name"
                android:maxLines="1"
-               android:textSize="16sp"/>
+               android:textSize="16sp" />
        </LinearLayout>
    </LinearLayout>
 
