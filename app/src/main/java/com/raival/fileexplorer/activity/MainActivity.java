@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends BaseActivity {
-    private final boolean confirmExit = false;
+    private boolean confirmExit = false;
     private TabView tabView;
     private FragmentContainerView fragmentContainerView;
     private MaterialToolbar toolbar;
@@ -229,6 +229,12 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         if (getActiveFragment().onBackPressed()) {
+            return;
+        }
+        if (!confirmExit) {
+            confirmExit = true;
+            App.showMsg("Press again to exit");
+            App.appHandler.postDelayed(() -> confirmExit = false, 2000);
             return;
         }
         super.onBackPressed();
