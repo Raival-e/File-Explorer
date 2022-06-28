@@ -29,7 +29,7 @@
                 app:cardElevation="0dp"
                 app:strokeWidth="0dp">
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/file_icon"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -44,16 +44,16 @@
             android:orientation="vertical"
             android:padding="8dp">
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/file_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingEnd="8dp"
                 android:text="loading..."
-                android:maxLines="1"
+                android:singleLine="true"
                 android:textSize="14sp" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/file_details"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

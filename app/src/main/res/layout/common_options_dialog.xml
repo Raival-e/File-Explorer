@@ -9,11 +9,10 @@
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginLeft="8dp"
         android:padding="8dp"
-        android:maxLines="1"
         android:text="This is Title"
         android:textSize="16sp"
         android:textStyle="bold" />
