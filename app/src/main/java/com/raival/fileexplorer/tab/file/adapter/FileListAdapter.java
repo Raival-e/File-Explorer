@@ -19,6 +19,8 @@ import com.raival.fileexplorer.tab.file.observer.FileListObserver;
 import com.raival.fileexplorer.util.FileExtensions;
 import com.raival.fileexplorer.util.FileUtils;
 
+import java.io.File;
+
 public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHolder> {
     private final FileExplorerTabFragment parentFragment;
     private ColorDrawable selectedFileDrawable;
@@ -56,6 +58,8 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
         View background;
         View divider;
 
+        File prevFile;
+
         public ViewHolder(View v) {
             super(v);
             name = v.findViewById(R.id.file_name);
@@ -73,7 +77,13 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
             final FileItem fileItem = parentFragment.getFiles().get(position);
 
             if (!FileUtils.getFileExtension(fileItem.file).equalsIgnoreCase(FileExtensions.apkType)) {
-                FileUtils.setFileIcon(icon, fileItem.file);
+                if (prevFile == null) {
+                    FileUtils.setFileIcon(icon, fileItem.file);
+                } else if (!fileItem.file.isDirectory()) {
+                    FileUtils.setFileIcon(icon, fileItem.file);
+                } else if (!prevFile.isDirectory()) {
+                    FileUtils.setFileIcon(icon, fileItem.file);
+                }
             } else {
                 fileItem.img.observe(parentFragment, (drawable -> icon.setImageDrawable(drawable)));
             }
@@ -147,6 +157,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
             itemView.findViewById(R.id.icon_container).setOnLongClickListener(longClickListener);
             background.setOnLongClickListener(longClickListener);
 
+            prevFile = fileItem.file;
         }
     }
 }

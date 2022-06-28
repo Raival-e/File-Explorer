@@ -206,7 +206,7 @@ public class FileUtils {
         }
         if (isImageFile(file)) {
             Glide.with(App.appContext)
-                    .applyDefaultRequestOptions(new RequestOptions().override(65).encodeQuality(30))
+                    .applyDefaultRequestOptions(new RequestOptions().override(100).encodeQuality(80))
                     .load(file)
                     .error(R.drawable.unknown_file)
                     .into(icon);
