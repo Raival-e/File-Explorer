@@ -32,9 +32,7 @@ Using this features, the possibilities are endless, and you can create any exten
 # Screenshots
 
 <div style="overflow: hidden">
-<img src="/assets/screenshot1.png" width="80%" />
-<img src="/assets/screenshot2.png" width="80%" />
-<img src="/assets/screenshot3.png" width="80%" />
+<img src="/assets/screenshot1.png" width="32%" /> <img src="/assets/screenshot2.png" width="32%" /> <img src="/assets/screenshot3.png" width="32%" />
 </div>
 
 
