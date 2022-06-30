@@ -53,6 +53,8 @@ public class FileExplorerTabFragment extends BaseTabFragment {
     private File previousDirectory;
     private File currentDirectory;
 
+    private boolean requireRefresh = false;
+
     private IconResolver iconResolver;
     private Thread iconResolverThread;
 
@@ -247,9 +249,24 @@ public class FileExplorerTabFragment extends BaseTabFragment {
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        requireRefresh = true;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        requireRefresh = true;
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
-        refresh();
+        if (requireRefresh) {
+            requireRefresh = false;
+            refresh();
+        }
     }
 
     public void setSelectAll(boolean select) {
@@ -355,10 +372,6 @@ public class FileExplorerTabFragment extends BaseTabFragment {
     }
 
     private void prepareFiles() {
-        if (iconResolverThread != null) {
-            iconResolverThread.interrupt();
-            iconResolverThread = null;
-        }
         // Make sure current file is ready
         if (getCurrentDirectory() == null) {
             loadData();
@@ -479,7 +492,6 @@ public class FileExplorerTabFragment extends BaseTabFragment {
 
     private class IconResolver {
         public boolean isWorking = false;
-
         public IconResolver start() {
             isWorking = true;
             AtomicInteger i = new AtomicInteger();
