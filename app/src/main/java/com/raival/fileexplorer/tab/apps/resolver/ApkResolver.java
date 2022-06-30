@@ -13,13 +13,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ApkResolver {
-    ArrayList<Apk> list = new ArrayList<>();
+    private final ArrayList<Apk> list = new ArrayList<>();
+    private boolean sortApps;
 
     public ApkResolver() {
     }
 
-    public ApkResolver load(boolean system, boolean withDrawable) {
+    public ApkResolver load(boolean showSystemApps, boolean sortNewerFirst) {
         list.clear();
+        sortApps = sortNewerFirst;
 
         final PackageManager pm = App.appContext.getPackageManager();
 
@@ -44,14 +46,14 @@ public class ApkResolver {
                 pkgInfo = null;
             }
             boolean isSystemApp = isAppInSystemPartition(info) || isSignedBySystem(pkgInfo, androidInfo);
-            if (isSystemApp && !system) continue;
+            if (isSystemApp && !showSystemApps) continue;
 
             Apk apk = new Apk();
             apk.pkg = info.packageName;
             apk.name = pm.getApplicationLabel(info).toString();
             apk.source = new File(info.publicSourceDir);
             apk.lastModified = apk.source.lastModified();
-            if (withDrawable) apk.icon = info.loadIcon(pm);
+            apk.icon = info.loadIcon(pm);
             apk.size = FileUtils.getFormattedFileSize(new File(info.publicSourceDir));
             list.add(apk);
         }
@@ -59,7 +61,7 @@ public class ApkResolver {
     }
 
     public ArrayList<Apk> get() {
-        list.sort((apk1, apk2) -> Long.compare(apk2.lastModified, apk1.lastModified));
+        if (sortApps) list.sort((apk1, apk2) -> Long.compare(apk2.lastModified, apk1.lastModified));
         return list;
     }
 

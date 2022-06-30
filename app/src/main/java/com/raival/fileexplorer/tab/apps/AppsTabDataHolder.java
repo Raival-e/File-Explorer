@@ -18,16 +18,20 @@ public class AppsTabDataHolder extends BaseDataHolder {
         this.tag = tag;
     }
 
-    public LiveData<ArrayList<Apk>> getApps() {
+    public LiveData<ArrayList<Apk>> getApps(boolean showSystemApps, boolean sortNewerFirst) {
         if (apps.getValue() == null) {
-            loadApps();
+            loadApps(showSystemApps, sortNewerFirst);
         }
         return apps;
     }
 
-    private void loadApps() {
+    public void updateAppsList(boolean showSystemApps, boolean sortNewerFirst) {
+        loadApps(showSystemApps, sortNewerFirst);
+    }
+
+    private void loadApps(boolean showSystemApps, boolean sortNewerFirst) {
         new Thread(() -> {
-            ArrayList<Apk> apks = new ApkResolver().load(false, true).get();
+            ArrayList<Apk> apks = new ApkResolver().load(showSystemApps, sortNewerFirst).get();
             App.appHandler.post(() -> apps.setValue(apks));
         }).start();
     }
