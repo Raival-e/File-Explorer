@@ -1,9 +1,13 @@
 package com.raival.fileexplorer.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -14,6 +18,7 @@ import androidx.fragment.app.FragmentContainerView;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.raival.fileexplorer.App;
 import com.raival.fileexplorer.R;
 import com.raival.fileexplorer.activity.model.MainViewModel;
@@ -21,6 +26,8 @@ import com.raival.fileexplorer.common.view.BottomBarView;
 import com.raival.fileexplorer.common.view.TabView;
 import com.raival.fileexplorer.tab.BaseDataHolder;
 import com.raival.fileexplorer.tab.BaseTabFragment;
+import com.raival.fileexplorer.tab.apps.AppsTabDataHolder;
+import com.raival.fileexplorer.tab.apps.AppsTabFragment;
 import com.raival.fileexplorer.tab.checklist.ChecklistTabDataHolder;
 import com.raival.fileexplorer.tab.checklist.ChecklistTabFragment;
 import com.raival.fileexplorer.tab.file.FileExplorerTabDataHolder;
@@ -38,8 +45,13 @@ public class MainActivity extends BaseActivity {
     private FragmentContainerView fragmentContainerView;
     private MaterialToolbar toolbar;
     private BottomBarView bottomBarView;
-    private DrawerLayout drawerLayout;
     private MainViewModel mainViewModel;
+
+    private DrawerLayout drawer;
+    private LinearProgressIndicator drawer_storageSpaceProgress;
+    private TextView drawer_storageSpace;
+    private LinearProgressIndicator drawer_rootSpaceProgress;
+    private TextView drawer_rootSpace;
 
     /**
      * Called after read & write permissions are granted
@@ -83,6 +95,8 @@ public class MainActivity extends BaseActivity {
                 } else if (dataHolder instanceof ChecklistTabDataHolder) {
                     tabView.insertNewTabAt(i, dataHolder.getTag(), false)
                             .setName(FileUtils.getShortLabel(((ChecklistTabDataHolder) dataHolder).file, FileExplorerTabFragment.MAX_NAME_LENGTH));
+                } else if (dataHolder instanceof AppsTabDataHolder) {
+                    tabView.insertNewTabAt(i, dataHolder.getTag(), false).setName("Apps");
                 }
                 // handle other types of DataHolders here
             }
@@ -110,7 +124,7 @@ public class MainActivity extends BaseActivity {
         fragmentContainerView = findViewById(R.id.fragment_container);
         toolbar = findViewById(R.id.toolbar);
         bottomBarView = findViewById(R.id.bottom_bar_view);
-        drawerLayout = findViewById(R.id.drawer);
+        drawer = findViewById(R.id.drawer);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -118,8 +132,8 @@ public class MainActivity extends BaseActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_round_menu_24);
         toolbar.setNavigationOnClickListener(null);
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name, R.string.app_name);
-        drawerLayout.addDrawerListener(toggle);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.app_name, R.string.app_name);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         tabView.setOnUpdateTabViewListener((tab, event) -> {
@@ -136,6 +150,14 @@ public class MainActivity extends BaseActivity {
                     if (!getSupportFragmentManager().findFragmentById(R.id.fragment_container).getTag().equals(tab.tag)) {
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.fragment_container, new ChecklistTabFragment(), tab.tag)
+                                .setReorderingAllowed(true)
+                                .commit();
+                    }
+                }
+                if (tab.tag.startsWith("AppsTabFragment_")) {
+                    if (!getSupportFragmentManager().findFragmentById(R.id.fragment_container).getTag().equals(tab.tag)) {
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.fragment_container, new AppsTabFragment(), tab.tag)
                                 .setReorderingAllowed(true)
                                 .commit();
                     }
@@ -198,11 +220,56 @@ public class MainActivity extends BaseActivity {
     }
 
     private void setupDrawer() {
-        MaterialToolbar materialToolbar = findViewById(R.id.drawer_layout).findViewById(R.id.toolbar);
+        View drawerLayout = findViewById(R.id.drawer_layout);
+
+        drawer_storageSpaceProgress = drawerLayout.findViewById(R.id.storage_space_progress);
+        drawer_rootSpaceProgress = drawerLayout.findViewById(R.id.root_space_progress);
+        drawer_rootSpace = drawerLayout.findViewById(R.id.root_space);
+        drawer_storageSpace = drawerLayout.findViewById(R.id.storage_space);
+
+        drawerLayout.findViewById(R.id.apps).setOnClickListener((v -> {
+            addNewTab(new AppsTabFragment(), "AppsTabFragment_" + generateRandomTag());
+            drawer.close();
+        }));
+
+        MaterialToolbar materialToolbar = drawerLayout.findViewById(R.id.toolbar);
         materialToolbar.setTitle(R.string.app_name);
         materialToolbar.setSubtitle("https://github.com/Raival-e/File-Explorer");
         materialToolbar.getMenu().clear();
-        materialToolbar.getMenu().add("Settings").setIcon(R.drawable.ic_round_settings_24).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        materialToolbar.getMenu().add("Settings")
+                .setIcon(R.drawable.ic_round_settings_24)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+        updateStorageSpace();
+        updateRootSpace();
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void updateRootSpace() {
+        final long used = FileUtils.getUsedMemoryBytes(Environment.getRootDirectory());
+        final long total = FileUtils.getTotalMemoryBytes(Environment.getRootDirectory());
+        drawer_rootSpaceProgress.setProgress((int) ((double) used / (double) total * 100));
+
+        drawer_rootSpace.setText(
+                FileUtils.getFormattedSize(FileUtils.getUsedMemoryBytes(Environment.getRootDirectory()))
+                        + " used, "
+                        + FileUtils.getFormattedSize(FileUtils.getAvailableMemoryBytes(Environment.getRootDirectory()))
+                        + " available"
+        );
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void updateStorageSpace() {
+        final long used = FileUtils.getUsedMemoryBytes(Environment.getExternalStorageDirectory());
+        final long total = FileUtils.getTotalMemoryBytes(Environment.getExternalStorageDirectory());
+        drawer_rootSpaceProgress.setProgress((int) ((double) used / (double) total * 100));
+
+        drawer_storageSpace.setText(
+                FileUtils.getFormattedSize(FileUtils.getUsedMemoryBytes(Environment.getExternalStorageDirectory()))
+                        + " used, "
+                        + FileUtils.getFormattedSize(FileUtils.getAvailableMemoryBytes(Environment.getExternalStorageDirectory()))
+                        + " available"
+        );
     }
 
     private BaseTabFragment getActiveFragment() {
