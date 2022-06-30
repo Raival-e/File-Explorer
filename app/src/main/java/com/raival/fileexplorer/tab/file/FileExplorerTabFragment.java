@@ -1,5 +1,6 @@
 package com.raival.fileexplorer.tab.file;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -41,6 +42,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class FileExplorerTabFragment extends BaseTabFragment {
@@ -166,9 +168,9 @@ public class FileExplorerTabFragment extends BaseTabFragment {
     }
 
     private void showAddNewFileDialog() {
-        TextInputLayout input = (TextInputLayout) getLayoutInflater().inflate(R.layout.input, null, false);
+        @SuppressLint("InflateParams") TextInputLayout input = (TextInputLayout) getLayoutInflater().inflate(R.layout.input, null, false);
         input.setHint("File name");
-        input.getEditText().setSingleLine();
+        Objects.requireNonNull(input.getEditText()).setSingleLine();
         FileUtils.setFileValidator(input, getCurrentDirectory());
 
         new CustomDialog()
@@ -209,7 +211,7 @@ public class FileExplorerTabFragment extends BaseTabFragment {
     @Override
     public void closeTab() {
         // Close the tab (if not default tab)
-        if (!getTag().startsWith("0_")) {
+        if (getTag() != null && !getTag().startsWith("0_")) {
             super.closeTab();
         }
     }
@@ -233,7 +235,7 @@ public class FileExplorerTabFragment extends BaseTabFragment {
             return true;
         }
         // Close the tab (if not default tab)
-        if (!getTag().startsWith("0_")) {
+        if (getTag() != null && !getTag().startsWith("0_")) {
             closeTab();
             return true;
         }
@@ -269,6 +271,7 @@ public class FileExplorerTabFragment extends BaseTabFragment {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setSelectAll(boolean select) {
         if (!select) ((FileExplorerTabDataHolder) getDataHolder()).selectedFiles.clear();
 
@@ -279,7 +282,7 @@ public class FileExplorerTabFragment extends BaseTabFragment {
             }
         }
         // Don't call refresh(), because it will recreate the tab and reset the selection
-        fileList.getAdapter().notifyDataSetChanged();
+        Objects.requireNonNull(fileList.getAdapter()).notifyDataSetChanged();
     }
 
     public ArrayList<FileItem> getSelectedFiles() {
@@ -328,7 +331,7 @@ public class FileExplorerTabFragment extends BaseTabFragment {
         super.onDestroy();
         FileExplorerTabDataHolder fileExplorerTabDataHolder = (FileExplorerTabDataHolder) getMainViewModel().getDataHolder(getTag());
         if (fileExplorerTabDataHolder != null) {
-            fileExplorerTabDataHolder.recyclerViewStates.put(getCurrentDirectory(), fileList.getLayoutManager().onSaveInstanceState());
+            fileExplorerTabDataHolder.recyclerViewStates.put(getCurrentDirectory(), Objects.requireNonNull(fileList.getLayoutManager()).onSaveInstanceState());
         }
     }
 
@@ -342,7 +345,7 @@ public class FileExplorerTabFragment extends BaseTabFragment {
     public void restoreRecyclerViewState() {
         Parcelable savedState = ((FileExplorerTabDataHolder) getDataHolder()).recyclerViewStates.get(getCurrentDirectory());
         if (savedState != null) {
-            fileList.getLayoutManager().onRestoreInstanceState(savedState);
+            Objects.requireNonNull(fileList.getLayoutManager()).onRestoreInstanceState(savedState);
             ((FileExplorerTabDataHolder) getDataHolder()).recyclerViewStates.remove(getCurrentDirectory());
         }
     }
@@ -350,9 +353,10 @@ public class FileExplorerTabFragment extends BaseTabFragment {
     /**
      * Refreshes both fileList and pathRoot recyclerview (used by #setCurrentDirectory(File) ONLY)
      */
+    @SuppressLint("NotifyDataSetChanged")
     private void refreshFileList() {
-        fileList.getAdapter().notifyDataSetChanged();
-        pathRootRv.getAdapter().notifyDataSetChanged();
+        Objects.requireNonNull(fileList.getAdapter()).notifyDataSetChanged();
+        Objects.requireNonNull(pathRootRv.getAdapter()).notifyDataSetChanged();
         pathRootRv.scrollToPosition(pathRootRv.getAdapter().getItemCount() - 1);
         fileList.scrollToPosition(0);
         if (getToolbar() != null)
@@ -479,7 +483,7 @@ public class FileExplorerTabFragment extends BaseTabFragment {
         currentDirectory = dir;
         // Save only when previousDirectory is set (so that it can restore the state before onDestroy())
         if (previousDirectory != null) ((FileExplorerTabDataHolder) getDataHolder())
-                .recyclerViewStates.put(previousDirectory, fileList.getLayoutManager().onSaveInstanceState());
+                .recyclerViewStates.put(previousDirectory, Objects.requireNonNull(fileList.getLayoutManager()).onSaveInstanceState());
         prepareFiles();
         updateTabTitle();
         refreshFileList();
@@ -492,6 +496,7 @@ public class FileExplorerTabFragment extends BaseTabFragment {
 
     private class IconResolver {
         public boolean isWorking = false;
+
         public IconResolver start() {
             isWorking = true;
             AtomicInteger i = new AtomicInteger();

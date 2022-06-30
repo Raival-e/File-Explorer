@@ -17,10 +17,6 @@ public class ExtractTask extends Task {
         this.filesToExtract = filesToExtract;
     }
 
-    public ArrayList<File> getFilesToExtract() {
-        return filesToExtract;
-    }
-
     @Override
     public String getName() {
         return "Extract";

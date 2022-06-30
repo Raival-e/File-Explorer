@@ -50,8 +50,9 @@ import io.github.rosemoe.sora.widget.SymbolPairMatch;
  */
 public class JavaLanguage implements Language {
 
+    private final NewlineHandler[] newlineHandlers = new NewlineHandler[]{new BraceHandler()};
     private IdentifierAutoComplete autoComplete;
-    private JavaIncrementalAnalyzeManager manager;
+    private final JavaIncrementalAnalyzeManager manager;
 
     public JavaLanguage() {
         autoComplete = new IdentifierAutoComplete(JavaTextTokenizer.sKeywords);
@@ -102,8 +103,6 @@ public class JavaLanguage implements Language {
         advance = Math.max(0, advance);
         return advance * 4;
     }
-
-    private final NewlineHandler[] newlineHandlers = new NewlineHandler[]{new BraceHandler()};
 
     @Override
     public boolean useTab() {

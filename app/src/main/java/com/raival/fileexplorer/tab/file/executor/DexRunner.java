@@ -23,6 +23,7 @@ public class DexRunner {
         this.activity = activity;
         this.directory = dexFile.getParentFile();
 
+        assert directory != null;
         final File[] files = directory.listFiles();
         final String prefix = dexFile.getName().substring(0, dexFile.getName().indexOf(".exe.dex"));
         if (files != null) {
@@ -42,7 +43,7 @@ public class DexRunner {
                 optimizedDir,
                 null,
                 App.appContext.getClassLoader());
-        Class<?> clazz = null;
+        Class<?> clazz;
         try {
             clazz = dexClassLoader.loadClass("com.main.Main");
         } catch (ClassNotFoundException e) {

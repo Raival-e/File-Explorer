@@ -23,8 +23,8 @@ import java.io.File;
 
 public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHolder> {
     private final FileExplorerTabFragment parentFragment;
-    private ColorDrawable selectedFileDrawable;
-    private ColorDrawable highlightedFileDrawable;
+    private final ColorDrawable selectedFileDrawable;
+    private final ColorDrawable highlightedFileDrawable;
 
     public FileListAdapter(FileExplorerTabFragment parentFragment) {
         this.parentFragment = parentFragment;

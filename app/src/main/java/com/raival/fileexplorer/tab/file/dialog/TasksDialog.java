@@ -1,5 +1,6 @@
 package com.raival.fileexplorer.tab.file.dialog;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -95,6 +96,7 @@ public class TasksDialog extends BottomSheetDialogFragment {
         container.addView(v);
     }
 
+    @SuppressLint("SetTextI18n")
     private void run(Task task) {
         dismiss();
 
@@ -117,6 +119,7 @@ public class TasksDialog extends BottomSheetDialogFragment {
         });
     }
 
+    @SuppressLint("InflateParams")
     private View getProgressView() {
         return requireActivity().getLayoutInflater().inflate(R.layout.progress_view, null);
     }

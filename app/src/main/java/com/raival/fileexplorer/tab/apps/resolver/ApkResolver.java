@@ -1,5 +1,6 @@
 package com.raival.fileexplorer.tab.apps.resolver;
 
+import android.annotation.SuppressLint;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -19,6 +20,13 @@ public class ApkResolver {
     public ApkResolver() {
     }
 
+    public static boolean isAppInSystemPartition(ApplicationInfo applicationInfo) {
+        return ((applicationInfo.flags
+                & (ApplicationInfo.FLAG_SYSTEM | ApplicationInfo.FLAG_UPDATED_SYSTEM_APP))
+                != 0);
+    }
+
+    @SuppressLint("PackageManagerGetSignatures")
     public ApkResolver load(boolean showSystemApps, boolean sortNewerFirst) {
         list.clear();
         sortApps = sortNewerFirst;
@@ -63,12 +71,6 @@ public class ApkResolver {
     public ArrayList<Apk> get() {
         if (sortApps) list.sort((apk1, apk2) -> Long.compare(apk2.lastModified, apk1.lastModified));
         return list;
-    }
-
-    public static boolean isAppInSystemPartition(ApplicationInfo applicationInfo) {
-        return ((applicationInfo.flags
-                & (ApplicationInfo.FLAG_SYSTEM | ApplicationInfo.FLAG_UPDATED_SYSTEM_APP))
-                != 0);
     }
 
     public boolean isSignedBySystem(PackageInfo piApp, PackageInfo piSys) {

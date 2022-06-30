@@ -24,10 +24,6 @@ public class Jar2DexTask extends Task {
         this.fileToConvert = file;
     }
 
-    public File getFileToConvert() {
-        return fileToConvert;
-    }
-
     @Override
     public String getName() {
         return "Jar2Dex";

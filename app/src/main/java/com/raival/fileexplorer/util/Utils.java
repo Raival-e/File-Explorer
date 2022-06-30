@@ -27,7 +27,7 @@ public class Utils {
     }
 
     @SuppressLint("SimpleDateFormat")
-    public static String getLastModifiedDate(File file, String dateFormat) {
+    public static String getLastModifiedDate(File file) {
         return new SimpleDateFormat(REGULAR_DATE_FORMAT).format(file.lastModified());
     }
 

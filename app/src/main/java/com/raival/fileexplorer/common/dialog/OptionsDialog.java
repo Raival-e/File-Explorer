@@ -86,7 +86,7 @@ public class OptionsDialog extends BottomSheetDialogFragment {
         return super.onCreateDialog(savedInstanceState);
     }
 
-    private class OptionHolder {
+    private static class OptionHolder {
         String label;
         int res;
         View.OnClickListener listener;

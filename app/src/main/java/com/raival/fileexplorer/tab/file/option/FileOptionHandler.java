@@ -1,5 +1,6 @@
 package com.raival.fileexplorer.tab.file.option;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
@@ -33,6 +34,7 @@ import com.raival.fileexplorer.util.FileUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class FileOptionHandler {
@@ -50,7 +52,7 @@ public class FileOptionHandler {
         }
         if (!fileItem.isSelected) selectedFiles.add(fileItem.file);
 
-        String title = "";
+        String title;
         if (selectedFiles.size() == 1) {
             title = fileItem.file.getName();
         } else {
@@ -65,9 +67,7 @@ public class FileOptionHandler {
         if (FileUtils.isSingleFile(selectedFiles)) {
             if (selectedFiles.get(0).getName().toLowerCase().endsWith(".java")
                     || selectedFiles.get(0).getName().toLowerCase().endsWith(".kt")) {
-                bottomDialog.addOption("Execute", R.drawable.ic_round_code_24, view1 -> {
-                    exeJava(selectedFiles.get(0).getParentFile());
-                }, true);
+                bottomDialog.addOption("Execute", R.drawable.ic_round_code_24, view1 -> exeJava(selectedFiles.get(0).getParentFile()), true);
             }
         }
 
@@ -107,19 +107,13 @@ public class FileOptionHandler {
         }, true);
 
         if (selectedFiles.size() == 1) {
-            bottomDialog.addOption("Rename", R.drawable.ic_round_edit_24, view1 -> {
-                showRenameDialog(selectedFiles);
-            }, true);
+            bottomDialog.addOption("Rename", R.drawable.ic_round_edit_24, view1 -> showRenameDialog(selectedFiles), true);
         }
 
-        bottomDialog.addOption("Delete", R.drawable.ic_round_delete_forever_24, view1 -> {
-            confirmDeletion(selectedFiles);
-        }, true);
+        bottomDialog.addOption("Delete", R.drawable.ic_round_delete_forever_24, view1 -> confirmDeletion(selectedFiles), true);
 
         if (FileUtils.isSingleFile(selectedFiles)) {
-            bottomDialog.addOption("Edit with code editor", R.drawable.ic_round_edit_note_24, view1 -> {
-                openWithTextEditor(selectedFiles.get(0));
-            }, true);
+            bottomDialog.addOption("Edit with code editor", R.drawable.ic_round_edit_note_24, view1 -> openWithTextEditor(selectedFiles.get(0)), true);
         }
 
         if (FileUtils.isArchiveFiles(selectedFiles)) {
@@ -130,30 +124,22 @@ public class FileOptionHandler {
             }, true);
         }
 
-        bottomDialog.addOption("Compress", R.drawable.ic_round_compress_24, view1 -> {
-            compressFiles(new CompressTask(selectedFiles));
-        }, true);
+        bottomDialog.addOption("Compress", R.drawable.ic_round_compress_24, view1 -> compressFiles(new CompressTask(selectedFiles)), true);
 
         if (FileUtils.isSingleFile(selectedFiles)) {
             if (FileUtils.getFileExtension(selectedFiles.get(0)).equalsIgnoreCase("jar")) {
-                bottomDialog.addOption("Jar2Dex", R.drawable.ic_round_code_24, view1 -> {
-                    jar2Dex(new Jar2DexTask(selectedFiles.get(0)));
-                }, true);
+                bottomDialog.addOption("Jar2Dex", R.drawable.ic_round_code_24, view1 -> jar2Dex(new Jar2DexTask(selectedFiles.get(0))), true);
             }
         }
 
         if (FileUtils.isSingleFile(selectedFiles)) {
             if (FileUtils.getFileExtension(selectedFiles.get(0)).equalsIgnoreCase("apk")) {
-                bottomDialog.addOption("Sign with test key", R.drawable.ic_round_key_24, view1 -> {
-                    signApkWithTestKey(new APKSignerTask(selectedFiles.get(0)));
-                }, true);
+                bottomDialog.addOption("Sign with test key", R.drawable.ic_round_key_24, view1 -> signApkWithTestKey(new APKSignerTask(selectedFiles.get(0))), true);
             }
         }
 
         if (selectedFiles.size() == 1) {
-            bottomDialog.addOption("Details", R.drawable.ic_baseline_info_24, view1 -> {
-                showFileInfoDialog(selectedFiles.get(0));
-            }, true);
+            bottomDialog.addOption("Details", R.drawable.ic_baseline_info_24, view1 -> showFileInfoDialog(selectedFiles.get(0)), true);
         }
 
         bottomDialog.addOption("Search", R.drawable.ic_round_manage_search_24, view1 -> {
@@ -163,6 +149,7 @@ public class FileOptionHandler {
         }, true);
     }
 
+    @SuppressLint("SetTextI18n")
     private void jar2Dex(Jar2DexTask task) {
         if (task.isValid()) {
             task.setActiveDirectory(parentFragment.getCurrentDirectory());
@@ -183,10 +170,11 @@ public class FileOptionHandler {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private void compressFiles(CompressTask task) {
-        TextInputLayout input = (TextInputLayout) parentFragment.requireActivity().getLayoutInflater().inflate(R.layout.input, null, false);
+        @SuppressLint("InflateParams") TextInputLayout input = (TextInputLayout) parentFragment.requireActivity().getLayoutInflater().inflate(R.layout.input, null, false);
         input.setHint("Archive name");
-        input.getEditText().setText(".zip");
+        Objects.requireNonNull(input.getEditText()).setText(".zip");
         FileUtils.setFileValidator(input, parentFragment.getCurrentDirectory());
 
         new CustomDialog()
@@ -240,6 +228,7 @@ public class FileOptionHandler {
         new FileInfoDialog(file).setUseDefaultFileInfo(true).show(parentFragment.getParentFragmentManager(), "");
     }
 
+    @SuppressLint("SetTextI18n")
     private void signApkWithTestKey(APKSignerTask task) {
         if (task.isValid()) {
             task.setActiveDirectory(parentFragment.getCurrentDirectory());
@@ -260,6 +249,7 @@ public class FileOptionHandler {
         }
     }
 
+    @SuppressLint("InflateParams")
     private View getProgressView() {
         return parentFragment.requireActivity().getLayoutInflater().inflate(R.layout.progress_view, null);
     }
@@ -275,9 +265,7 @@ public class FileOptionHandler {
 
         AtomicReference<String> error = new AtomicReference<>("");
 
-        backgroundTask.setTasks(() -> {
-            backgroundTask.showProgressDialog("compiling files...", parentFragment.requireActivity());
-        }, () -> {
+        backgroundTask.setTasks(() -> backgroundTask.showProgressDialog("compiling files...", parentFragment.requireActivity()), () -> {
             try {
                 executor.execute();
             } catch (Exception exception) {
@@ -304,9 +292,9 @@ public class FileOptionHandler {
     }
 
     private void showRenameDialog(ArrayList<File> selectedFiles) {
-        TextInputLayout input = (TextInputLayout) parentFragment.getLayoutInflater().inflate(R.layout.input, null, false);
+        @SuppressLint("InflateParams") TextInputLayout input = (TextInputLayout) parentFragment.getLayoutInflater().inflate(R.layout.input, null, false);
         input.setHint("File name");
-        input.getEditText().setText(selectedFiles.get(0).getName());
+        Objects.requireNonNull(input.getEditText()).setText(selectedFiles.get(0).getName());
         input.getEditText().setSingleLine();
         FileUtils.setFileValidator(input, selectedFiles.get(0), selectedFiles.get(0).getParentFile());
 
@@ -340,9 +328,7 @@ public class FileOptionHandler {
     private void doDelete(ArrayList<File> selectedFiles) {
         parentFragment.setSelectAll(false);
         BackgroundTask backgroundTask = new BackgroundTask();
-        backgroundTask.setTasks(() -> {
-            backgroundTask.showProgressDialog("Deleting files...", parentFragment.requireActivity());
-        }, () -> {
+        backgroundTask.setTasks(() -> backgroundTask.showProgressDialog("Deleting files...", parentFragment.requireActivity()), () -> {
             try {
                 FileUtils.deleteFiles(selectedFiles);
             } catch (Exception e) {

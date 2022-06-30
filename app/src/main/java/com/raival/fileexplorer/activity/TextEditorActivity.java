@@ -32,6 +32,7 @@ import org.eclipse.tm4e.core.internal.theme.reader.ThemeReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.github.rosemoe.sora.lang.EmptyLanguage;
@@ -97,7 +98,7 @@ public class TextEditorActivity extends BaseActivity {
 
         materialToolbar.setTitle(editorViewModel.file.getName());
         setSupportActionBar(materialToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         materialToolbar.setNavigationOnClickListener(view -> onBackPressed());
 
@@ -183,7 +184,7 @@ public class TextEditorActivity extends BaseActivity {
         TextInputLayout replaceInput = searchPanel.findViewById(R.id.replace_input);
         replaceInput.setHint("Replacement");
 
-        findInput.getEditText().addTextChangedListener(new TextWatcher() {
+        Objects.requireNonNull(findInput.getEditText()).addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
@@ -212,11 +213,11 @@ public class TextEditorActivity extends BaseActivity {
 
         searchPanel.findViewById(R.id.replace).setOnClickListener(view -> {
             if (editor.getSearcher().hasQuery())
-                editor.getSearcher().replaceThis(replaceInput.getEditText().getText().toString());
+                editor.getSearcher().replaceThis(Objects.requireNonNull(replaceInput.getEditText()).getText().toString());
         });
         searchPanel.findViewById(R.id.replace_all).setOnClickListener(view -> {
             if (editor.getSearcher().hasQuery())
-                editor.getSearcher().replaceAll(replaceInput.getEditText().getText().toString());
+                editor.getSearcher().replaceAll(Objects.requireNonNull(replaceInput.getEditText()).getText().toString());
         });
 
     }
@@ -447,7 +448,7 @@ public class TextEditorActivity extends BaseActivity {
 
 
     private void executeFile() {
-        Executor executor = new Executor(editorViewModel.file.getParentFile(), this);
+        Executor executor = new Executor(Objects.requireNonNull(editorViewModel.file.getParentFile()), this);
         BackgroundTask backgroundTask = new BackgroundTask();
 
         AtomicReference<String> error = new AtomicReference<>("");

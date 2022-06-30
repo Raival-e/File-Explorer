@@ -1,5 +1,6 @@
 package com.raival.fileexplorer.tab.file.adapter;
 
+import android.annotation.SuppressLint;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -26,7 +27,7 @@ public class PathRootAdapter extends RecyclerView.Adapter<PathRootAdapter.ViewHo
     @NonNull
     @Override
     public PathRootAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = parentFragment.requireActivity().getLayoutInflater().inflate(R.layout.file_explorer_tab_path_root_view, null);
+        @SuppressLint("InflateParams") View v = parentFragment.requireActivity().getLayoutInflater().inflate(R.layout.file_explorer_tab_path_root_view, null);
         v.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
         return new ViewHolder(v);
     }

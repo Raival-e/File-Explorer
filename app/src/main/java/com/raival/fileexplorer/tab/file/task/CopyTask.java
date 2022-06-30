@@ -17,10 +17,6 @@ public class CopyTask extends Task {
         this.filesToCopy = filesToCopy;
     }
 
-    public ArrayList<File> getFilesToCopy() {
-        return filesToCopy;
-    }
-
     @Override
     public String getName() {
         return "Copy";
@@ -64,15 +60,13 @@ public class CopyTask extends Task {
                 for (File file : filesToCopy) {
                     try {
                         int finalProgress = progress;
-                        new Handler(Looper.getMainLooper()).post(() -> {
-                            onUpdateListener.onUpdate("["
-                                    + finalProgress
-                                    + "/"
-                                    + filesToCopy.size()
-                                    + "]"
-                                    + "Copying "
-                                    + file.getName());
-                        });
+                        new Handler(Looper.getMainLooper()).post(() -> onUpdateListener.onUpdate("["
+                                + finalProgress
+                                + "/"
+                                + filesToCopy.size()
+                                + "]"
+                                + "Copying "
+                                + file.getName()));
                         FileUtils.copy(file, activeDirectory, true);
                     } catch (Exception exception) {
                         error = true;

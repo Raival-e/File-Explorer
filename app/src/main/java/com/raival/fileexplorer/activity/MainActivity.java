@@ -38,6 +38,7 @@ import com.raival.fileexplorer.util.TextUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MainActivity extends BaseActivity {
     private boolean confirmExit = false;
@@ -127,7 +128,7 @@ public class MainActivity extends BaseActivity {
         drawer = findViewById(R.id.drawer);
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_round_menu_24);
         toolbar.setNavigationOnClickListener(null);
@@ -139,7 +140,7 @@ public class MainActivity extends BaseActivity {
         tabView.setOnUpdateTabViewListener((tab, event) -> {
             if (event == TabView.ON_SELECT) {
                 if (tab.tag.startsWith("FileExplorerTabFragment_") || tab.tag.startsWith("0_FileExplorerTabFragment_")) {
-                    if (!getSupportFragmentManager().findFragmentById(R.id.fragment_container).getTag().equals(tab.tag)) {
+                    if (!Objects.equals(Objects.requireNonNull(getSupportFragmentManager().findFragmentById(R.id.fragment_container)).getTag(), tab.tag)) {
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.fragment_container, new FileExplorerTabFragment(), tab.tag)
                                 .setReorderingAllowed(true)
@@ -147,7 +148,7 @@ public class MainActivity extends BaseActivity {
                     }
                 }
                 if (tab.tag.startsWith("ChecklistTabFragment_")) {
-                    if (!getSupportFragmentManager().findFragmentById(R.id.fragment_container).getTag().equals(tab.tag)) {
+                    if (!Objects.equals(Objects.requireNonNull(getSupportFragmentManager().findFragmentById(R.id.fragment_container)).getTag(), tab.tag)) {
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.fragment_container, new ChecklistTabFragment(), tab.tag)
                                 .setReorderingAllowed(true)
@@ -155,7 +156,7 @@ public class MainActivity extends BaseActivity {
                     }
                 }
                 if (tab.tag.startsWith("AppsTabFragment_")) {
-                    if (!getSupportFragmentManager().findFragmentById(R.id.fragment_container).getTag().equals(tab.tag)) {
+                    if (!Objects.equals(Objects.requireNonNull(getSupportFragmentManager().findFragmentById(R.id.fragment_container)).getTag(), tab.tag)) {
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.fragment_container, new AppsTabFragment(), tab.tag)
                                 .setReorderingAllowed(true)
@@ -166,7 +167,7 @@ public class MainActivity extends BaseActivity {
             } else if (event == TabView.ON_LONG_CLICK) {
                 PopupMenu popupMenu = new PopupMenu(this, tab.view);
                 popupMenu.inflate(R.menu.tab_menu);
-                // Default tab is unclosable
+                // Default tab is un-closable
                 if (tab.tag.startsWith("0_")) {
                     popupMenu.getMenu().findItem(R.id.close).setVisible(false);
                     popupMenu.getMenu().findItem(R.id.close_all).setVisible(false);
@@ -202,7 +203,8 @@ public class MainActivity extends BaseActivity {
                                 closeTab(tag);
                             }
                         }
-                        if (!activeFragment.getTag().equals(tab.tag)) activeFragment.closeTab();
+                        if (!Objects.requireNonNull(activeFragment.getTag()).equals(tab.tag))
+                            activeFragment.closeTab();
                         return true;
                     }
                     return false;
@@ -211,9 +213,7 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        findViewById(R.id.tabs_options).setOnClickListener(view -> {
-            addNewTab(new FileExplorerTabFragment(), "FileExplorerTabFragment_" + generateRandomTag());
-        });
+        findViewById(R.id.tabs_options).setOnClickListener(view -> addNewTab(new FileExplorerTabFragment(), "FileExplorerTabFragment_" + generateRandomTag()));
 
         checkPermissions();
         setupDrawer();
@@ -262,7 +262,7 @@ public class MainActivity extends BaseActivity {
     private void updateStorageSpace() {
         final long used = FileUtils.getUsedMemoryBytes(Environment.getExternalStorageDirectory());
         final long total = FileUtils.getTotalMemoryBytes(Environment.getExternalStorageDirectory());
-        drawer_rootSpaceProgress.setProgress((int) ((double) used / (double) total * 100));
+        drawer_storageSpaceProgress.setProgress((int) ((double) used / (double) total * 100));
 
         drawer_storageSpace.setText(
                 FileUtils.getFormattedSize(FileUtils.getUsedMemoryBytes(Environment.getExternalStorageDirectory()))

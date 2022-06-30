@@ -18,10 +18,6 @@ public class APKSignerTask extends Task {
         this.fileToSign = file;
     }
 
-    public File getFileToSign() {
-        return fileToSign;
-    }
-
     @Override
     public String getName() {
         return "APK Signer";

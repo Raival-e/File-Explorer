@@ -26,13 +26,12 @@ public class BackgroundTask {
         this.postTask = postTask;
     }
 
-    public BackgroundTask run() {
+    public void run() {
         new Thread(() -> {
             new Handler(Looper.getMainLooper()).post(preTask);
             task.run();
             new Handler(Looper.getMainLooper()).post(postTask);
         }).start();
-        return this;
     }
 
     public void dismiss() {
@@ -49,7 +48,7 @@ public class BackgroundTask {
     }
 
     private View getProgressView(String msg, Activity activity) {
-        View v = activity.getLayoutInflater().inflate(R.layout.progress_view, null);
+        @SuppressLint("InflateParams") View v = activity.getLayoutInflater().inflate(R.layout.progress_view, null);
         ((TextView) v.findViewById(R.id.msg)).setText(msg);
         return v;
     }

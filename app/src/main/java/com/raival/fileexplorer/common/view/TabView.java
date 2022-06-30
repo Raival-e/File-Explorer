@@ -28,7 +28,6 @@ public class TabView extends HorizontalScrollView {
     public ArrayList<Tab> tabsArray = new ArrayList<>();
 
     private int textColor;
-    private int rippleColor;
     private int indicatorColor;
     private int textSize;
 
@@ -204,24 +203,6 @@ public class TabView extends HorizontalScrollView {
             if (tab.tag.equals(s)) return false;
         }
         return true;
-    }
-
-    /**
-     * Getter & Setter
-     **/
-    public void setTextColor(int c) {
-        textColor = c;
-        invalidate();
-    }
-
-    public void setRippleColor(int c) {
-        rippleColor = c;
-        invalidate();
-    }
-
-    public void setIndicatorColor(int c) {
-        indicatorColor = c;
-        invalidate();
     }
 
     public void setTextSize(int s) {

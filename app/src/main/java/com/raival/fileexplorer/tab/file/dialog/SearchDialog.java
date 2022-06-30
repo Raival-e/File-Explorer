@@ -28,6 +28,7 @@ import com.raival.fileexplorer.util.FileUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class SearchDialog extends BottomSheetDialogFragment {
@@ -67,7 +68,7 @@ public class SearchDialog extends BottomSheetDialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        Objects.requireNonNull(getDialog()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         return inflater.inflate(R.layout.search_fragment, container, false);
     }
 
@@ -76,7 +77,7 @@ public class SearchDialog extends BottomSheetDialogFragment {
         return R.style.ThemeOverlay_Material3_BottomSheetDialog;
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "NotifyDataSetChanged"})
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -100,18 +101,18 @@ public class SearchDialog extends BottomSheetDialogFragment {
             if (active) {
                 searchButton.setText("Search");
                 progress.setVisibility(View.GONE);
-                recyclerView.getAdapter().notifyDataSetChanged();
+                Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
                 active = false;
                 setCancelable(true);
             } else {
                 setCancelable(false);
                 searchButton.setText("Stop");
                 ((FileExplorerTabDataHolder) tab.getDataHolder()).searchList.clear();
-                recyclerView.getAdapter().notifyDataSetChanged();
+                Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
                 progress.setVisibility(View.VISIBLE);
                 loseFocus(input);
                 active = true;
-                query = input.getEditText().getText().toString();
+                query = Objects.requireNonNull(input.getEditText()).getText().toString();
                 searchThread = new Thread(() -> {
                     for (File file : filesToSearchIn) {
                         searchIn(file, deepSearch.isChecked(), regEx.isChecked(), prefix.isChecked(), suffix.isChecked());
@@ -179,11 +180,12 @@ public class SearchDialog extends BottomSheetDialogFragment {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void addFileItem(File file) {
         ((FileExplorerTabDataHolder) tab.getDataHolder()).searchList.add(new FileItem(file));
         recyclerView.post(() -> {
             updateFileCount();
-            recyclerView.getAdapter().notifyDataSetChanged();
+            Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
         });
     }
 

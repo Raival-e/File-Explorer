@@ -1,5 +1,6 @@
 package com.raival.fileexplorer.tab.file.dialog;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,7 +65,7 @@ public class FileInfoDialog extends BottomSheetDialogFragment {
 
     private void addDefaultFolderInfo() {
         addItemView(new InfoHolder("Path:", file.getAbsolutePath(), true), container);
-        addItemView(new InfoHolder("Modified:", Utils.getLastModifiedDate(file, Utils.REGULAR_DATE_FORMAT), true), container);
+        addItemView(new InfoHolder("Modified:", Utils.getLastModifiedDate(file), true), container);
         addItemView(new InfoHolder("Content:", FileUtils.getFormattedFileCount(file), true), container);
         addItemView(new InfoHolder("Type:", file.isFile() ? "File" : "Folder", true), container);
         addItemView(new InfoHolder("Read:", file.canRead() ? "Yes" : "No", true), container);
@@ -80,7 +81,7 @@ public class FileInfoDialog extends BottomSheetDialogFragment {
     private void addDefaultFileInfo() {
         addItemView(new InfoHolder("Path:", file.getAbsolutePath(), true), container);
         addItemView(new InfoHolder("Extension:", FileUtils.getFileExtension(file), true), container);
-        addItemView(new InfoHolder("Modified:", Utils.getLastModifiedDate(file, Utils.REGULAR_DATE_FORMAT), true), container);
+        addItemView(new InfoHolder("Modified:", Utils.getLastModifiedDate(file), true), container);
         addItemView(new InfoHolder("Type:", file.isFile() ? "File" : "Folder", true), container);
         addItemView(new InfoHolder("Read:", file.canRead() ? "Yes" : "No", true), container);
         addItemView(new InfoHolder("Write:", file.canWrite() ? "Yes" : "No", true), container);
@@ -88,7 +89,7 @@ public class FileInfoDialog extends BottomSheetDialogFragment {
     }
 
     private TextView addItemView(InfoHolder holder, ViewGroup container) {
-        View view = getLayoutInflater().inflate(R.layout.file_explorer_tab_info_dialog_item, null, false);
+        @SuppressLint("InflateParams") View view = getLayoutInflater().inflate(R.layout.file_explorer_tab_info_dialog_item, null, false);
 
         ((TextView) view.findViewById(R.id.name)).setText(holder.name);
         TextView details = view.findViewById(R.id.details);

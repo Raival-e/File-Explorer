@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -21,7 +22,7 @@ public class D8Utils {
         if (check.exists()) {
             return check;
         }
-        unzipFromAssets(App.appContext, "build/lambda-stubs.zip", check.getParentFile().getAbsolutePath());
+        unzipFromAssets(App.appContext, "build/lambda-stubs.zip", Objects.requireNonNull(check.getParentFile()).getAbsolutePath());
         return check;
     }
 
@@ -30,7 +31,7 @@ public class D8Utils {
         if (check.exists()) {
             return check;
         }
-        unzipFromAssets(App.appContext, "build/rt.zip", check.getParentFile().getAbsolutePath());
+        unzipFromAssets(App.appContext, "build/rt.zip", Objects.requireNonNull(check.getParentFile()).getAbsolutePath());
         return check;
     }
 
@@ -61,7 +62,7 @@ public class D8Utils {
         byte[] buffer = new byte[BUFFER_SIZE];
         try {
             ZipInputStream zin = new ZipInputStream(stream);
-            ZipEntry ze = null;
+            ZipEntry ze;
 
             while ((ze = zin.getNextEntry()) != null) {
                 Log.v(TAG, "Unzipping " + ze.getName());
@@ -76,13 +77,13 @@ public class D8Utils {
                             Log.w(TAG, "Failed to create file " + f.getName());
                             continue;
                         }
-                        FileOutputStream fout = new FileOutputStream(f);
+                        FileOutputStream fileOutputStream = new FileOutputStream(f);
                         int count;
                         while ((count = zin.read(buffer)) != -1) {
-                            fout.write(buffer, 0, count);
+                            fileOutputStream.write(buffer, 0, count);
                         }
                         zin.closeEntry();
-                        fout.close();
+                        fileOutputStream.close();
                     }
                 }
 

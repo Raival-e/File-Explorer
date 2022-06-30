@@ -66,11 +66,11 @@ public class PrefsUtils {
         Prefs.putBoolean("text_editor_read_only", readOnly);
     }
 
-    public static void setTextEditorAutocomplete(boolean autocomplete) {
-        Prefs.putBoolean("text_editor_autocomplete", autocomplete);
-    }
-
     public static boolean getTextEditorAutocomplete() {
         return Prefs.getBoolean("text_editor_autocomplete", false);
+    }
+
+    public static void setTextEditorAutocomplete(boolean autocomplete) {
+        Prefs.putBoolean("text_editor_autocomplete", autocomplete);
     }
 }

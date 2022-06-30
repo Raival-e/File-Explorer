@@ -17,10 +17,6 @@ public class CompressTask extends Task {
         this.filesToCompress = filesToCompress;
     }
 
-    public ArrayList<File> getFilesToCompress() {
-        return filesToCompress;
-    }
-
     @Override
     public String getName() {
         return "Compress";

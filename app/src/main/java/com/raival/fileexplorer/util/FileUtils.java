@@ -66,7 +66,7 @@ public class FileUtils {
 
     public static String getFileDetails(File file) {
         final StringBuilder sb = new StringBuilder();
-        sb.append(Utils.getLastModifiedDate(file, Utils.REGULAR_DATE_FORMAT));
+        sb.append(Utils.getLastModifiedDate(file));
         sb.append("  |  ");
         if (file.isFile()) {
             sb.append(FileUtils.getFormattedFileSize(file));

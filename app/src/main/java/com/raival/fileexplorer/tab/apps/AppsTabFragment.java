@@ -1,5 +1,6 @@
 package com.raival.fileexplorer.tab.apps;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -61,6 +62,7 @@ public class AppsTabFragment extends BaseTabFragment {
         getTabView().setName("Apps");
     }
 
+    @SuppressLint("SetTextI18n")
     private void prepareBottomBarView() {
         getBottomBarView().clear();
 

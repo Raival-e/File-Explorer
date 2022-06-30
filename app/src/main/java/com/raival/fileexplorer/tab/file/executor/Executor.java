@@ -25,6 +25,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import dalvik.system.DexClassLoader;
 
@@ -35,13 +36,11 @@ public class Executor {
     private final ArrayList<File> jarFiles = new ArrayList<>();
     private File project;
     private File output;
-    private boolean isValidProject = false;
 
     private AppCompatActivity activity;
 
     public Executor(File folder, AppCompatActivity activity) {
         if (folder.isFile()) {
-            isValidProject = false;
             return;
         }
         this.activity = activity;
@@ -115,7 +114,7 @@ public class Executor {
 
     private String getDexFiles() {
         ArrayList<File> list = new ArrayList<>(dexFiles);
-        for (File file : output.listFiles()) {
+        for (File file : Objects.requireNonNull(output.listFiles())) {
             if (file.getName().endsWith(".dex"))
                 list.add(file);
         }
@@ -127,7 +126,7 @@ public class Executor {
         return stringBuilder.substring(1);
     }
 
-    private void runD8() throws Exception {
+    private void runD8() {
         ArrayList<String> opt = new ArrayList<>();
 
         opt.add("--intermediate");
@@ -136,7 +135,7 @@ public class Executor {
         opt.add("--output");
         opt.add(output.getAbsolutePath());
         ArrayList<String> classes = FileUtils.getAllFilesInDir(new File(output, "classes"), "class");
-        if (classes != null && classes.size() > 0)
+        if (classes.size() > 0)
             opt.addAll(classes);
 
         D8.main(opt.toArray(new String[0]));
@@ -149,9 +148,13 @@ public class Executor {
      */
     private void compileKotlin() throws Exception {
         final File ktHome = new File(output, "ktHome");
-        ktHome.mkdir();
+        if (ktHome.mkdir()) {
+            throw new Exception("Unable to create file: " + ktHome);
+        }
         final File classes = new File(output, "classes");
-        classes.mkdir();
+        if (!classes.mkdir()) {
+            throw new Exception("Unable to create file: " + classes);
+        }
 
         K2JVMCompiler k2JVMCompiler = new K2JVMCompiler();
         DiagnosticCollector messageCollector = new DiagnosticCollector();
@@ -179,7 +182,6 @@ public class Executor {
         compilerArguments.setNoStdlib(true);
         compilerArguments.setKotlinHome(ktHome.getAbsolutePath());
         compilerArguments.setDestination(classes.getAbsolutePath());
-        //compilerArguments.setPluginClasspaths();
 
         k2JVMCompiler.parseArguments(args.toArray(new String[0]), compilerArguments);
         k2JVMCompiler.exec(messageCollector, Services.EMPTY, compilerArguments);
@@ -195,7 +197,9 @@ public class Executor {
     private void runECJ() throws Exception {
         ArrayList<String> opt = new ArrayList<>();
         final File classes = new File(output, "classes");
-        classes.mkdir();
+        if (!classes.mkdir()) {
+            throw new Exception("Unable to create file: " + classes);
+        }
 
         opt.add("-11");
         opt.add("-nowarn");
@@ -259,7 +263,7 @@ public class Executor {
     }
 
     private void parseInputFolder(File input) {
-        for (File file : input.listFiles()) {
+        for (File file : Objects.requireNonNull(input.listFiles())) {
             if (file.getName().toLowerCase().endsWith(".dex")) {
                 dexFiles.add(file);
             } else if (file.getName().toLowerCase().endsWith(".jar")) {
@@ -279,7 +283,7 @@ public class Executor {
      * - https://github.com/Sketchware-Pro/Sketchware-Pro/tree/main/app/src/minApi26/java/mod/hey/studios/compiler/kotlin
      * - https://github.com/MikeAndrson/kotlinc-android
      */
-    private class DiagnosticCollector implements MessageCollector {
+    private static class DiagnosticCollector implements MessageCollector {
         private final ArrayList<Diagnostic> diagnostics = new ArrayList<>();
 
         @Override
@@ -329,7 +333,7 @@ public class Executor {
      * - https://github.com/Sketchware-Pro/Sketchware-Pro/tree/main/app/src/minApi26/java/mod/hey/studios/compiler/kotlin
      * - https://github.com/MikeAndrson/kotlinc-android
      */
-    private class Diagnostic {
+    private static class Diagnostic {
         public final CompilerMessageSeverity compilerMessageSeverity;
         public final String message;
         public final CompilerMessageSourceLocation compilerMessageSourceLocation;

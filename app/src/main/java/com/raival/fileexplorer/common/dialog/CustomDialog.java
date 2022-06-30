@@ -20,6 +20,7 @@ import com.google.android.material.imageview.ShapeableImageView;
 import com.raival.fileexplorer.R;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class CustomDialog extends BottomSheetDialogFragment {
     private final ArrayList<View> views = new ArrayList<>();
@@ -36,7 +37,7 @@ public class CustomDialog extends BottomSheetDialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        Objects.requireNonNull(getDialog()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         return inflater.inflate(R.layout.common_custom_dialog, container, true);
     }
 
@@ -112,9 +113,8 @@ public class CustomDialog extends BottomSheetDialogFragment {
         }
     }
 
-    public CustomDialog showDialog(@NonNull FragmentManager fragmentManager, String tag) {
+    public void showDialog(@NonNull FragmentManager fragmentManager, String tag) {
         super.show(fragmentManager, tag);
-        return this;
     }
 
     public String getTitle() {

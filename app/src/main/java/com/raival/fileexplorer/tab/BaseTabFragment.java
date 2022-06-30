@@ -12,6 +12,8 @@ import com.raival.fileexplorer.activity.model.MainViewModel;
 import com.raival.fileexplorer.common.view.BottomBarView;
 import com.raival.fileexplorer.common.view.TabView;
 
+import java.util.Objects;
+
 /**
  * Each TabFragment must handle the creation of its DataHolder and the related TabView using
  * the provided APIs or custom ones.
@@ -73,7 +75,7 @@ public abstract class BaseTabFragment extends Fragment {
 
     public void closeTab() {
         getMainViewModel().getDataHolders().removeIf(dataHolder1 -> dataHolder1.getTag().equals(getTag()));
-        ((MainActivity) requireActivity()).closeTab(getTag());
+        ((MainActivity) requireActivity()).closeTab(Objects.requireNonNull(getTag()));
     }
 
     @Override

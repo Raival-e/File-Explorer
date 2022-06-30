@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class AppsTabDataHolder extends BaseDataHolder {
     public final String tag;
-    private MutableLiveData<ArrayList<Apk>> apps = new MutableLiveData<>();
+    private final MutableLiveData<ArrayList<Apk>> apps = new MutableLiveData<>();
 
     public AppsTabDataHolder(String tag) {
         this.tag = tag;

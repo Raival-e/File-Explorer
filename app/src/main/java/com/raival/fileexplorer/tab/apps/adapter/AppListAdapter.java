@@ -49,32 +49,6 @@ public class AppListAdapter extends RecyclerView.Adapter<AppListAdapter.ViewHold
         return list.size();
     }
 
-    protected class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView icon;
-        TextView name;
-        TextView pkg;
-        TextView details;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            icon = itemView.findViewById(R.id.app_icon);
-            name = itemView.findViewById(R.id.app_name);
-            pkg = itemView.findViewById(R.id.app_pkg);
-            details = itemView.findViewById(R.id.app_details);
-        }
-
-        public void bind() {
-            final int position = getAdapterPosition();
-            final Apk apk = list.get(position);
-            name.setText(apk.name);
-            pkg.setText(apk.pkg);
-            details.setText(apk.size);
-            icon.setImageDrawable(apk.icon);
-
-            itemView.findViewById(R.id.background).setOnClickListener((v -> showSaveDialog(apk)));
-        }
-    }
-
     private void showSaveDialog(Apk file) {
         new CustomDialog()
                 .setIconDrawable(file.icon)
@@ -102,5 +76,31 @@ public class AppListAdapter extends RecyclerView.Adapter<AppListAdapter.ViewHold
             backgroundTask.dismiss();
         });
         backgroundTask.run();
+    }
+
+    protected class ViewHolder extends RecyclerView.ViewHolder {
+        ImageView icon;
+        TextView name;
+        TextView pkg;
+        TextView details;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            icon = itemView.findViewById(R.id.app_icon);
+            name = itemView.findViewById(R.id.app_name);
+            pkg = itemView.findViewById(R.id.app_pkg);
+            details = itemView.findViewById(R.id.app_details);
+        }
+
+        public void bind() {
+            final int position = getAdapterPosition();
+            final Apk apk = list.get(position);
+            name.setText(apk.name);
+            pkg.setText(apk.pkg);
+            details.setText(apk.size);
+            icon.setImageDrawable(apk.icon);
+
+            itemView.findViewById(R.id.background).setOnClickListener((v -> showSaveDialog(apk)));
+        }
     }
 }

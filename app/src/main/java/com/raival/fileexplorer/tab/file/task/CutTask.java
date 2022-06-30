@@ -17,10 +17,6 @@ public class CutTask extends Task {
         filesToCut = selectedFiles;
     }
 
-    public ArrayList<File> getFilesToCut() {
-        return filesToCut;
-    }
-
     @Override
     public String getName() {
         return "Cut";
@@ -64,15 +60,13 @@ public class CutTask extends Task {
                 for (File file : filesToCut) {
                     try {
                         int finalProgress = progress;
-                        new Handler(Looper.getMainLooper()).post(() -> {
-                            onUpdateListener.onUpdate("["
-                                    + finalProgress
-                                    + "/"
-                                    + filesToCut.size()
-                                    + "]"
-                                    + "Moving "
-                                    + file.getName());
-                        });
+                        new Handler(Looper.getMainLooper()).post(() -> onUpdateListener.onUpdate("["
+                                + finalProgress
+                                + "/"
+                                + filesToCut.size()
+                                + "]"
+                                + "Moving "
+                                + file.getName()));
                         FileUtils.move(file, activeDirectory);
                     } catch (Exception exception) {
                         error = true;
