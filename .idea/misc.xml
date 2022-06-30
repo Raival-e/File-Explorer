@@ -48,6 +48,7 @@
         <entry key="..\:/Users/pavnv/OneDrive/Desktop/android_studio_projects/Quicktools/app/src/main/res/drawable/ic_baseline_arrow_back_24.xml" value="0.122" />
         <entry key="..\:/Users/pavnv/OneDrive/Desktop/android_studio_projects/Quicktools/app/src/main/res/drawable/ic_baseline_assignment_24.xml" value="0.122" />
         <entry key="..\:/Users/pavnv/OneDrive/Desktop/android_studio_projects/Quicktools/app/src/main/res/drawable/ic_baseline_bookmark_add_24.xml" value="0.1" />
+        <entry key="..\:/Users/pavnv/OneDrive/Desktop/android_studio_projects/Quicktools/app/src/main/res/drawable/ic_baseline_bookmark_remove_24.xml" value="0.1" />
         <entry key="..\:/Users/pavnv/OneDrive/Desktop/android_studio_projects/Quicktools/app/src/main/res/drawable/ic_baseline_bug_report_24.xml" value="0.122" />
         <entry key="..\:/Users/pavnv/OneDrive/Desktop/android_studio_projects/Quicktools/app/src/main/res/drawable/ic_baseline_chevron_right_24.xml" value="0.122" />
         <entry key="..\:/Users/pavnv/OneDrive/Desktop/android_studio_projects/Quicktools/app/src/main/res/drawable/ic_baseline_delete_sweep_24.xml" value="0.1" />
@@ -88,6 +89,7 @@
         <entry key="..\:/Users/pavnv/OneDrive/Desktop/android_studio_projects/Quicktools/app/src/main/res/drawable/ic_round_undo_24.xml" value="0.122" />
         <entry key="..\:/Users/pavnv/OneDrive/Desktop/android_studio_projects/Quicktools/app/src/main/res/layout/activity_main.xml" value="0.18333333333333332" />
         <entry key="..\:/Users/pavnv/OneDrive/Desktop/android_studio_projects/Quicktools/app/src/main/res/layout/activity_main_drawer.xml" value="0.1872103799814643" />
+        <entry key="..\:/Users/pavnv/OneDrive/Desktop/android_studio_projects/Quicktools/app/src/main/res/layout/activity_main_drawer_bookmark_item.xml" value="0.20512820512820512" />
         <entry key="..\:/Users/pavnv/OneDrive/Desktop/android_studio_projects/Quicktools/app/src/main/res/layout/apps_tab_app_item.xml" value="0.20512820512820512" />
         <entry key="..\:/Users/pavnv/OneDrive/Desktop/android_studio_projects/Quicktools/app/src/main/res/layout/apps_tab_fragment.xml" value="0.20512820512820512" />
         <entry key="..\:/Users/pavnv/OneDrive/Desktop/android_studio_projects/Quicktools/app/src/main/res/layout/bottom_bar_menu_item.xml" value="0.24895833333333334" />

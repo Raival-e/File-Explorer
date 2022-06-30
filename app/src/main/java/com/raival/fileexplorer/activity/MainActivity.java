@@ -16,11 +16,13 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.raival.fileexplorer.App;
 import com.raival.fileexplorer.R;
+import com.raival.fileexplorer.activity.adapter.BookmarksAdapter;
 import com.raival.fileexplorer.activity.model.MainViewModel;
 import com.raival.fileexplorer.common.view.BottomBarView;
 import com.raival.fileexplorer.common.view.TabView;
@@ -48,11 +50,13 @@ public class MainActivity extends BaseActivity {
     private BottomBarView bottomBarView;
     private MainViewModel mainViewModel;
 
+    private View drawerLayout;
     private DrawerLayout drawer;
     private LinearProgressIndicator drawer_storageSpaceProgress;
     private TextView drawer_storageSpace;
     private LinearProgressIndicator drawer_rootSpaceProgress;
     private TextView drawer_rootSpace;
+    private RecyclerView bookmarksList;
 
     /**
      * Called after read & write permissions are granted
@@ -133,7 +137,12 @@ public class MainActivity extends BaseActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_round_menu_24);
         toolbar.setNavigationOnClickListener(null);
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.app_name, R.string.app_name);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.app_name, R.string.app_name) {
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                refreshBookmarks();
+            }
+        };
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -219,18 +228,32 @@ public class MainActivity extends BaseActivity {
         setupDrawer();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    public void refreshBookmarks() {
+        Objects.requireNonNull(bookmarksList.getAdapter()).notifyDataSetChanged();
+    }
+
+    public void onBookmarkSelected(File file) {
+        FileExplorerTabFragment fragment = new FileExplorerTabFragment(file);
+        addNewTab(fragment, "FileExplorerTabFragment_" + generateRandomTag());
+        if (drawer.isDrawerOpen(drawerLayout)) drawer.close();
+    }
+
     private void setupDrawer() {
-        View drawerLayout = findViewById(R.id.drawer_layout);
+        drawerLayout = findViewById(R.id.drawer_layout);
 
         drawer_storageSpaceProgress = drawerLayout.findViewById(R.id.storage_space_progress);
         drawer_rootSpaceProgress = drawerLayout.findViewById(R.id.root_space_progress);
         drawer_rootSpace = drawerLayout.findViewById(R.id.root_space);
         drawer_storageSpace = drawerLayout.findViewById(R.id.storage_space);
+        bookmarksList = drawerLayout.findViewById(R.id.rv);
 
         drawerLayout.findViewById(R.id.apps).setOnClickListener((v -> {
             addNewTab(new AppsTabFragment(), "AppsTabFragment_" + generateRandomTag());
             drawer.close();
         }));
+
+        bookmarksList.setAdapter(new BookmarksAdapter(this));
 
         MaterialToolbar materialToolbar = drawerLayout.findViewById(R.id.toolbar);
         materialToolbar.setTitle(R.string.app_name);
@@ -313,6 +336,10 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         if (getActiveFragment().onBackPressed()) {
+            return;
+        }
+        if (drawer.isDrawerOpen(drawerLayout)) {
+            drawer.close();
             return;
         }
         if (!confirmExit) {
