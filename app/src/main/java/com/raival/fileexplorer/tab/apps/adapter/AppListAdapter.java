@@ -19,7 +19,6 @@ import com.raival.fileexplorer.tab.apps.model.Apk;
 import com.raival.fileexplorer.util.FileUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class AppListAdapter extends RecyclerView.Adapter<AppListAdapter.ViewHolder> {
@@ -80,22 +79,25 @@ public class AppListAdapter extends RecyclerView.Adapter<AppListAdapter.ViewHold
                 .setIconDrawable(file.icon)
                 .setTitle(file.name)
                 .setMsg("Do you want to save this app to Download folder?")
-                .setPositiveButton("Yes", view -> saveApkFile(file.source), true)
+                .setPositiveButton("Yes", view -> saveApkFile(file), true)
                 .setNegativeButton("No", null, true)
                 .show(fragment.getParentFragmentManager(), "");
     }
 
-    private void saveApkFile(File file) {
+    private void saveApkFile(Apk file) {
         BackgroundTask backgroundTask = new BackgroundTask();
 
         backgroundTask.setTasks(() -> backgroundTask.showProgressDialog("Copying...", fragment.requireActivity()), () -> {
             try {
-                FileUtils.copy(file, new File(Environment.getExternalStorageDirectory(), Environment.DIRECTORY_DOWNLOADS));
-            } catch (IOException e) {
+                FileUtils.copyFile(file.source, file.name, new File(Environment.DIRECTORY_DOWNLOADS), true);
+            } catch (Exception e) {
                 e.printStackTrace();
                 App.appHandler.post(() -> App.showMsg(e.toString()));
             }
-        }, backgroundTask::dismiss);
+        }, () -> {
+            App.showMsg("APK file has been saved in " + "/Downloads/" + file.name);
+            backgroundTask.dismiss();
+        });
         backgroundTask.run();
     }
 }

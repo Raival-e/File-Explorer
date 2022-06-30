@@ -35,6 +35,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Locale;
+import java.util.Objects;
 
 public class FileUtils {
     public final static String INTERNAL_STORAGE = "Internal Storage";
@@ -329,7 +330,7 @@ public class FileUtils {
         if (file.isDirectory()) return "";
         final String name = file.getName();
         final int last = name.lastIndexOf(".");
-        if (name.isEmpty() || !name.contains(".") || last == -1) {
+        if (!name.contains(".") || last == -1) {
             return "";
         }
         return name.substring(last + 1);
@@ -345,12 +346,10 @@ public class FileUtils {
         }
 
         StringBuilder sb = new StringBuilder();
-        FileReader fr = null;
-
-        fr = new FileReader(file);
+        FileReader fr = new FileReader(file);
 
         char[] buff = new char[1024];
-        int length = 0;
+        int length;
 
         while ((length = fr.read(buff)) > 0) {
             sb.append(new String(buff, 0, length));
@@ -363,7 +362,8 @@ public class FileUtils {
 
 
     public static void writeFile(File file, String content) throws IOException {
-        if (!file.getParentFile().exists() && !file.getParentFile().mkdir()) {
+        final File parentFile = file.getParentFile();
+        if (parentFile != null && !file.getParentFile().exists() && !file.getParentFile().mkdir()) {
             throw new IOException(file.getAbsolutePath() + " doesn't exist");
         }
         if (!file.exists() && !file.createNewFile()) {
@@ -405,14 +405,6 @@ public class FileUtils {
         return (selectedFiles.size() == 1 && !selectedFiles.get(0).isFile());
     }
 
-    public static boolean isOnlyFolders(ArrayList<File> selectedFiles) {
-        for (File file : selectedFiles) {
-            if (file.isFile())
-                return false;
-        }
-        return true;
-    }
-
     public static boolean isSingleFile(ArrayList<File> selectedFiles) {
         return (selectedFiles.size() == 1 && selectedFiles.get(0).isFile());
     }
@@ -443,96 +435,123 @@ public class FileUtils {
 
     private static long getFolderSize(File file) {
         long size = 0;
-        for (File child : file.listFiles()) {
-            if (child.isFile()) {
-                size = size + child.length();
-            } else {
-                size = size + getFolderSize(child);
+        final File[] list = file.listFiles();
+        if (list != null) {
+            for (File child : list) {
+                if (child.isFile()) {
+                    size = size + child.length();
+                } else {
+                    size = size + getFolderSize(child);
+                }
             }
         }
         return size;
     }
 
-    public static void copyFiles(ArrayList<File> selectedFiles, File destination) throws IOException {
-        for (File file : selectedFiles) {
-            copy(file, destination);
-        }
+    public static void copy(File fileToCopy, File destinationFolder, boolean overwrite) throws Exception {
+        if (fileToCopy.isFile()) copyFile(fileToCopy, destinationFolder, overwrite);
+        else copyFolder(fileToCopy, destinationFolder, overwrite);
     }
 
-    public static void copy(File file, File to) throws IOException {
-        if (file.isFile()) {
-            copyFile(file, new File(to, file.getName()));
-        } else {
-            File parent = new File(to, file.getName());
-            if (parent.mkdir()) {
-                final File[] files = file.listFiles();
-                if (files != null) {
-                    for (File child : files) {
-                        copy(child, parent);
-                    }
-                }
-            } else {
-                throw new IOException("Failed to create directory: " + parent.getAbsolutePath());
-            }
-        }
+    public static void copyFile(File fileToCopy, File destinationFolder, boolean overwrite) throws Exception {
+        copyFile(fileToCopy, fileToCopy.getName(), destinationFolder, overwrite);
     }
 
-    private static void copyFile(File sourcePath, File destPath) throws IOException {
-        if (!destPath.createNewFile()) {
-            throw new IOException("Failed to create file: " + destPath.getAbsolutePath());
+    /**
+     * Copy file to a new folder
+     *
+     * @param fileToCopy:        the file that needs to be copied
+     * @param fileName:          The name of the copied file in the destination folder
+     * @param destinationFolder: The folder to copy the file into
+     * @param overwrite:         Whether or not to overwrite the already existed file in the destination folder
+     * @throws Exception: Any errors that occur during the copying process
+     */
+    public static void copyFile(File fileToCopy, String fileName, File destinationFolder, boolean overwrite) throws Exception {
+        if (!destinationFolder.exists() && !destinationFolder.mkdirs()) {
+            throw new Exception("Unable to create folder: " + destinationFolder);
         }
 
-        FileInputStream fis = null;
-        FileOutputStream fos = null;
+        final File newFile = new File(destinationFolder, fileName);
+        if (newFile.exists() && !overwrite) return;
+        if (!newFile.exists() && !newFile.createNewFile()) {
+            throw new Exception("Unable to create file: " + newFile);
+        }
 
-        fis = new FileInputStream(sourcePath);
-        fos = new FileOutputStream(destPath, false);
+        FileInputStream fileInputStream = new FileInputStream(fileToCopy);
+        FileOutputStream fileOutputStream = new FileOutputStream(newFile, false);
 
         byte[] buff = new byte[1024];
-        int length = 0;
+        int length;
 
-        while ((length = fis.read(buff)) > 0) {
-            fos.write(buff, 0, length);
+        while ((length = fileInputStream.read(buff)) > 0) {
+            fileOutputStream.write(buff, 0, length);
         }
 
-        fis.close();
-        fos.close();
+        fileInputStream.close();
+        fileOutputStream.close();
     }
 
-    public static void deleteFile(File file) {
-        if (!file.exists()) return;
+    public static void copyFolder(File folderToCopy, File destinationFolder, boolean overwrite) throws Exception {
+        copyFolder(folderToCopy, folderToCopy.getName(), destinationFolder, overwrite);
+    }
 
-        if (file.isFile()) {
-            file.delete();
-            return;
+    /**
+     * Copy folder to another new folder
+     *
+     * @param folderToCopy:      the folder that needs to be copied
+     * @param folderName:        The name of the copied folder in the destination folder
+     * @param destinationFolder: The folder to copy into
+     * @param overwrite:         Whether or not to overwrite the already existed files in the destination folder
+     * @throws Exception: Any errors that occur during the copying process
+     */
+    public static void copyFolder(File folderToCopy, String folderName, File destinationFolder, boolean overwrite) throws Exception {
+        final File newFolder = new File(destinationFolder, folderName);
+        if (!newFolder.exists() && !newFolder.mkdirs()) {
+            throw new Exception("Unable to create folder: " + newFolder);
         }
 
-        File[] fileArr = file.listFiles();
+        if (newFolder.isFile()) {
+            throw new Exception("Unable to create folder: " + newFolder + ".\nA file with the same name exists.");
+        }
 
-        if (fileArr != null) {
-            for (File subFile : fileArr) {
-                if (subFile.isDirectory()) {
-                    deleteFile(subFile);
-                }
-
-                if (subFile.isFile()) {
-                    subFile.delete();
+        final File[] folderContent = folderToCopy.listFiles();
+        if (folderContent != null) {
+            for (File file : folderContent) {
+                if (file.isFile()) {
+                    copyFile(file, file.getName(), newFolder, overwrite);
+                } else {
+                    copyFolder(file, file.getName(), newFolder, overwrite);
                 }
             }
         }
-
-        file.delete();
     }
 
-    public static void deleteFiles(ArrayList<File> selectedFiles) {
+    public static void deleteFile(File file) throws Exception {
+        if (!file.exists()) {
+            throw new Exception("File " + file + " doesn't exist");
+        }
+
+        if (!file.isFile()) {
+            final File[] fileArr = file.listFiles();
+            if (fileArr != null) {
+                for (File subFile : fileArr) {
+                    if (subFile.isDirectory()) {
+                        deleteFile(subFile);
+                    }
+
+                    if (subFile.isFile()) {
+                        if (!subFile.delete())
+                            throw new Exception("Unable to delete file: " + subFile);
+                    }
+                }
+            }
+        }
+        if (!file.delete()) throw new Exception("Unable to delete file: " + file);
+    }
+
+    public static void deleteFiles(ArrayList<File> selectedFiles) throws Exception {
         for (File file : selectedFiles) {
             deleteFile(file);
-        }
-    }
-
-    public static void MoveFiles(ArrayList<File> filesToCut, File destination) throws IOException {
-        for (File file : filesToCut) {
-            move(file, destination);
         }
     }
 
@@ -564,7 +583,7 @@ public class FileUtils {
     }
 
     public static void setFileValidator(TextInputLayout input, File file, File directory) {
-        input.getEditText().addTextChangedListener(new TextWatcher() {
+        Objects.requireNonNull(input.getEditText()).addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
@@ -663,20 +682,21 @@ public class FileUtils {
     }
 
     public static ArrayList<String> getAllFilesInDir(File dir, String extension) {
-        if (!dir.exists() || dir.isFile()) return null;
+        if (!dir.exists() || dir.isFile()) {
+            return new ArrayList<>();
+        }
         ArrayList<String> list = new ArrayList<>();
-        for (File file : dir.listFiles()) {
-            if (file.isFile() && file.getName().endsWith("." + extension)) {
-                list.add(file.getAbsolutePath());
-            } else {
-                list.addAll(getAllFilesInDir(file, extension));
+        final File[] content = dir.listFiles();
+        if (content != null) {
+            for (File file : content) {
+                if (file.isFile() && file.getName().endsWith("." + extension)) {
+                    list.add(file.getAbsolutePath());
+                } else {
+                    list.addAll(getAllFilesInDir(file, extension));
+                }
             }
         }
         return list;
-    }
-
-    public static String getFileNameWithoutExtension(File file) {
-        return file.getName().substring(0, file.getName().lastIndexOf(FileUtils.getFileExtension(file)) - 1);
     }
 
     public static String copyFromInputStream(InputStream inputStream) {

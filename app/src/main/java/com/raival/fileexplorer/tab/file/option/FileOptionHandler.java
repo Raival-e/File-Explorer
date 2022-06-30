@@ -342,7 +342,14 @@ public class FileOptionHandler {
         BackgroundTask backgroundTask = new BackgroundTask();
         backgroundTask.setTasks(() -> {
             backgroundTask.showProgressDialog("Deleting files...", parentFragment.requireActivity());
-        }, () -> FileUtils.deleteFiles(selectedFiles), () -> {
+        }, () -> {
+            try {
+                FileUtils.deleteFiles(selectedFiles);
+            } catch (Exception e) {
+                e.printStackTrace();
+                App.showMsg(e.toString());
+            }
+        }, () -> {
             backgroundTask.dismiss();
             App.showMsg("Files have been deleted");
             parentFragment.refresh();

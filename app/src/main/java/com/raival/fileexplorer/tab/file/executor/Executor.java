@@ -248,7 +248,7 @@ public class Executor {
         }
     }
 
-    private boolean clearOutput() {
+    private boolean clearOutput() throws Exception {
         if (output == null) {
             output = new File(project, "output");
             return output.mkdir();

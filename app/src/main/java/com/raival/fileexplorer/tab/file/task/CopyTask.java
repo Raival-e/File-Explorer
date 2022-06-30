@@ -73,7 +73,7 @@ public class CopyTask extends Task {
                                     + "Copying "
                                     + file.getName());
                         });
-                        FileUtils.copy(file, activeDirectory);
+                        FileUtils.copy(file, activeDirectory, true);
                     } catch (Exception exception) {
                         error = true;
                     }
