@@ -57,6 +57,7 @@ dependencies {
 
     implementation 'io.github.Rosemoe.sora-editor:editor:0.14.0', { exclude group: "androidx.annotation", module: "annotation" }
     implementation 'io.github.Rosemoe.sora-editor:language-textmate:0.14.0'
+    implementation 'io.github.Rosemoe.sora-editor:language-java:0.14.0'
 
     implementation 'io.github.damianvdb:materialchecklist:1.0.0'
 

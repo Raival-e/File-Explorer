@@ -19,6 +19,7 @@ import com.raival.fileexplorer.activity.editor.autocomplete.CustomCompletionItem
 import com.raival.fileexplorer.activity.editor.autocomplete.CustomCompletionLayout;
 import com.raival.fileexplorer.activity.editor.scheme.DarkScheme;
 import com.raival.fileexplorer.activity.editor.scheme.LightScheme;
+import com.raival.fileexplorer.activity.editor.util.CodeFormatter;
 import com.raival.fileexplorer.activity.model.TextEditorViewModel;
 import com.raival.fileexplorer.common.BackgroundTask;
 import com.raival.fileexplorer.common.dialog.CustomDialog;
@@ -268,7 +269,9 @@ public class TextEditorActivity extends BaseActivity {
         menu.findItem(R.id.editor_option_line_number).setChecked(PrefsUtils.getTextEditorShowLineNumber());
         menu.findItem(R.id.editor_option_read_only).setChecked(PrefsUtils.getTextEditorReadOnly());
 
-        if (!"java".equals(FileUtils.getFileExtension(editorViewModel.file))) {
+        if (!"java".equals(FileUtils.getFileExtension(editorViewModel.file))
+                && !"xml".equals(FileUtils.getFileExtension(editorViewModel.file))
+                && !"json".equals(FileUtils.getFileExtension(editorViewModel.file))) {
             menu.findItem(R.id.editor_format).setVisible(false);
         }
         if (!canExecute()) menu.findItem(R.id.editor_execute).setVisible(false);
@@ -346,7 +349,12 @@ public class TextEditorActivity extends BaseActivity {
     private void setEditorLanguage(int language) {
         if (language == LANGUAGE_JAVA) {
             editor.setColorScheme(getColorScheme(false));
-            editor.setEditorLanguage(new JavaLanguage());
+            editor.setEditorLanguage(new JavaLanguage() {
+                @Override
+                public CharSequence format(CharSequence text) {
+                    return CodeFormatter.internalJavaFormat(text.toString());
+                }
+            });
         } else if (language == LANGUAGE_KOTLIN) {
             editor.setColorScheme(getColorScheme(true));
             editor.setEditorLanguage(getKotlinLang());
