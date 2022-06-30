@@ -24,7 +24,7 @@ import com.raival.fileexplorer.R;
 import com.raival.fileexplorer.tab.file.FileExplorerTabDataHolder;
 import com.raival.fileexplorer.tab.file.FileExplorerTabFragment;
 import com.raival.fileexplorer.tab.file.model.FileItem;
-import com.raival.fileexplorer.util.FileUtils;
+import com.raival.fileexplorer.tab.file.util.FileUtils;
 
 import java.io.File;
 import java.util.ArrayList;

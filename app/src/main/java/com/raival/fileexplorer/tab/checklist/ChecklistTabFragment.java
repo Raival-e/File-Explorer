@@ -13,7 +13,7 @@ import com.raival.fileexplorer.App;
 import com.raival.fileexplorer.R;
 import com.raival.fileexplorer.tab.BaseTabFragment;
 import com.raival.fileexplorer.tab.file.FileExplorerTabFragment;
-import com.raival.fileexplorer.util.FileUtils;
+import com.raival.fileexplorer.tab.file.util.FileUtils;
 
 import java.io.File;
 import java.io.IOException;

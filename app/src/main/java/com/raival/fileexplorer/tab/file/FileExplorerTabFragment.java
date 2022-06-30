@@ -33,8 +33,8 @@ import com.raival.fileexplorer.tab.file.dialog.TasksDialog;
 import com.raival.fileexplorer.tab.file.executor.DexRunner;
 import com.raival.fileexplorer.tab.file.model.FileItem;
 import com.raival.fileexplorer.tab.file.option.FileOptionHandler;
-import com.raival.fileexplorer.util.FileExtensions;
-import com.raival.fileexplorer.util.FileUtils;
+import com.raival.fileexplorer.tab.file.util.FileExtensions;
+import com.raival.fileexplorer.tab.file.util.FileUtils;
 import com.raival.fileexplorer.util.PrefsUtils;
 
 import java.io.File;

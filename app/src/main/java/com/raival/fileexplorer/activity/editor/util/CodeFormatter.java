@@ -1,4 +1,4 @@
-package com.raival.fileexplorer.util;
+package com.raival.fileexplorer.activity.editor.util;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;

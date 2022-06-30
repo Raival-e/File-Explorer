@@ -7,10 +7,14 @@ import android.util.TypedValue;
 
 import androidx.annotation.ColorInt;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.raival.fileexplorer.App;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class Utils {
     public final static String REGULAR_DATE_FORMAT = "MMM dd , hh:mm a";
@@ -34,5 +38,21 @@ public class Utils {
     public static boolean isDarkMode() {
         return (App.appContext.getResources().getConfiguration().uiMode
                 & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+    }
+
+    private static final String ALLOWED_CHARACTERS = "0123456789qwertyuiopasdfghjklzxcvbnm_";
+
+    public static String getRandomString(final int sizeOfRandomString) {
+        final Random random = new Random();
+        final StringBuilder sb = new StringBuilder(sizeOfRandomString);
+        for (int i = 0; i < sizeOfRandomString; ++i) {
+            sb.append(ALLOWED_CHARACTERS.charAt(random.nextInt(ALLOWED_CHARACTERS.length())));
+        }
+        return sb.toString();
+    }
+
+    public static ArrayList<String> getStringList(String json) {
+        return new Gson().fromJson(json, new TypeToken<ArrayList<String>>() {
+        }.getType());
     }
 }

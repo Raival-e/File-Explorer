@@ -5,7 +5,7 @@ import android.os.Looper;
 
 import com.android.apksigner.ApkSignerTool;
 import com.raival.fileexplorer.tab.file.model.Task;
-import com.raival.fileexplorer.util.APKSignerUtils;
+import com.raival.fileexplorer.tab.file.util.APKSignerUtils;
 
 import java.io.File;
 import java.util.ArrayList;

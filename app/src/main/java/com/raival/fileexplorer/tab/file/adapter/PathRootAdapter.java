@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.raival.fileexplorer.R;
 import com.raival.fileexplorer.tab.file.FileExplorerTabFragment;
-import com.raival.fileexplorer.util.FileUtils;
+import com.raival.fileexplorer.tab.file.util.FileUtils;
 import com.raival.fileexplorer.util.Utils;
 
 import java.io.File;

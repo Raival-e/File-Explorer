@@ -32,8 +32,8 @@ import com.raival.fileexplorer.tab.checklist.ChecklistTabDataHolder;
 import com.raival.fileexplorer.tab.checklist.ChecklistTabFragment;
 import com.raival.fileexplorer.tab.file.FileExplorerTabDataHolder;
 import com.raival.fileexplorer.tab.file.FileExplorerTabFragment;
-import com.raival.fileexplorer.util.FileUtils;
-import com.raival.fileexplorer.util.TextUtils;
+import com.raival.fileexplorer.tab.file.util.FileUtils;
+import com.raival.fileexplorer.util.Utils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -113,7 +113,7 @@ public class MainActivity extends BaseActivity {
     }
 
     public String generateRandomTag() {
-        return TextUtils.getRandomString(16);
+        return Utils.getRandomString(16);
     }
 
     @Override

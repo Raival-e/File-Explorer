@@ -9,7 +9,7 @@ import android.os.Handler;
 import android.widget.Toast;
 
 import com.pixplicity.easyprefs.library.Prefs;
-import com.raival.fileexplorer.util.FileUtils;
+import com.raival.fileexplorer.tab.file.util.FileUtils;
 
 import java.io.File;
 import java.io.PrintWriter;

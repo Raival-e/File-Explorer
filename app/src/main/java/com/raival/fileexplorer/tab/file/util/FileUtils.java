@@ -1,4 +1,4 @@
-package com.raival.fileexplorer.util;
+package com.raival.fileexplorer.tab.file.util;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -22,6 +22,8 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.textfield.TextInputLayout;
 import com.raival.fileexplorer.App;
 import com.raival.fileexplorer.R;
+import com.raival.fileexplorer.util.PrefsUtils;
+import com.raival.fileexplorer.util.Utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

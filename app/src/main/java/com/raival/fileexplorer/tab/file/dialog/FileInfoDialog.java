@@ -13,7 +13,7 @@ import androidx.annotation.Nullable;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.raival.fileexplorer.App;
 import com.raival.fileexplorer.R;
-import com.raival.fileexplorer.util.FileUtils;
+import com.raival.fileexplorer.tab.file.util.FileUtils;
 import com.raival.fileexplorer.util.Utils;
 
 import java.io.File;

@@ -4,7 +4,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.raival.fileexplorer.tab.file.model.Task;
-import com.raival.fileexplorer.util.FileUtils;
+import com.raival.fileexplorer.tab.file.util.FileUtils;
 
 import java.io.File;
 import java.util.ArrayList;

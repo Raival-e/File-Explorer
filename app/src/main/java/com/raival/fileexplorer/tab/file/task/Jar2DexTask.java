@@ -9,7 +9,7 @@ import com.android.tools.r8.D8Command;
 import com.android.tools.r8.OutputMode;
 import com.raival.fileexplorer.tab.file.d8.DexDiagnosticHandler;
 import com.raival.fileexplorer.tab.file.model.Task;
-import com.raival.fileexplorer.util.D8Utils;
+import com.raival.fileexplorer.tab.file.util.D8Utils;
 
 import java.io.File;
 import java.nio.file.Path;

@@ -1,4 +1,4 @@
-package com.raival.fileexplorer.util;
+package com.raival.fileexplorer.tab.file.util;
 
 import android.content.Context;
 import android.util.Log;

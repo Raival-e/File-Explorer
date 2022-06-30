@@ -7,7 +7,7 @@ import android.content.pm.PackageManager;
 
 import com.raival.fileexplorer.App;
 import com.raival.fileexplorer.tab.apps.model.Apk;
-import com.raival.fileexplorer.util.FileUtils;
+import com.raival.fileexplorer.tab.file.util.FileUtils;
 
 import java.io.File;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.raival.fileexplorer.util;
+package com.raival.fileexplorer.tab.file.util;
 
 public class FileExtensions {
     public final static String[] audioType = {"mp3", "4mp", "aup", "ogg", "3ga", "m4b", "wav", "acc", "m4a"};

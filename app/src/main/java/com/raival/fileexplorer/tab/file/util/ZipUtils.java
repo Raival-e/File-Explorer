@@ -1,4 +1,4 @@
-package com.raival.fileexplorer.util;
+package com.raival.fileexplorer.tab.file.util;
 
 import net.lingala.zip4j.ZipFile;
 

@@ -27,7 +27,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 
-import com.raival.fileexplorer.util.CodeFormatter;
+import com.raival.fileexplorer.activity.editor.util.CodeFormatter;
 
 import io.github.rosemoe.sora.lang.Language;
 import io.github.rosemoe.sora.lang.analysis.AnalyzeManager;

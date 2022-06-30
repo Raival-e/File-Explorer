@@ -23,7 +23,7 @@ import com.raival.fileexplorer.activity.model.TextEditorViewModel;
 import com.raival.fileexplorer.common.BackgroundTask;
 import com.raival.fileexplorer.common.dialog.CustomDialog;
 import com.raival.fileexplorer.tab.file.executor.Executor;
-import com.raival.fileexplorer.util.FileUtils;
+import com.raival.fileexplorer.tab.file.util.FileUtils;
 import com.raival.fileexplorer.util.PrefsUtils;
 import com.raival.fileexplorer.util.Utils;
 

@@ -8,8 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.tools.r8.D8;
 import com.raival.fileexplorer.App;
-import com.raival.fileexplorer.util.D8Utils;
-import com.raival.fileexplorer.util.FileUtils;
+import com.raival.fileexplorer.tab.file.util.D8Utils;
+import com.raival.fileexplorer.tab.file.util.FileUtils;
 
 import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments;
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity;
