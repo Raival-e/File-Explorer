@@ -39,7 +39,7 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/file_name"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingEnd="8dp"
                 android:text="loading..."
@@ -48,7 +48,7 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/file_details"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="loading..."
                 android:paddingEnd="8dp"
