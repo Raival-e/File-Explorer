@@ -4,7 +4,7 @@ A full-featured file manager with Material You design.
 
 # Features
 
-- Open source, lightweight and simple.
+- Open source and simple.
 - All basic file management functionality (e.g. copy, paste,.. etc) are supported.
 - Support for multiple tabs, and Tasks which make managing files much easier.
 - Powerful Code Editor ([Sora Editor](https://github.com/Rosemoe/sora-editor)).
@@ -19,7 +19,7 @@ A full-featured file manager with Material You design.
 To use this feature, all you need to do is to create Main.java/.kt file (it is recommended to create
 it in an empty folder), then open it, a dialog will show asking you if you want to use a sample
 code, click Yes. Now you can run you code by clicking run button in the toolbar. The main method
-gives you the activity and the folder where the Main.java/.kt is located.
+gives you the context and the folder where the Main.java/.kt is located.
 
 You can add java files to the same directory. You can also add .dex/.jar files to the same directory
 if you want to use additional libraries.
