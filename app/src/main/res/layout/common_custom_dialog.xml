@@ -26,6 +26,7 @@
             android:textStyle="normal"
             android:padding="8dp"
             android:visibility="gone"
+            android:gravity="start"
             style="@style/Theme.Material3.Light.Dialog.Alert" />
     </LinearLayout>
 
