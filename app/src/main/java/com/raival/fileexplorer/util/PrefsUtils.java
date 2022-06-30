@@ -1,6 +1,9 @@
 package com.raival.fileexplorer.util;
 
+import com.google.gson.Gson;
 import com.pixplicity.easyprefs.library.Prefs;
+
+import java.util.ArrayList;
 
 public class PrefsUtils {
     public final static int SORT_NAME_A2Z = 1;
@@ -72,5 +75,13 @@ public class PrefsUtils {
 
     public static void setTextEditorAutocomplete(boolean autocomplete) {
         Prefs.putBoolean("text_editor_autocomplete", autocomplete);
+    }
+
+    public static ArrayList<String> getFileExplorerTabBookmarks() {
+        return Utils.getStringList(Prefs.getString("file_explorer_tab_bookmarks", "[]"));
+    }
+
+    public static void setFileExplorerTabBookmarks(ArrayList<String> list) {
+        Prefs.putString("file_explorer_tab_bookmarks", new Gson().toJson(list));
     }
 }

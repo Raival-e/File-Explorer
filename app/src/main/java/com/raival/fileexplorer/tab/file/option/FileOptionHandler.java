@@ -30,7 +30,8 @@ import com.raival.fileexplorer.tab.file.task.CopyTask;
 import com.raival.fileexplorer.tab.file.task.CutTask;
 import com.raival.fileexplorer.tab.file.task.ExtractTask;
 import com.raival.fileexplorer.tab.file.task.Jar2DexTask;
-import com.raival.fileexplorer.util.FileUtils;
+import com.raival.fileexplorer.tab.file.util.FileUtils;
+import com.raival.fileexplorer.util.PrefsUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -68,6 +69,25 @@ public class FileOptionHandler {
             if (selectedFiles.get(0).getName().toLowerCase().endsWith(".java")
                     || selectedFiles.get(0).getName().toLowerCase().endsWith(".kt")) {
                 bottomDialog.addOption("Execute", R.drawable.ic_round_code_24, view1 -> exeJava(selectedFiles.get(0).getParentFile()), true);
+            }
+        }
+
+        if (FileUtils.isSingleFolder(selectedFiles)) {
+            final ArrayList<String> list = PrefsUtils.getFileExplorerTabBookmarks();
+            if (!list.contains(selectedFiles.get(0).toString())) {
+                bottomDialog.addOption("Add to bookmarks", R.drawable.ic_baseline_bookmark_add_24, v -> {
+                    list.add(selectedFiles.get(0).getAbsolutePath());
+                    PrefsUtils.setFileExplorerTabBookmarks(list);
+                    ((MainActivity) parentFragment.requireActivity()).refreshBookmarks();
+                    App.showMsg("Added to bookmarks successfully");
+                }, true);
+            } else {
+                bottomDialog.addOption("Remove from bookmarks", R.drawable.ic_baseline_bookmark_remove_24, v -> {
+                    list.remove(selectedFiles.get(0).getAbsolutePath());
+                    PrefsUtils.setFileExplorerTabBookmarks(list);
+                    ((MainActivity) parentFragment.requireActivity()).refreshBookmarks();
+                    App.showMsg("Removed from bookmarks successfully");
+                }, true);
             }
         }
 
