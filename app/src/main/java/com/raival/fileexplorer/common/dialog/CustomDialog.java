@@ -1,5 +1,6 @@
 package com.raival.fileexplorer.common.dialog;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,16 +11,19 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.raival.fileexplorer.R;
 
 import java.util.ArrayList;
 
 public class CustomDialog extends BottomSheetDialogFragment {
     private final ArrayList<View> views = new ArrayList<>();
+    private Drawable icon;
     private String title;
     private String msg;
     private String positiveButton;
@@ -52,34 +56,36 @@ public class CustomDialog extends BottomSheetDialogFragment {
 
         TextView titleView = view.findViewById(R.id.dialog_title);
         TextView msgView = view.findViewById(R.id.dialog_msg);
+        ShapeableImageView imageView = view.findViewById(R.id.dialog_icon);
         LinearLayout containerView = view.findViewById(R.id.dialog_container);
         MaterialButton positiveButtonView = view.findViewById(R.id.dialog_positive_button);
         MaterialButton negativeButtonView = view.findViewById(R.id.dialog_negative_button);
         MaterialButton neutralButtonView = view.findViewById(R.id.dialog_neutral_button);
 
-        if (msg == null) {
-            msgView.setVisibility(View.GONE);
-        } else {
-            msgView.setText(msg);
+        if (icon != null) {
+            imageView.setVisibility(View.VISIBLE);
+            imageView.setImageDrawable(icon);
         }
 
-        if (title == null) {
-            titleView.setVisibility(View.GONE);
-        } else {
+        if (title != null) {
+            titleView.setVisibility(View.VISIBLE);
             titleView.setText(title);
         }
 
-        if (views.size() == 0) {
-            containerView.setVisibility(View.GONE);
-        } else {
+        if (msg != null) {
+            msgView.setVisibility(View.VISIBLE);
+            msgView.setText(msg);
+        }
+
+        if (views.size() > 0) {
+            containerView.setVisibility(View.VISIBLE);
             for (View view1 : views) {
                 containerView.addView(view1);
             }
         }
 
-        if (positiveButton == null) {
-            positiveButtonView.setVisibility(View.GONE);
-        } else {
+        if (positiveButton != null) {
+            positiveButtonView.setVisibility(View.VISIBLE);
             positiveButtonView.setText(positiveButton);
             positiveButtonView.setOnClickListener(view1 -> {
                 if (positiveListener.listener != null) positiveListener.listener.onClick(view1);
@@ -87,9 +93,8 @@ public class CustomDialog extends BottomSheetDialogFragment {
             });
         }
 
-        if (negativeButton == null) {
-            negativeButtonView.setVisibility(View.GONE);
-        } else {
+        if (negativeButton != null) {
+            negativeButtonView.setVisibility(View.VISIBLE);
             negativeButtonView.setText(negativeButton);
             negativeButtonView.setOnClickListener(view1 -> {
                 if (negativeListener.listener != null) negativeListener.listener.onClick(view1);
@@ -97,9 +102,8 @@ public class CustomDialog extends BottomSheetDialogFragment {
             });
         }
 
-        if (neutralButton == null) {
-            neutralButtonView.setVisibility(View.GONE);
-        } else {
+        if (neutralButton != null) {
+            neutralButtonView.setVisibility(View.VISIBLE);
             neutralButtonView.setText(neutralButton);
             neutralButtonView.setOnClickListener(view1 -> {
                 if (neutralListener.listener != null) neutralListener.listener.onClick(view1);
@@ -124,6 +128,16 @@ public class CustomDialog extends BottomSheetDialogFragment {
 
     public CustomDialog setMsg(String msg) {
         this.msg = msg;
+        return this;
+    }
+
+    public CustomDialog setIconDrawable(Drawable drawable) {
+        icon = drawable;
+        return this;
+    }
+
+    public CustomDialog setIcon(int resId) {
+        icon = AppCompatResources.getDrawable(requireActivity(), resId);
         return this;
     }
 

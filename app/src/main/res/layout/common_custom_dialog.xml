@@ -5,15 +5,29 @@
     android:orientation="vertical"
     android:padding="12dp">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/dialog_title"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Dialog Title"
-        android:textSize="16sp"
-        android:textStyle="normal"
-        android:padding="8dp"
-        style="@style/Theme.Material3.Light.Dialog.Alert" />
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/dialog_icon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="8dp"
+            android:visibility="gone" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/dialog_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="normal"
+            android:padding="8dp"
+            android:visibility="gone"
+            style="@style/Theme.Material3.Light.Dialog.Alert" />
+    </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -33,14 +47,16 @@
                 android:text=""
                 android:textSize="14sp"
                 android:textStyle="normal"
-                android:padding="8dp" />
+                android:padding="8dp"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/dialog_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="8dp" />
+                android:padding="8dp"
+                android:visibility="gone" />
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
@@ -56,8 +72,8 @@
             android:id="@+id/dialog_neutral_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="More"
-            style="@style/Widget.Material3.Button"/>
+            android:visibility="gone"
+            style="@style/Widget.Material3.Button" />
         <Space
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -67,14 +83,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:text="Cancel"
+            android:visibility="gone"
             style="@style/Widget.Material3.Button"/>
         <com.google.android.material.button.MaterialButton
             android:id="@+id/dialog_positive_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:text="Save"
+            android:visibility="gone"
             style="@style/Widget.Material3.Button"/>
 
     </LinearLayout>
