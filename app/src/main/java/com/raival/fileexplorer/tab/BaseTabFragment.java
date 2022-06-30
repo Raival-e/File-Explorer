@@ -65,6 +65,8 @@ public abstract class BaseTabFragment extends Fragment {
     public TabView.Tab getTabView() {
         if (tabView == null && (tabView = ((MainActivity) requireActivity()).getTabView().getTabByTag(getTag())) == null) {
             tabView = ((MainActivity) requireActivity()).getTabView().addNewTab(getTag());
+            // set Default name
+            tabView.setName("Untitled");
         }
         return tabView;
     }
@@ -72,5 +74,12 @@ public abstract class BaseTabFragment extends Fragment {
     public void closeTab() {
         getMainViewModel().getDataHolders().removeIf(dataHolder1 -> dataHolder1.getTag().equals(getTag()));
         ((MainActivity) requireActivity()).closeTab(getTag());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // create TabView if necessary (important when a tab fragment doesn't update its TabView)
+        getTabView();
     }
 }
