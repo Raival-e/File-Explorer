@@ -20,6 +20,7 @@ import com.raival.fileexplorer.util.FileUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class AppListAdapter extends RecyclerView.Adapter<AppListAdapter.ViewHolder> {
     private final ArrayList<Apk> list;
@@ -86,16 +87,18 @@ public class AppListAdapter extends RecyclerView.Adapter<AppListAdapter.ViewHold
 
     private void saveApkFile(Apk file) {
         BackgroundTask backgroundTask = new BackgroundTask();
-
+        AtomicBoolean error = new AtomicBoolean(false);
         backgroundTask.setTasks(() -> backgroundTask.showProgressDialog("Copying...", fragment.requireActivity()), () -> {
             try {
-                FileUtils.copyFile(file.source, file.name, new File(Environment.DIRECTORY_DOWNLOADS), true);
+                FileUtils.copyFile(file.source, file.name + ".apk", new File(Environment.getExternalStorageDirectory(), Environment.DIRECTORY_DOWNLOADS), true);
             } catch (Exception e) {
+                error.set(true);
                 e.printStackTrace();
                 App.appHandler.post(() -> App.showMsg(e.toString()));
             }
         }, () -> {
-            App.showMsg("APK file has been saved in " + "/Downloads/" + file.name);
+            if (!error.get())
+                App.showMsg("APK file has been saved in " + "/Downloads/" + file.name);
             backgroundTask.dismiss();
         });
         backgroundTask.run();
