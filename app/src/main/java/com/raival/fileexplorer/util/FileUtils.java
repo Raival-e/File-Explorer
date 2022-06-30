@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.StatFs;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.webkit.MimeTypeMap;
@@ -160,7 +161,7 @@ public class FileUtils {
 
     public static void setFileIcon(ImageView icon, File file) {
         if (!file.isFile()) {
-            icon.setImageResource(R.drawable.folder_icon);
+            icon.setImageResource(R.drawable.ic_baseline_folder_24);
             return;
         }
 
@@ -225,6 +226,30 @@ public class FileUtils {
                 return true;
         }
         return false;
+    }
+
+    public static long getAvailableMemoryBytes(File file) {
+        StatFs statFs = new StatFs(file.getAbsolutePath());
+        return statFs.getBlockSizeLong() * statFs.getAvailableBlocksLong();
+    }
+
+    public static long getTotalMemoryBytes(File file) {
+        StatFs statFs = new StatFs(file.getAbsolutePath());
+        return statFs.getBlockSizeLong() * statFs.getBlockCountLong();
+    }
+
+    public static long getUsedMemoryBytes(File file) {
+        return getTotalMemoryBytes(file) - getAvailableMemoryBytes(file);
+    }
+
+    public static String getFormattedSize(long bytes) {
+        if (bytes > 1073741824)
+            return String.format(Locale.ENGLISH, "%.02f", (float) bytes / 1073741824) + "GB";
+        if (bytes > 1048576)
+            return String.format(Locale.ENGLISH, "%.02f", (float) bytes / 1048576) + "MB";
+        if (bytes > 1024)
+            return String.format(Locale.ENGLISH, "%.02f", (float) bytes / 1024) + "KB";
+        return bytes + "B";
     }
 
     public static String getFormattedFileCount(File file) {
