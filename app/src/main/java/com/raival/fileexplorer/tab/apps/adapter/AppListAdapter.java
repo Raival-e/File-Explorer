@@ -71,15 +71,16 @@ public class AppListAdapter extends RecyclerView.Adapter<AppListAdapter.ViewHold
             details.setText(apk.size);
             icon.setImageDrawable(apk.icon);
 
-            itemView.findViewById(R.id.background).setOnClickListener((v -> showSaveDialog(apk.source)));
+            itemView.findViewById(R.id.background).setOnClickListener((v -> showSaveDialog(apk)));
         }
     }
 
-    private void showSaveDialog(File file) {
+    private void showSaveDialog(Apk file) {
         new CustomDialog()
-                .setTitle(file.getName())
+                .setIconDrawable(file.icon)
+                .setTitle(file.name)
                 .setMsg("Do you want to save this app to Download folder?")
-                .setPositiveButton("Yes", view -> saveApkFile(file), true)
+                .setPositiveButton("Yes", view -> saveApkFile(file.source), true)
                 .setNegativeButton("No", null, true)
                 .show(fragment.getParentFragmentManager(), "");
     }
