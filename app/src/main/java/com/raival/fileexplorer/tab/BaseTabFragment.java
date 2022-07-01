@@ -19,6 +19,11 @@ import java.util.Objects;
  * the provided APIs or custom ones.
  */
 public abstract class BaseTabFragment extends Fragment {
+    public final static String DEFAULT_TAB_FRAGMENT_PREFIX = "0_FileExplorerTabFragment_";
+    public final static String FILE_EXPLORER_TAB_FRAGMENT_PREFIX = "FileExplorerTabFragment_";
+    public final static String CHECKLIST_TAB_FRAGMENT_PREFIX = "ChecklistTabFragment_";
+    public final static String APPS_TAB_FRAGMENT_PREFIX = "AppsTabFragment_";
+
     private MainViewModel mainViewModel;
     private BottomBarView bottomBarView;
     private MaterialToolbar toolbar;

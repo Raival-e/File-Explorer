@@ -111,7 +111,7 @@ public class MainActivity extends BaseActivity {
     private void loadDefaultTab() {
         getSupportFragmentManager().beginTransaction()
                 // This fragment cannot be deleted, and its tag is unique (starts with "0_")
-                .replace(R.id.fragment_container, new FileExplorerTabFragment(), "0_FileExplorerTabFragment_" + generateRandomTag())
+                .replace(R.id.fragment_container, new FileExplorerTabFragment(), BaseTabFragment.DEFAULT_TAB_FRAGMENT_PREFIX + generateRandomTag())
                 .setReorderingAllowed(true)
                 .commit();
     }
@@ -148,7 +148,7 @@ public class MainActivity extends BaseActivity {
 
         tabView.setOnUpdateTabViewListener((tab, event) -> {
             if (event == TabView.ON_SELECT) {
-                if (tab.tag.startsWith("FileExplorerTabFragment_") || tab.tag.startsWith("0_FileExplorerTabFragment_")) {
+                if (tab.tag.startsWith(BaseTabFragment.FILE_EXPLORER_TAB_FRAGMENT_PREFIX) || tab.tag.startsWith(BaseTabFragment.DEFAULT_TAB_FRAGMENT_PREFIX)) {
                     if (!Objects.equals(Objects.requireNonNull(getSupportFragmentManager().findFragmentById(R.id.fragment_container)).getTag(), tab.tag)) {
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.fragment_container, new FileExplorerTabFragment(), tab.tag)
@@ -156,7 +156,7 @@ public class MainActivity extends BaseActivity {
                                 .commit();
                     }
                 }
-                if (tab.tag.startsWith("ChecklistTabFragment_")) {
+                if (tab.tag.startsWith(BaseTabFragment.CHECKLIST_TAB_FRAGMENT_PREFIX)) {
                     if (!Objects.equals(Objects.requireNonNull(getSupportFragmentManager().findFragmentById(R.id.fragment_container)).getTag(), tab.tag)) {
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.fragment_container, new ChecklistTabFragment(), tab.tag)
@@ -164,7 +164,7 @@ public class MainActivity extends BaseActivity {
                                 .commit();
                     }
                 }
-                if (tab.tag.startsWith("AppsTabFragment_")) {
+                if (tab.tag.startsWith(BaseTabFragment.APPS_TAB_FRAGMENT_PREFIX)) {
                     if (!Objects.equals(Objects.requireNonNull(getSupportFragmentManager().findFragmentById(R.id.fragment_container)).getTag(), tab.tag)) {
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.fragment_container, new AppsTabFragment(), tab.tag)
@@ -177,7 +177,7 @@ public class MainActivity extends BaseActivity {
                 PopupMenu popupMenu = new PopupMenu(this, tab.view);
                 popupMenu.inflate(R.menu.tab_menu);
                 // Default tab is un-closable
-                if (tab.tag.startsWith("0_")) {
+                if (tab.tag.startsWith(BaseTabFragment.DEFAULT_TAB_FRAGMENT_PREFIX)) {
                     popupMenu.getMenu().findItem(R.id.close).setVisible(false);
                     popupMenu.getMenu().findItem(R.id.close_all).setVisible(false);
                 }
@@ -196,7 +196,7 @@ public class MainActivity extends BaseActivity {
                         BaseTabFragment activeFragment = getActiveFragment();
                         // Remove unselected tabs
                         for (String tag : tabView.getTags()) {
-                            if (!tag.startsWith("0_") && !tag.equals(activeFragment.getTag())) {
+                            if (!tag.startsWith(BaseTabFragment.DEFAULT_TAB_FRAGMENT_PREFIX) && !tag.equals(activeFragment.getTag())) {
                                 getMainViewModel().getDataHolders().removeIf(dataHolder1 -> dataHolder1.getTag().equals(tag));
                                 closeTab(tag);
                             }
@@ -207,7 +207,7 @@ public class MainActivity extends BaseActivity {
                     } else if (item.getItemId() == R.id.close_others) {
                         BaseTabFragment activeFragment = getActiveFragment();
                         for (String tag : tabView.getTags()) {
-                            if (!tag.startsWith("0_") && !tag.equals(activeFragment.getTag()) && !tag.equals(tab.tag)) {
+                            if (!tag.startsWith(BaseTabFragment.DEFAULT_TAB_FRAGMENT_PREFIX) && !tag.equals(activeFragment.getTag()) && !tag.equals(tab.tag)) {
                                 getMainViewModel().getDataHolders().removeIf(dataHolder1 -> dataHolder1.getTag().equals(tag));
                                 closeTab(tag);
                             }
@@ -222,7 +222,7 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        findViewById(R.id.tabs_options).setOnClickListener(view -> addNewTab(new FileExplorerTabFragment(), "FileExplorerTabFragment_" + generateRandomTag()));
+        findViewById(R.id.tabs_options).setOnClickListener(view -> addNewTab(new FileExplorerTabFragment(), BaseTabFragment.FILE_EXPLORER_TAB_FRAGMENT_PREFIX + generateRandomTag()));
 
         checkPermissions();
         setupDrawer();
@@ -235,7 +235,7 @@ public class MainActivity extends BaseActivity {
 
     public void onBookmarkSelected(File file) {
         FileExplorerTabFragment fragment = new FileExplorerTabFragment(file);
-        addNewTab(fragment, "FileExplorerTabFragment_" + generateRandomTag());
+        addNewTab(fragment, BaseTabFragment.FILE_EXPLORER_TAB_FRAGMENT_PREFIX + generateRandomTag());
         if (drawer.isDrawerOpen(drawerLayout)) drawer.close();
     }
 
@@ -249,7 +249,7 @@ public class MainActivity extends BaseActivity {
         bookmarksList = drawerLayout.findViewById(R.id.rv);
 
         drawerLayout.findViewById(R.id.apps).setOnClickListener((v -> {
-            addNewTab(new AppsTabFragment(), "AppsTabFragment_" + generateRandomTag());
+            addNewTab(new AppsTabFragment(), BaseTabFragment.APPS_TAB_FRAGMENT_PREFIX + generateRandomTag());
             drawer.close();
         }));
 

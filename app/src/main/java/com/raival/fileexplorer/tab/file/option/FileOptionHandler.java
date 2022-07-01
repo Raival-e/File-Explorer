@@ -19,6 +19,7 @@ import com.raival.fileexplorer.activity.model.MainViewModel;
 import com.raival.fileexplorer.common.BackgroundTask;
 import com.raival.fileexplorer.common.dialog.CustomDialog;
 import com.raival.fileexplorer.common.dialog.OptionsDialog;
+import com.raival.fileexplorer.tab.BaseTabFragment;
 import com.raival.fileexplorer.tab.file.FileExplorerTabFragment;
 import com.raival.fileexplorer.tab.file.dialog.FileInfoDialog;
 import com.raival.fileexplorer.tab.file.dialog.SearchDialog;
@@ -95,7 +96,7 @@ public class FileOptionHandler {
             bottomDialog.addOption("Open in a new tab", R.drawable.ic_round_tab_24, view1 -> {
                 if (parentFragment.requireActivity() instanceof MainActivity) {
                     FileExplorerTabFragment fragment = new FileExplorerTabFragment(selectedFiles.get(0));
-                    ((MainActivity) parentFragment.requireActivity()).addNewTab(fragment, "FileExplorerTabFragment_" + ((MainActivity) parentFragment.requireActivity()).generateRandomTag());
+                    ((MainActivity) parentFragment.requireActivity()).addNewTab(fragment, BaseTabFragment.FILE_EXPLORER_TAB_FRAGMENT_PREFIX + ((MainActivity) parentFragment.requireActivity()).generateRandomTag());
                 }
             }, true);
         }
