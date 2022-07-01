@@ -115,7 +115,7 @@ public class TextEditorActivity extends BaseActivity {
 
         try {
             if (editorViewModel.content != null) {
-                editor.setText(editorViewModel.content);
+                editor.setText(editorViewModel.content.toString());
             } else {
                 editor.setText(FileUtils.readFile(editorViewModel.file));
             }
@@ -154,7 +154,7 @@ public class TextEditorActivity extends BaseActivity {
                     : FileUtils.copyFromInputStream(getAssets().open("sample_code/kotlin_sample_code.txt"));
         } catch (IOException e) {
             App.log(e);
-            App.showWarning("Failed to load sample code");
+            App.showMsg("Failed to load sample code");
             return "";
         }
     }

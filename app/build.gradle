@@ -55,9 +55,9 @@ dependencies {
     implementation 'com.pixplicity.easyprefs:EasyPrefs:1.10.0'
     implementation 'net.lingala.zip4j:zip4j:2.11.0'
 
-    implementation 'io.github.Rosemoe.sora-editor:editor:0.14.0', { exclude group: "androidx.annotation", module: "annotation" }
-    implementation 'io.github.Rosemoe.sora-editor:language-textmate:0.14.0'
-    implementation 'io.github.Rosemoe.sora-editor:language-java:0.14.0'
+    implementation 'io.github.Rosemoe.sora-editor:editor:0.13.1', { exclude group: "androidx.annotation", module: "annotation" }
+    implementation 'io.github.Rosemoe.sora-editor:language-textmate:0.13.1'
+    implementation 'io.github.Rosemoe.sora-editor:language-java:0.13.1'
 
     implementation 'io.github.damianvdb:materialchecklist:1.0.0'
 

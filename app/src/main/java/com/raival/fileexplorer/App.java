@@ -33,10 +33,6 @@ public class App extends Application {
         Toast.makeText(appContext, message, Toast.LENGTH_SHORT).show();
     }
 
-    public static void showWarning(String message) {
-        showMsg(message);
-    }
-
     public static void copyString(String string) {
         ((ClipboardManager) appContext.getSystemService(CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText("clipboard", string));
     }
@@ -70,5 +66,6 @@ public class App extends Application {
                 .setPrefsName("Prefs")
                 .setMode(ContextWrapper.MODE_PRIVATE)
                 .build();
+
     }
 }
