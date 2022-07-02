@@ -6,6 +6,7 @@ import android.content.Context;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.raival.fileexplorer.App;
+import com.raival.fileexplorer.util.Log;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import dalvik.system.DexClassLoader;
 
 public class DexRunner {
+    private static final String TAG = "DexRunner";
     private final AppCompatActivity activity;
     private final File directory;
     private final ArrayList<File> relatedDexFiles = new ArrayList<>();
@@ -47,8 +49,7 @@ public class DexRunner {
         try {
             clazz = dexClassLoader.loadClass("com.main.Main");
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            App.log(e);
+            Log.e(TAG, e);
             App.showMsg("Class com.main.Main is not found");
             return;
         }
@@ -72,9 +73,8 @@ public class DexRunner {
                 try {
                     method.invoke(null, params.toArray(new Object[0]));
                 } catch (IllegalAccessException | InvocationTargetException e) {
-                    e.printStackTrace();
-                    App.log(e);
-                    App.log("Something went wrong, check logs for more details");
+                    Log.e(TAG, "Unable to invoke " + method.getName(), e);
+                    App.showMsg("Unable to invoke " + method.getName() + ", check logs for more details.");
                 }
             }
         }

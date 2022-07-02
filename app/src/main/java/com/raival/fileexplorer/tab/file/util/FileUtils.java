@@ -22,6 +22,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.textfield.TextInputLayout;
 import com.raival.fileexplorer.App;
 import com.raival.fileexplorer.R;
+import com.raival.fileexplorer.util.Log;
 import com.raival.fileexplorer.util.PrefsUtils;
 import com.raival.fileexplorer.util.Utils;
 
@@ -41,6 +42,7 @@ import java.util.Objects;
 
 public class FileUtils {
     public final static String INTERNAL_STORAGE = "Internal Storage";
+    private static final String TAG = "FileUtils";
 
     public static Comparator<File> sortFoldersFirst() {
         return (file1, file2) -> {
@@ -397,7 +399,7 @@ public class FileUtils {
                 App.showMsg("Couldn't find any app that can open this type of files");
             }
         } catch (Exception e) {
-            App.log(e);
+            Log.i(TAG, e);
             App.showMsg("Failed to open this file");
         }
     }

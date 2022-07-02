@@ -14,11 +14,13 @@ import com.raival.fileexplorer.R;
 import com.raival.fileexplorer.tab.BaseTabFragment;
 import com.raival.fileexplorer.tab.file.FileExplorerTabFragment;
 import com.raival.fileexplorer.tab.file.util.FileUtils;
+import com.raival.fileexplorer.util.Log;
 
 import java.io.File;
 import java.io.IOException;
 
 public class ChecklistTabFragment extends BaseTabFragment {
+    private static final String TAG = "CheckListTabFragment";
     private MaterialChecklist materialChecklist;
     private File file;
 
@@ -42,8 +44,7 @@ public class ChecklistTabFragment extends BaseTabFragment {
         try {
             materialChecklist.setItems(FileUtils.readFile(((ChecklistTabDataHolder) getDataHolder()).file));
         } catch (Exception e) {
-            e.printStackTrace();
-            App.log(e);
+            Log.e(TAG, "something went wrong while loading checklist file", e);
             App.showMsg(e.toString());
             closeTab();
         }
@@ -61,8 +62,7 @@ public class ChecklistTabFragment extends BaseTabFragment {
         try {
             FileUtils.writeFile(((ChecklistTabDataHolder) getDataHolder()).file, materialChecklist.getItems(true, true));
         } catch (IOException e) {
-            e.printStackTrace();
-            App.log(e);
+            Log.e(TAG, "something went wrong while saving checklist file", e);
             App.showMsg("Unable to save the list, check logs for more details");
         }
     }

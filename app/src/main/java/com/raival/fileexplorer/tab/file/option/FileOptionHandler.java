@@ -32,6 +32,7 @@ import com.raival.fileexplorer.tab.file.task.CutTask;
 import com.raival.fileexplorer.tab.file.task.ExtractTask;
 import com.raival.fileexplorer.tab.file.task.Jar2DexTask;
 import com.raival.fileexplorer.tab.file.util.FileUtils;
+import com.raival.fileexplorer.util.Log;
 import com.raival.fileexplorer.util.PrefsUtils;
 
 import java.io.File;
@@ -40,6 +41,7 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class FileOptionHandler {
+    private static final String TAG = "FileOptionHandler";
     private final FileExplorerTabFragment parentFragment;
     private MainViewModel mainViewModel;
 
@@ -290,13 +292,13 @@ public class FileOptionHandler {
             try {
                 executor.execute();
             } catch (Exception exception) {
-                error.set(App.getStackTrace(exception));
+                error.set(Log.getStackTrace(exception));
             }
         }, () -> {
             try {
                 if (!error.get().equals("")) {
                     backgroundTask.dismiss();
-                    App.log(error.get());
+                    Log.e(TAG, error.get());
                     parentFragment.showDialog("Error", error.get());
                     return;
                 }
@@ -304,8 +306,8 @@ public class FileOptionHandler {
                 backgroundTask.dismiss();
             } catch (Exception exception) {
                 backgroundTask.dismiss();
-                App.log(exception);
-                parentFragment.showDialog("Error", App.getStackTrace(exception));
+                Log.e(TAG, exception);
+                parentFragment.showDialog("Error", Log.getStackTrace(exception));
             }
             parentFragment.refresh();
         });

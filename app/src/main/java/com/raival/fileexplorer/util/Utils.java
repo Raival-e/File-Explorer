@@ -18,6 +18,7 @@ import java.util.Random;
 
 public class Utils {
     public final static String REGULAR_DATE_FORMAT = "MMM dd , hh:mm a";
+    public final static String TAB = "  ";
 
     @ColorInt
     public static int getColorAttribute(int id, Context context) {
@@ -54,5 +55,9 @@ public class Utils {
     public static ArrayList<String> getStringList(String json) {
         return new Gson().fromJson(json, new TypeToken<ArrayList<String>>() {
         }.getType());
+    }
+
+    public static String surroundWithBrackets(String string) {
+        return "[" + string + "]";
     }
 }

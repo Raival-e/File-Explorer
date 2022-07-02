@@ -35,6 +35,7 @@ import com.raival.fileexplorer.tab.file.model.FileItem;
 import com.raival.fileexplorer.tab.file.option.FileOptionHandler;
 import com.raival.fileexplorer.tab.file.util.FileExtensions;
 import com.raival.fileexplorer.tab.file.util.FileUtils;
+import com.raival.fileexplorer.util.Log;
 import com.raival.fileexplorer.util.PrefsUtils;
 
 import java.io.File;
@@ -47,6 +48,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class FileExplorerTabFragment extends BaseTabFragment {
     public final static int MAX_NAME_LENGTH = 32;
+    private static final String TAG = "FileExplorerTabFragment";
     private final ArrayList<FileItem> files = new ArrayList<>();
     private RecyclerView fileList;
     private RecyclerView pathRootRv;
@@ -202,8 +204,8 @@ public class FileExplorerTabFragment extends BaseTabFragment {
                     focusOn(file);
                 }
             } catch (IOException e) {
+                Log.e(TAG, e);
                 App.showMsg(e.toString());
-                App.log(e);
             }
         }
     }
