@@ -1,13 +1,9 @@
 package com.raival.fileexplorer.tab.file.executor;
 
-import android.app.Activity;
-import android.content.Context;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.tools.r8.D8;
-import com.raival.fileexplorer.App;
 import com.raival.fileexplorer.tab.file.util.D8Utils;
 import com.raival.fileexplorer.tab.file.util.FileUtils;
 
@@ -21,13 +17,8 @@ import org.jetbrains.kotlin.config.Services;
 import java.io.File;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Objects;
-
-import dalvik.system.DexClassLoader;
 
 public class Executor {
     private final ArrayList<File> javaFiles = new ArrayList<>();
@@ -36,6 +27,7 @@ public class Executor {
     private final ArrayList<File> jarFiles = new ArrayList<>();
     private File project;
     private File output;
+    private File libs;
 
     private AppCompatActivity activity;
 
@@ -62,68 +54,7 @@ public class Executor {
     }
 
     public void invoke() throws Exception {
-        final String optimizedDir = App.appContext.getCodeCacheDir().getAbsolutePath();
-
-        DexClassLoader dexClassLoader = new DexClassLoader(
-                getDexFiles(),
-                optimizedDir,
-                null,
-                App.appContext.getClassLoader());
-        Class<?> clazz = dexClassLoader.loadClass("com.main.Main");
-
-        // Look for a public static method called `main` and invoke it
-        for (Method method : clazz.getMethods()) {
-            if (method.getName().equals("main") && method.getModifiers() == Modifier.PUBLIC + Modifier.STATIC) {
-                ArrayList<Object> params = new ArrayList<>();
-                for (Object obj : method.getParameterTypes()) {
-                    if (obj.equals(AppCompatActivity.class)) {
-                        params.add(activity);
-                    } else if (obj.equals(Activity.class)) {
-                        params.add(activity);
-                    } else if (obj.equals(Context.class)) {
-                        params.add(activity);
-                    } else if (obj.equals(File.class)) {
-                        params.add(project);
-                    } else {
-                        params.add(null);
-                    }
-                }
-                method.invoke(null, params.toArray(new Object[0]));
-                return;
-            }
-        }
-
-        // if the specified method doesn't exist, create an instance of the Main class instead
-        Constructor<?> method = clazz.getConstructors()[0];
-        ArrayList<Object> params = new ArrayList<>();
-        for (Object obj : method.getParameterTypes()) {
-            if (obj.equals(AppCompatActivity.class)) {
-                params.add(activity);
-            } else if (obj.equals(Activity.class)) {
-                params.add(activity);
-            } else if (obj.equals(Context.class)) {
-                params.add(activity);
-            } else if (obj.equals(File.class)) {
-                params.add(project);
-            } else {
-                params.add(null);
-            }
-        }
-        method.newInstance(params.toArray(new Object[0]));
-    }
-
-    private String getDexFiles() {
-        ArrayList<File> list = new ArrayList<>(dexFiles);
-        for (File file : Objects.requireNonNull(output.listFiles())) {
-            if (file.getName().endsWith(".dex"))
-                list.add(file);
-        }
-        StringBuilder stringBuilder = new StringBuilder();
-        for (File file : list) {
-            stringBuilder.append(":");
-            stringBuilder.append(file.getAbsolutePath());
-        }
-        return stringBuilder.substring(1);
+        new DexRunner(new File(output, "classes.extension"), activity).setProjectDir(project).setLibsDir(libs).run();
     }
 
     private void runD8() {
@@ -139,6 +70,16 @@ public class Executor {
             opt.addAll(classes);
 
         D8.main(opt.toArray(new String[0]));
+
+        // Rename dex files to .extension to be able to run them with ExtensionRunner
+        for (File file : Objects.requireNonNull(output.listFiles())) {
+            if (file.isFile()) {
+                if (file.getName().endsWith(".dex")) {
+                    final String path = file.getAbsolutePath();
+                    file.renameTo(new File(path.substring(0, path.length() - 3) + "extension"));
+                }
+            }
+        }
     }
 
     /**
@@ -278,6 +219,7 @@ public class Executor {
                 if (file.getName().equals("output")) {
                     output = file;
                 } else if (file.getName().equals("libs")) {
+                    libs = file;
                     for (File subFile : Objects.requireNonNull(file.listFiles())) {
                         if (subFile.isFile()) {
                             if (subFile.getName().toLowerCase().endsWith(".dex")) {

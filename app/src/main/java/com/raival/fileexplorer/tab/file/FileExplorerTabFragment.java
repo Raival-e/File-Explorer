@@ -437,8 +437,12 @@ public class FileExplorerTabFragment extends BaseTabFragment {
             requireActivity().startActivity(intent);
             return true;
         }
-        if (fileItem.file.getName().toLowerCase().endsWith(".exe.dex")) {
-            new DexRunner(fileItem.file, (AppCompatActivity) requireActivity()).run();
+        if (fileItem.file.getName().toLowerCase().endsWith(".extension")) {
+            try {
+                new DexRunner(fileItem.file, (AppCompatActivity) requireActivity()).run();
+            } catch (Exception e) {
+                Log.e(TAG, e);
+            }
             return true;
         }
         return false;

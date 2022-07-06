@@ -6,19 +6,21 @@ import android.content.Context;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.raival.fileexplorer.App;
-import com.raival.fileexplorer.util.Log;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import dalvik.system.DexClassLoader;
 
 public class DexRunner {
     private static final String TAG = "DexRunner";
+
     private final AppCompatActivity activity;
-    private final File directory;
+    private File directory;
     private final ArrayList<File> relatedDexFiles = new ArrayList<>();
 
     public DexRunner(File dexFile, AppCompatActivity activity) {
@@ -27,17 +29,22 @@ public class DexRunner {
 
         assert directory != null;
         final File[] files = directory.listFiles();
-        final String prefix = dexFile.getName().substring(0, dexFile.getName().indexOf(".exe.dex"));
+        final String prefix = dexFile.getName().substring(0, dexFile.getName().indexOf(".extension"));
         if (files != null) {
             for (File file : files) {
-                if (file.getName().endsWith(".exe.dex")) {
+                if (file.getName().endsWith(".extension")) {
                     if (file.getName().startsWith(prefix)) relatedDexFiles.add(file);
                 }
             }
         }
     }
 
-    public void run() {
+    public DexRunner setProjectDir(File file) {
+        if (file.isDirectory()) directory = file;
+        return this;
+    }
+
+    public void run() throws Exception {
         final String optimizedDir = App.appContext.getCodeCacheDir().getAbsolutePath();
 
         DexClassLoader dexClassLoader = new DexClassLoader(
@@ -45,17 +52,11 @@ public class DexRunner {
                 optimizedDir,
                 null,
                 App.appContext.getClassLoader());
-        Class<?> clazz;
-        try {
-            clazz = dexClassLoader.loadClass("com.main.Main");
-        } catch (ClassNotFoundException e) {
-            Log.e(TAG, e);
-            App.showMsg("Class com.main.Main is not found");
-            return;
-        }
+        Class<?> clazz = dexClassLoader.loadClass("com.main.Main");
 
+        // Look for a public static method called `main` and invoke it
         for (Method method : clazz.getMethods()) {
-            if (method.getName().equals("main")) {
+            if (method.getName().equals("main") && method.getModifiers() == Modifier.PUBLIC + Modifier.STATIC) {
                 ArrayList<Object> params = new ArrayList<>();
                 for (Object obj : method.getParameterTypes()) {
                     if (obj.equals(AppCompatActivity.class)) {
@@ -70,14 +71,28 @@ public class DexRunner {
                         params.add(null);
                     }
                 }
-                try {
-                    method.invoke(null, params.toArray(new Object[0]));
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    Log.e(TAG, "Unable to invoke " + method.getName(), e);
-                    App.showMsg("Unable to invoke " + method.getName() + ", check logs for more details.");
-                }
+                method.invoke(null, params.toArray(new Object[0]));
+                return;
             }
         }
+
+        // if the specified method doesn't exist, create an instance of the Main class instead
+        Constructor<?> method = clazz.getConstructors()[0];
+        ArrayList<Object> params = new ArrayList<>();
+        for (Object obj : method.getParameterTypes()) {
+            if (obj.equals(AppCompatActivity.class)) {
+                params.add(activity);
+            } else if (obj.equals(Activity.class)) {
+                params.add(activity);
+            } else if (obj.equals(Context.class)) {
+                params.add(activity);
+            } else if (obj.equals(File.class)) {
+                params.add(directory);
+            } else {
+                params.add(null);
+            }
+        }
+        method.newInstance(params.toArray(new Object[0]));
     }
 
     private String getDexFiles() {
@@ -87,5 +102,18 @@ public class DexRunner {
             stringBuilder.append(file.getAbsolutePath());
         }
         return stringBuilder.substring(1);
+    }
+
+    public DexRunner setLibsDir(File libs) {
+        if (libs != null) {
+            if (libs.isDirectory()) {
+                for (File file : Objects.requireNonNull(libs.listFiles())) {
+                    if (file.isFile()) {
+                        if (file.getName().endsWith(".dex")) relatedDexFiles.add(file);
+                    }
+                }
+            }
+        }
+        return this;
     }
 }
