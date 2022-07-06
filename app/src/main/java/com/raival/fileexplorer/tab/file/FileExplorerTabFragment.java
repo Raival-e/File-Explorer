@@ -1,7 +1,6 @@
 package com.raival.fileexplorer.tab.file;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
@@ -12,7 +11,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.textfield.TextInputLayout;
 import com.raival.fileexplorer.App;
 import com.raival.fileexplorer.R;
-import com.raival.fileexplorer.activity.TextEditorActivity;
+import com.raival.fileexplorer.activity.MainActivity;
 import com.raival.fileexplorer.common.dialog.CustomDialog;
 import com.raival.fileexplorer.tab.BaseDataHolder;
 import com.raival.fileexplorer.tab.BaseTabFragment;
@@ -28,10 +26,10 @@ import com.raival.fileexplorer.tab.file.adapter.FileListAdapter;
 import com.raival.fileexplorer.tab.file.adapter.PathRootAdapter;
 import com.raival.fileexplorer.tab.file.dialog.SearchDialog;
 import com.raival.fileexplorer.tab.file.dialog.TasksDialog;
-import com.raival.fileexplorer.tab.file.executor.ModuleRunner;
 import com.raival.fileexplorer.tab.file.model.FileItem;
 import com.raival.fileexplorer.tab.file.option.FileOptionHandler;
 import com.raival.fileexplorer.tab.file.util.FileExtensions;
+import com.raival.fileexplorer.tab.file.util.FileOpener;
 import com.raival.fileexplorer.tab.file.util.FileUtils;
 import com.raival.fileexplorer.util.Log;
 import com.raival.fileexplorer.util.PrefsUtils;
@@ -424,29 +422,7 @@ public class FileExplorerTabFragment extends BaseTabFragment {
     }
 
     public void openFile(FileItem fileItem) {
-        if (!handleKnownFileExtensions(fileItem)) {
-            FileUtils.openFileWith(fileItem.file, false);
-        }
-    }
-
-    private boolean handleKnownFileExtensions(FileItem fileItem) {
-        if (FileUtils.isTextFile(fileItem.file) || FileUtils.isCodeFile(fileItem.file)) {
-            Intent intent = new Intent();
-            intent.setClass(requireActivity(), TextEditorActivity.class);
-            intent.putExtra("file", fileItem.file.getAbsolutePath());
-            requireActivity().startActivity(intent);
-            return true;
-        }
-        if (fileItem.file.getName().toLowerCase().endsWith(".extension")) {
-            try {
-                new ModuleRunner(fileItem.file, (AppCompatActivity) requireActivity()).run();
-            } catch (Exception e) {
-                Log.e(TAG, e);
-                App.showMsg("Something went wrong, check logs for more details");
-            }
-            return true;
-        }
-        return false;
+        new FileOpener((MainActivity) requireActivity()).openFile(fileItem.file);
     }
 
     public void showDialog(String title, String msg) {

@@ -75,7 +75,7 @@ public class FileOptionHandler {
             }
         }
 
-        if (FileUtils.isSingleFolder(selectedFiles)) {
+        if (selectedFiles.size() == 1) {
             final ArrayList<String> list = PrefsUtils.getFileExplorerTabBookmarks();
             if (!list.contains(selectedFiles.get(0).toString())) {
                 bottomDialog.addOption("Add to bookmarks", R.drawable.ic_baseline_bookmark_add_24, v -> {

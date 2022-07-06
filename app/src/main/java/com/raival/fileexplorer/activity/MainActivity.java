@@ -32,6 +32,7 @@ import com.raival.fileexplorer.tab.apps.AppsTabDataHolder;
 import com.raival.fileexplorer.tab.apps.AppsTabFragment;
 import com.raival.fileexplorer.tab.file.FileExplorerTabDataHolder;
 import com.raival.fileexplorer.tab.file.FileExplorerTabFragment;
+import com.raival.fileexplorer.tab.file.util.FileOpener;
 import com.raival.fileexplorer.tab.file.util.FileUtils;
 import com.raival.fileexplorer.util.Utils;
 
@@ -221,8 +222,12 @@ public class MainActivity extends BaseActivity {
     }
 
     public void onBookmarkSelected(File file) {
-        FileExplorerTabFragment fragment = new FileExplorerTabFragment(file);
-        addNewTab(fragment, BaseTabFragment.FILE_EXPLORER_TAB_FRAGMENT_PREFIX + generateRandomTag());
+        if (file.isDirectory()) {
+            FileExplorerTabFragment fragment = new FileExplorerTabFragment(file);
+            addNewTab(fragment, BaseTabFragment.FILE_EXPLORER_TAB_FRAGMENT_PREFIX + generateRandomTag());
+        } else {
+            new FileOpener(this).openFile(file);
+        }
         if (drawer.isDrawerOpen(drawerLayout)) drawer.close();
     }
 

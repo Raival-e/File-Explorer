@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.raival.fileexplorer.App;
 import com.raival.fileexplorer.R;
 import com.raival.fileexplorer.activity.MainActivity;
+import com.raival.fileexplorer.tab.file.util.FileUtils;
 import com.raival.fileexplorer.util.PrefsUtils;
 import com.raival.fileexplorer.util.Utils;
 
@@ -64,14 +65,18 @@ public class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.View
             final int position = getAdapterPosition();
             final File file = new File(list.get(position));
 
-            name.setText(file.getName());
+            if (file.isFile() && file.getName().endsWith(".extension")) {
+                name.setText(file.getName().substring(0, file.getName().length() - 10));
+            } else {
+                name.setText(file.getName());
+            }
 
             if (!file.exists()) {
                 name.setTextColor(Color.RED);
                 details.setTextColor(Color.RED);
 
                 background.setOnClickListener((v -> {
-                    App.showMsg("This folder doesn't exist anymore");
+                    App.showMsg("This file doesn't exist anymore");
                     list.remove(file.getAbsolutePath());
                     PrefsUtils.setFileExplorerTabBookmarks(list);
                     list.clear();
@@ -86,7 +91,7 @@ public class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.View
                 }));
             }
             details.setText(file.getAbsolutePath());
-            icon.setImageResource(R.drawable.ic_baseline_folder_24);
+            FileUtils.setFileIcon(icon, file);
 
             background.setOnLongClickListener((v -> {
                 list.remove(file.getAbsolutePath());
