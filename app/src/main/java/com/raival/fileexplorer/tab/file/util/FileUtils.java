@@ -218,6 +218,10 @@ public class FileUtils {
                     .into(icon);
             return;
         }
+        if (getFileExtension(file).equals("extension")) {
+            icon.setImageResource(R.drawable.ic_baseline_extension_24);
+            return;
+        }
         icon.setImageResource(R.drawable.unknown_file);
     }
 
