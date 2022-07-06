@@ -103,7 +103,9 @@ public class Log {
             if (!msg.isEmpty()) {
                 logToWrite.append(msg).append(System.lineSeparator());
             }
-            logToWrite.append(getStackTrace(throwable));
+            if (throwable != null) {
+                logToWrite.append(getStackTrace(throwable));
+            }
 
             FileWriter fileWriter = new FileWriter(logFile, true);
             fileWriter.write(logToWrite.toString());
