@@ -11,7 +11,6 @@ A full-featured file manager with Material You design.
 - Deep search that allows you to search in files contents.
 - Additional features:
   - Jar2Dex: you can convert .jar files to .dex files
-  - Built-in checklist: you can add checklists by using .checklist extension.
   - Executor: you can run java/kotlin projects. see Executor bellow.
 
 # Executor
@@ -21,13 +20,12 @@ it in an empty folder), then open it, a dialog will show asking you if you want 
 code, click Yes. Now you can run you code by clicking run button in the toolbar. The main method
 gives you the context and the folder where the Main.java/.kt is located.
 
-You can add java files to the same directory. You can also add .dex/.jar files to the same directory
-if you want to use additional libraries.
+You can add additional java files to the same directory, and if you want to use a local library, create a folder and name it `libs`,
+then put all JARs and DEXs here.
 
-After running the code, an output folder will be created. In this folder, you can see the output dex file(s), you
-can run these dex files directly without the need to compile your code, all you need to do is to rename them 
-to any name that ends with .exe.dex (e.g. classes.exe.dex, classes2.exe.dex,.. etc).
-Using this features, the possibilities are endless, and you can create any extension you want and makes part of the app!.
+After running the code, an output folder will be created. In this folder, you can see the output `.extension` file(s), you
+can run these files directly without the need to compile your code again by clicking on `classes.extension`.
+Using this features, the possibilities are endless, and you can create any extension you want and use it as part of the app!.
 
 # Screenshots
 
