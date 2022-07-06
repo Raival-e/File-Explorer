@@ -264,17 +264,32 @@ public class Executor {
 
     private void parseInputFolder(File input) {
         for (File file : Objects.requireNonNull(input.listFiles())) {
-            if (file.getName().toLowerCase().endsWith(".dex")) {
-                dexFiles.add(file);
-            } else if (file.getName().toLowerCase().endsWith(".jar")) {
-                jarFiles.add(file);
-            } else if (file.getName().toLowerCase().endsWith(".java")) {
-                javaFiles.add(file);
-            } else if (file.getName().toLowerCase().endsWith(".kt")) {
-                kotlinFiles.add(file);
-            } else if (file.isDirectory() && file.getName().equals("output")) {
-                output = file;
+            if (file.isFile()) {
+                if (file.getName().toLowerCase().endsWith(".dex")) {
+                    dexFiles.add(file);
+                } else if (file.getName().toLowerCase().endsWith(".jar")) {
+                    jarFiles.add(file);
+                } else if (file.getName().toLowerCase().endsWith(".java")) {
+                    javaFiles.add(file);
+                } else if (file.getName().toLowerCase().endsWith(".kt")) {
+                    kotlinFiles.add(file);
+                }
+            } else {
+                if (file.getName().equals("output")) {
+                    output = file;
+                } else if (file.getName().equals("libs")) {
+                    for (File subFile : Objects.requireNonNull(file.listFiles())) {
+                        if (subFile.isFile()) {
+                            if (subFile.getName().toLowerCase().endsWith(".dex")) {
+                                dexFiles.add(subFile);
+                            } else if (subFile.getName().toLowerCase().endsWith(".jar")) {
+                                jarFiles.add(subFile);
+                            }
+                        }
+                    }
+                }
             }
+
         }
     }
 
