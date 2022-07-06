@@ -16,14 +16,14 @@ import java.util.Objects;
 
 import dalvik.system.DexClassLoader;
 
-public class DexRunner {
+public class ModuleRunner {
     private static final String TAG = "DexRunner";
 
     private final AppCompatActivity activity;
     private File directory;
     private final ArrayList<File> relatedDexFiles = new ArrayList<>();
 
-    public DexRunner(File dexFile, AppCompatActivity activity) {
+    public ModuleRunner(File dexFile, AppCompatActivity activity) {
         this.activity = activity;
         this.directory = dexFile.getParentFile();
 
@@ -39,7 +39,7 @@ public class DexRunner {
         }
     }
 
-    public DexRunner setProjectDir(File file) {
+    public ModuleRunner setProjectDir(File file) {
         if (file.isDirectory()) directory = file;
         return this;
     }
@@ -104,7 +104,7 @@ public class DexRunner {
         return stringBuilder.substring(1);
     }
 
-    public DexRunner setLibsDir(File libs) {
+    public ModuleRunner setLibsDir(File libs) {
         if (libs != null) {
             if (libs.isDirectory()) {
                 for (File file : Objects.requireNonNull(libs.listFiles())) {

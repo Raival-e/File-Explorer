@@ -28,7 +28,7 @@ import com.raival.fileexplorer.tab.file.adapter.FileListAdapter;
 import com.raival.fileexplorer.tab.file.adapter.PathRootAdapter;
 import com.raival.fileexplorer.tab.file.dialog.SearchDialog;
 import com.raival.fileexplorer.tab.file.dialog.TasksDialog;
-import com.raival.fileexplorer.tab.file.executor.DexRunner;
+import com.raival.fileexplorer.tab.file.executor.ModuleRunner;
 import com.raival.fileexplorer.tab.file.model.FileItem;
 import com.raival.fileexplorer.tab.file.option.FileOptionHandler;
 import com.raival.fileexplorer.tab.file.util.FileExtensions;
@@ -439,7 +439,7 @@ public class FileExplorerTabFragment extends BaseTabFragment {
         }
         if (fileItem.file.getName().toLowerCase().endsWith(".extension")) {
             try {
-                new DexRunner(fileItem.file, (AppCompatActivity) requireActivity()).run();
+                new ModuleRunner(fileItem.file, (AppCompatActivity) requireActivity()).run();
             } catch (Exception e) {
                 Log.e(TAG, e);
                 App.showMsg("Something went wrong, check logs for more details");

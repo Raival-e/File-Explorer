@@ -53,7 +53,7 @@ public class Executor {
     }
 
     public void invoke() throws Exception {
-        new DexRunner(new File(output, "classes.extension"), activity).setProjectDir(project).setLibsDir(libs).run();
+        new ModuleRunner(new File(output, "classes.extension"), activity).setProjectDir(project).setLibsDir(libs).run();
     }
 
     private void runD8() {
