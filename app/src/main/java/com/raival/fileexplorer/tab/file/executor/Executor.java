@@ -23,7 +23,6 @@ import java.util.Objects;
 public class Executor {
     private final ArrayList<File> javaFiles = new ArrayList<>();
     private final ArrayList<File> kotlinFiles = new ArrayList<>();
-    private final ArrayList<File> dexFiles = new ArrayList<>();
     private final ArrayList<File> jarFiles = new ArrayList<>();
     private File project;
     private File output;
@@ -206,11 +205,7 @@ public class Executor {
     private void parseInputFolder(File input) {
         for (File file : Objects.requireNonNull(input.listFiles())) {
             if (file.isFile()) {
-                if (file.getName().toLowerCase().endsWith(".dex")) {
-                    dexFiles.add(file);
-                } else if (file.getName().toLowerCase().endsWith(".jar")) {
-                    jarFiles.add(file);
-                } else if (file.getName().toLowerCase().endsWith(".java")) {
+                if (file.getName().toLowerCase().endsWith(".java")) {
                     javaFiles.add(file);
                 } else if (file.getName().toLowerCase().endsWith(".kt")) {
                     kotlinFiles.add(file);
@@ -222,9 +217,7 @@ public class Executor {
                     libs = file;
                     for (File subFile : Objects.requireNonNull(file.listFiles())) {
                         if (subFile.isFile()) {
-                            if (subFile.getName().toLowerCase().endsWith(".dex")) {
-                                dexFiles.add(subFile);
-                            } else if (subFile.getName().toLowerCase().endsWith(".jar")) {
+                            if (subFile.getName().toLowerCase().endsWith(".jar")) {
                                 jarFiles.add(subFile);
                             }
                         }
