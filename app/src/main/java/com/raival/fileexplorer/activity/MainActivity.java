@@ -30,8 +30,6 @@ import com.raival.fileexplorer.tab.BaseDataHolder;
 import com.raival.fileexplorer.tab.BaseTabFragment;
 import com.raival.fileexplorer.tab.apps.AppsTabDataHolder;
 import com.raival.fileexplorer.tab.apps.AppsTabFragment;
-import com.raival.fileexplorer.tab.checklist.ChecklistTabDataHolder;
-import com.raival.fileexplorer.tab.checklist.ChecklistTabFragment;
 import com.raival.fileexplorer.tab.file.FileExplorerTabDataHolder;
 import com.raival.fileexplorer.tab.file.FileExplorerTabFragment;
 import com.raival.fileexplorer.tab.file.util.FileUtils;
@@ -97,9 +95,6 @@ public class MainActivity extends BaseActivity {
                 if (dataHolder instanceof FileExplorerTabDataHolder) {
                     tabView.insertNewTabAt(i, dataHolder.getTag(), false)
                             .setName(FileUtils.getShortLabel(((FileExplorerTabDataHolder) dataHolder).activeDirectory, FileExplorerTabFragment.MAX_NAME_LENGTH));
-                } else if (dataHolder instanceof ChecklistTabDataHolder) {
-                    tabView.insertNewTabAt(i, dataHolder.getTag(), false)
-                            .setName(FileUtils.getShortLabel(((ChecklistTabDataHolder) dataHolder).file, FileExplorerTabFragment.MAX_NAME_LENGTH));
                 } else if (dataHolder instanceof AppsTabDataHolder) {
                     tabView.insertNewTabAt(i, dataHolder.getTag(), false).setName("Apps");
                 }
@@ -152,14 +147,6 @@ public class MainActivity extends BaseActivity {
                     if (!Objects.equals(Objects.requireNonNull(getSupportFragmentManager().findFragmentById(R.id.fragment_container)).getTag(), tab.tag)) {
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.fragment_container, new FileExplorerTabFragment(), tab.tag)
-                                .setReorderingAllowed(true)
-                                .commit();
-                    }
-                }
-                if (tab.tag.startsWith(BaseTabFragment.CHECKLIST_TAB_FRAGMENT_PREFIX)) {
-                    if (!Objects.equals(Objects.requireNonNull(getSupportFragmentManager().findFragmentById(R.id.fragment_container)).getTag(), tab.tag)) {
-                        getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.fragment_container, new ChecklistTabFragment(), tab.tag)
                                 .setReorderingAllowed(true)
                                 .commit();
                     }

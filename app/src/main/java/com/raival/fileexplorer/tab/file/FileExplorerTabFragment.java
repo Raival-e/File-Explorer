@@ -20,12 +20,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.textfield.TextInputLayout;
 import com.raival.fileexplorer.App;
 import com.raival.fileexplorer.R;
-import com.raival.fileexplorer.activity.MainActivity;
 import com.raival.fileexplorer.activity.TextEditorActivity;
 import com.raival.fileexplorer.common.dialog.CustomDialog;
 import com.raival.fileexplorer.tab.BaseDataHolder;
 import com.raival.fileexplorer.tab.BaseTabFragment;
-import com.raival.fileexplorer.tab.checklist.ChecklistTabFragment;
 import com.raival.fileexplorer.tab.file.adapter.FileListAdapter;
 import com.raival.fileexplorer.tab.file.adapter.PathRootAdapter;
 import com.raival.fileexplorer.tab.file.dialog.SearchDialog;
@@ -437,11 +435,6 @@ public class FileExplorerTabFragment extends BaseTabFragment {
             intent.setClass(requireActivity(), TextEditorActivity.class);
             intent.putExtra("file", fileItem.file.getAbsolutePath());
             requireActivity().startActivity(intent);
-            return true;
-        }
-        if (FileUtils.getFileExtension(fileItem.file).equals("checklist")) {
-            ((MainActivity) requireActivity()).addNewTab(new ChecklistTabFragment(fileItem.file)
-                    , "ChecklistTabFragment_" + ((MainActivity) requireActivity()).generateRandomTag());
             return true;
         }
         if (fileItem.file.getName().toLowerCase().endsWith(".exe.dex")) {
