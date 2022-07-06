@@ -298,7 +298,6 @@ public class FileOptionHandler {
             try {
                 if (!error.get().equals("")) {
                     backgroundTask.dismiss();
-                    Log.e(TAG, error.get());
                     parentFragment.showDialog("Error", error.get());
                     return;
                 }
@@ -306,7 +305,6 @@ public class FileOptionHandler {
                 backgroundTask.dismiss();
             } catch (Exception exception) {
                 backgroundTask.dismiss();
-                Log.e(TAG, exception);
                 parentFragment.showDialog("Error", Log.getStackTrace(exception));
             }
             parentFragment.refresh();

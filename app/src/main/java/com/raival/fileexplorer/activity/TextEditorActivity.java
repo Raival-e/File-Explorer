@@ -468,7 +468,6 @@ public class TextEditorActivity extends BaseActivity {
             try {
                 if (!error.get().isEmpty()) {
                     backgroundTask.dismiss();
-                    Log.e(TAG, error.get());
                     showDialog("Error", error.get());
                     return;
                 }
@@ -476,7 +475,6 @@ public class TextEditorActivity extends BaseActivity {
                 backgroundTask.dismiss();
             } catch (Exception exception) {
                 backgroundTask.dismiss();
-                Log.e(TAG, exception);
                 showDialog("Error", Log.getStackTrace(exception));
             }
         });

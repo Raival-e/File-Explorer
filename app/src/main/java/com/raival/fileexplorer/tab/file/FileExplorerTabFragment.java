@@ -442,6 +442,7 @@ public class FileExplorerTabFragment extends BaseTabFragment {
                 new DexRunner(fileItem.file, (AppCompatActivity) requireActivity()).run();
             } catch (Exception e) {
                 Log.e(TAG, e);
+                App.showMsg("Something went wrong, check logs for more details");
             }
             return true;
         }
