@@ -61,7 +61,7 @@ public class Jar2DexTask extends Task {
     private void runD8(File file, File currentPath) throws Exception {
         List<Path> path = new ArrayList<>();
         path.add(D8Utils.getLambdaStubsJarFile().toPath());
-        path.add(D8Utils.getBootstrapJarFile().toPath());
+        path.add(D8Utils.getRtJarFile().toPath());
 
         D8Command command = D8Command.builder(new DexDiagnosticHandler())
                 .addLibraryFiles(path)

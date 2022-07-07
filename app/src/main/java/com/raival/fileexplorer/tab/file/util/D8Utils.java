@@ -26,7 +26,12 @@ public class D8Utils {
         return check;
     }
 
-    public static File getBootstrapJarFile() {
+    public static File getRtJarFile() {
+        File customRt = new File(App.appContext.getExternalFilesDir(null), "build/rt.jar");
+        if (customRt.exists() && customRt.isFile()) {
+            return customRt;
+        }
+
         File check = new File(App.appContext.getFilesDir() + "/build/rt.jar");
         if (check.exists()) {
             return check;

@@ -61,7 +61,7 @@ public class Executor {
 
         opt.add("--intermediate");
         opt.add("--lib");
-        opt.add(D8Utils.getBootstrapJarFile().getAbsolutePath());
+        opt.add(D8Utils.getRtJarFile().getAbsolutePath());
         opt.add("--output");
         opt.add(output.getAbsolutePath());
         ArrayList<String> classes = FileUtils.getAllFilesInDir(new File(output, "classes"), "class");
@@ -104,7 +104,7 @@ public class Executor {
 
         final StringBuilder sb = new StringBuilder();
         for (File jar : jarFiles) sb.append(":").append(jar.getAbsolutePath());
-        sb.append(":").append(D8Utils.getBootstrapJarFile().getAbsolutePath());
+        sb.append(":").append(D8Utils.getRtJarFile().getAbsolutePath());
         args.add(sb.substring(1));
 
         for (File file : kotlinFiles) {
@@ -157,7 +157,7 @@ public class Executor {
                 .append(":")
                 .append(D8Utils.getLambdaStubsJarFile().getAbsolutePath())
                 .append(":")
-                .append(D8Utils.getBootstrapJarFile().getAbsolutePath());
+                .append(D8Utils.getRtJarFile().getAbsolutePath());
         opt.add(sb.substring(1));
 
         opt.add("-proc:none");
