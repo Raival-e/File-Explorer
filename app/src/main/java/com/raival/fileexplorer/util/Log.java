@@ -101,10 +101,10 @@ public class Log {
                     .append(Utils.surroundWithBrackets(tag))
                     .append(":").append(Utils.TAB);
             if (!msg.isEmpty()) {
-                logToWrite.append(msg).append(System.lineSeparator());
+                logToWrite.append(msg);
             }
             if (throwable != null) {
-                logToWrite.append(getStackTrace(throwable));
+                logToWrite.append(System.lineSeparator()).append(getStackTrace(throwable));
             }
 
             FileWriter fileWriter = new FileWriter(logFile, true);
