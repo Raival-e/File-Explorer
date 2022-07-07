@@ -165,6 +165,7 @@ public class Executor {
         opt.add(" ");
         for (File file : javaFiles)
             opt.add(file.getAbsolutePath());
+        opt.add("-warn:none");
 
         PrintWriter printWriter = new PrintWriter(new OutputStream() {
             @Override
@@ -185,6 +186,7 @@ public class Executor {
                 false,
                 null,
                 null);
+
         main.compile(opt.toArray(new String[0]));
 
         if (main.globalErrorsCount > 0) {
