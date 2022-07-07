@@ -76,7 +76,9 @@ public class FileExplorerTabFragment extends BaseTabFragment {
         pathRootRv = view.findViewById(R.id.path_root);
         placeHolder = view.findViewById(R.id.place_holder);
 
-        view.findViewById(R.id.home).setOnClickListener(view1 -> setCurrentDirectory(getDefaultHomeDirectory()));
+        final View homeButton = view.findViewById(R.id.home);
+        homeButton.setOnClickListener(view1 -> setCurrentDirectory(getDefaultHomeDirectory()));
+        homeButton.setOnLongClickListener((v -> showSetPathDialog()));
         return view;
     }
 
@@ -111,22 +113,15 @@ public class FileExplorerTabFragment extends BaseTabFragment {
 
     private void showSortOptionsMenu(View view) {
         PopupMenu popupMenu = new PopupMenu(requireActivity(), view);
-
         popupMenu.getMenu().add("Sort by:").setEnabled(false);
-
         popupMenu.getMenu().add("Name (A-Z)").setCheckable(true).setChecked(PrefsUtils.getSortingMethod() == PrefsUtils.SORT_NAME_A2Z);
         popupMenu.getMenu().add("Name (Z-A)").setCheckable(true).setChecked(PrefsUtils.getSortingMethod() == PrefsUtils.SORT_NAME_Z2A);
-
         popupMenu.getMenu().add("Size (Bigger)").setCheckable(true).setChecked(PrefsUtils.getSortingMethod() == PrefsUtils.SORT_SIZE_BIGGER);
         popupMenu.getMenu().add("Size (Smaller)").setCheckable(true).setChecked(PrefsUtils.getSortingMethod() == PrefsUtils.SORT_SIZE_SMALLER);
-
         popupMenu.getMenu().add("Date (Newer)").setCheckable(true).setChecked(PrefsUtils.getSortingMethod() == PrefsUtils.SORT_DATE_NEWER);
         popupMenu.getMenu().add("Date (Older)").setCheckable(true).setChecked(PrefsUtils.getSortingMethod() == PrefsUtils.SORT_DATE_OLDER);
-
         popupMenu.getMenu().add("Other options:").setEnabled(false);
-
         popupMenu.getMenu().add("Folders first").setCheckable(true).setChecked(PrefsUtils.listFoldersFirst());
-
         popupMenu.setOnMenuItemClickListener(menuItem -> {
             menuItem.setChecked(!menuItem.isChecked());
             switch (menuItem.getTitle().toString()) {
@@ -163,6 +158,38 @@ public class FileExplorerTabFragment extends BaseTabFragment {
             return true;
         });
         popupMenu.show();
+    }
+
+    private boolean showSetPathDialog() {
+        @SuppressLint("InflateParams") TextInputLayout input = (TextInputLayout) getLayoutInflater().inflate(R.layout.input, null, false);
+        input.setHint("File path");
+        Objects.requireNonNull(input.getEditText()).setSingleLine();
+
+        new CustomDialog()
+                .setTitle("Jump to path")
+                .addView(input)
+                .setPositiveButton("Go", view -> {
+                    final File file = new File(input.getEditText().getText().toString());
+                    if (file.exists()) {
+                        if (file.canRead()) {
+                            if (file.isFile()) {
+                                new FileOpener((MainActivity) requireActivity()).openFile(file);
+                            } else {
+                                setCurrentDirectory(file);
+                            }
+                        } else {
+                            App.showMsg("Unable to read the provided file");
+                        }
+                    } else {
+                        App.showMsg("The destination path doesn't exist!");
+                    }
+                }, true)
+                .setNegativeButton("App Data", v ->
+                        input.getEditText().setText(requireActivity().getExternalFilesDir(null).getAbsolutePath()), false)
+                .setNeutralButton("App files", v ->
+                        input.getEditText().setText(requireActivity().getFilesDir().getAbsolutePath()), false)
+                .show(getParentFragmentManager(), "");
+        return true;
     }
 
     private void showAddNewFileDialog() {
