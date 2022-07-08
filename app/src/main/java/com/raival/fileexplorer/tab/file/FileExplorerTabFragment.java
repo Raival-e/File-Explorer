@@ -8,6 +8,8 @@ import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,6 +35,7 @@ import com.raival.fileexplorer.tab.file.util.FileOpener;
 import com.raival.fileexplorer.tab.file.util.FileUtils;
 import com.raival.fileexplorer.util.Log;
 import com.raival.fileexplorer.util.PrefsUtils;
+import com.raival.fileexplorer.util.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -165,11 +168,24 @@ public class FileExplorerTabFragment extends BaseTabFragment {
         input.setHint("File path");
         Objects.requireNonNull(input.getEditText()).setSingleLine();
 
+        final TextView label1 = new TextView(requireActivity());
+        label1.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
+        label1.setTextColor(Utils.getColorAttribute(R.attr.colorOnSurface, requireActivity()));
+        label1.setPadding(0, (int) Utils.pxToDp(8), 0, 0);
+        label1.setTextSize(10);
+        label1.setAlpha(0.7f);
+        label1.setText("Shortcuts:\n*indata -> App internal data directory\n*extdata -> App external data directory");
+
+
         new CustomDialog()
                 .setTitle("Jump to path")
                 .addView(input)
+                .addView(label1)
                 .setPositiveButton("Go", view -> {
-                    final File file = new File(input.getEditText().getText().toString());
+                    final String path = input.getEditText().getText().toString()
+                            .replace("*extdata", requireActivity().getExternalFilesDir(null).getAbsolutePath())
+                            .replace("*indata", requireActivity().getFilesDir().getAbsolutePath());
+                    final File file = new File(path);
                     if (file.exists()) {
                         if (file.canRead()) {
                             if (file.isFile()) {
@@ -184,10 +200,6 @@ public class FileExplorerTabFragment extends BaseTabFragment {
                         App.showMsg("The destination path doesn't exist!");
                     }
                 }, true)
-                .setNegativeButton("App Data", v ->
-                        input.getEditText().setText(requireActivity().getExternalFilesDir(null).getAbsolutePath()), false)
-                .setNeutralButton("App files", v ->
-                        input.getEditText().setText(requireActivity().getFilesDir().getAbsolutePath()), false)
                 .show(getParentFragmentManager(), "");
         return true;
     }
