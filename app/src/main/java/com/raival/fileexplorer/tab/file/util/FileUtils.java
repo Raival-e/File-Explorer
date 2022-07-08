@@ -722,4 +722,8 @@ public class FileUtils {
         }
         return outputStream.toString();
     }
+
+    public static String getNameWithoutExtension(File file) {
+        return file.getName().substring(0, file.getName().length() - getFileExtension(file).length() - 1);
+    }
 }

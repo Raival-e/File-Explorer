@@ -123,6 +123,13 @@ public class FileOptionHandler {
             notifyNewTask();
         }, true);
 
+        if (FileUtils.isSingleFile(selectedFiles)) {
+            bottomDialog.addOption("Create a backup", R.drawable.ic_baseline_file_copy_24, view1 -> {
+                createBackupFile(selectedFiles.get(0));
+                parentFragment.setSelectAll(false);
+            }, true);
+        }
+
         bottomDialog.addOption("Cut", R.drawable.ic_round_content_cut_24, view1 -> {
             getMainViewModel().tasks.add(new CutTask(selectedFiles));
             parentFragment.setSelectAll(false);
@@ -170,6 +177,37 @@ public class FileOptionHandler {
             searchFragment.show(parentFragment.getParentFragmentManager(), "");
             parentFragment.setSelectAll(false);
         }, true);
+    }
+
+    private void createBackupFile(File file) {
+        BackgroundTask backgroundTask = new BackgroundTask();
+        backgroundTask.setTasks(() -> backgroundTask.showProgressDialog("creating a backup file...", parentFragment.requireActivity()), () -> {
+            try {
+                FileUtils.copyFile(file, generateUniqueFileName(FileUtils.getNameWithoutExtension(file)
+                        + "_copy."
+                        + FileUtils.getFileExtension(file), file.getParentFile()), file.getParentFile(), true);
+            } catch (Exception e) {
+                e.printStackTrace();
+                App.showMsg(e.toString());
+            }
+        }, () -> {
+            backgroundTask.dismiss();
+            App.showMsg("New backup file has been created");
+            parentFragment.refresh();
+        });
+        backgroundTask.run();
+    }
+
+    private String generateUniqueFileName(String name, File directory) {
+        File file = new File(directory, name);
+        int i = 2;
+        while (file.exists()) {
+            file = new File(directory, name);
+            final String newName = FileUtils.getNameWithoutExtension(file) + i + "." + FileUtils.getFileExtension(file);
+            file = new File(directory, newName);
+            i++;
+        }
+        return file.getName();
     }
 
     @SuppressLint("SetTextI18n")
