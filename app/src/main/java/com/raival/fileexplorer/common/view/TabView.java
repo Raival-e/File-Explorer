@@ -2,6 +2,7 @@ package com.raival.fileexplorer.common.view;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -264,17 +265,17 @@ public class TabView extends HorizontalScrollView {
         switch (event) {
             case "onSelect": {
                 View indicator = v.findViewWithTag("tab_indicator");
-                ObjectAnimator.ofFloat(indicator, "translationY", Utils.pxToDp(2), -Utils.pxToDp(2), 0).setDuration(250).start();
+                ObjectAnimator.ofFloat(indicator, "translationY", Utils.pxToDp(3), -Utils.pxToDp(3), 0).setDuration(400).start();
                 break;
             }
             case "onReselect": {
                 View indicator = v.findViewWithTag("tab_indicator");
-                ObjectAnimator.ofFloat(indicator, "translationY", 0, -Utils.pxToDp(2), 0).setDuration(250).start();
+                ObjectAnimator.ofFloat(indicator, "translationY", 0, Utils.pxToDp(1.5f), 0).setDuration(400).start();
                 break;
             }
             case "onUnselect": {
                 View indicator = v.findViewWithTag("tab_indicator");
-                ObjectAnimator.ofFloat(indicator, "translationY", 0, Utils.pxToDp(2)).setDuration(250).start();
+                ObjectAnimator.ofFloat(indicator, "translationY", 0, Utils.pxToDp(3)).setDuration(400).start();
                 break;
             }
         }
@@ -305,11 +306,14 @@ public class TabView extends HorizontalScrollView {
         text.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
 
         LinearLayout line = new LinearLayout(getContext());
-        line.setBackgroundColor(indicatorColor);
+        GradientDrawable gd = new GradientDrawable();
+        gd.setColor(indicatorColor);
+        gd.setCornerRadii(new float[]{Utils.pxToDp(8), Utils.pxToDp(8), Utils.pxToDp(8), Utils.pxToDp(8), 0, 0, 0, 0});
+        line.setBackground(gd);
         line.setTag("tab_indicator");
 
         bg.addView(text, new LinearLayout.LayoutParams(-2, 0, 1));
-        bg.addView(line, new LinearLayout.LayoutParams(-1, (int) Utils.pxToDp(2), 0));
+        bg.addView(line, new LinearLayout.LayoutParams(-1, (int) Utils.pxToDp(3), 0));
 
         return bg;
     }
