@@ -265,7 +265,7 @@ public class TabView extends HorizontalScrollView {
         switch (event) {
             case "onSelect": {
                 View indicator = v.findViewWithTag("tab_indicator");
-                ObjectAnimator.ofFloat(indicator, "translationY", Utils.pxToDp(3), -Utils.pxToDp(3), 0).setDuration(400).start();
+                ObjectAnimator.ofFloat(indicator, "translationY", Utils.pxToDp(2), -Utils.pxToDp(3), 0).setDuration(500).start();
                 break;
             }
             case "onReselect": {
@@ -275,7 +275,7 @@ public class TabView extends HorizontalScrollView {
             }
             case "onUnselect": {
                 View indicator = v.findViewWithTag("tab_indicator");
-                ObjectAnimator.ofFloat(indicator, "translationY", 0, Utils.pxToDp(3)).setDuration(400).start();
+                ObjectAnimator.ofFloat(indicator, "translationY", 0, Utils.pxToDp(2)).setDuration(400).start();
                 break;
             }
         }
@@ -290,6 +290,7 @@ public class TabView extends HorizontalScrollView {
         LinearLayout bg = new LinearLayout(getContext());
         bg.setOrientation(LinearLayout.VERTICAL);
         bg.setTag("tab_background");
+        bg.setPadding(padding, 0, padding, 0);
         bg.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
         bg.setLayoutParams(new ViewGroup.LayoutParams(-2, -1));
 
@@ -300,7 +301,6 @@ public class TabView extends HorizontalScrollView {
         TextView text = new TextView(getContext());
         text.setText("");
         text.setTextColor(textColor);
-        text.setPadding(padding, 0, padding, 0);
         text.setTextSize(textSize);
         text.setTag("tab_text");
         text.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
