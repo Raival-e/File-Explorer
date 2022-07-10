@@ -152,13 +152,30 @@ public class TextEditorActivity extends BaseActivity {
     private String getCodeSample(boolean isJava) {
         try {
             return isJava
-                    ? FileUtils.copyFromInputStream(getAssets().open("sample_code/java_sample_code.txt"))
-                    : FileUtils.copyFromInputStream(getAssets().open("sample_code/kotlin_sample_code.txt"));
-        } catch (IOException e) {
+                    ? getJavaSampleCode()
+                    : getKotlinSampleCode();
+        } catch (Exception e) {
             Log.e(TAG, "something went wrong while loading " + (isJava ? "java" : "kotlin") + " sample code", e);
             App.showMsg("Failed to load sample code");
             return "";
         }
+    }
+
+    private String getJavaSampleCode() throws Exception {
+        File customSampleCode = new File(App.appContext.getExternalFilesDir(null), "sample_code/java_sample_code.java");
+        if (customSampleCode.exists() && customSampleCode.isFile()) {
+            return FileUtils.readFile(customSampleCode);
+        }
+
+        return FileUtils.copyFromInputStream(getAssets().open("sample_code/java_sample_code.java"));
+    }
+
+    private String getKotlinSampleCode() throws Exception {
+        File customSampleCode = new File(App.appContext.getExternalFilesDir(null), "sample_code/kotlin_sample_code.kt");
+        if (customSampleCode.exists() && customSampleCode.isFile()) {
+            return FileUtils.readFile(customSampleCode);
+        }
+        return FileUtils.copyFromInputStream(getAssets().open("sample_code/kotlin_sample_code.kt"));
     }
 
     private void detectLanguage(File file) {
