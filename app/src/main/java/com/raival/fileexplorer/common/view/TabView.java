@@ -321,9 +321,7 @@ public class TabView extends HorizontalScrollView {
     public void scrollToTab(Tab tab) {
         if (tab == null || tab.view == null) return;
         post(() -> {
-            int[] array = {0, 0};
-            tab.view.getLocationOnScreen(array);
-            smoothScrollTo(array[0], 0);
+            smoothScrollTo((int) tab.view.getX() - (int) Utils.pxToDp(50), 0);
         });
     }
 
