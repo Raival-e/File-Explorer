@@ -24,6 +24,7 @@ import com.raival.fileexplorer.activity.model.TextEditorViewModel;
 import com.raival.fileexplorer.common.BackgroundTask;
 import com.raival.fileexplorer.common.dialog.CustomDialog;
 import com.raival.fileexplorer.tab.file.executor.Executor;
+import com.raival.fileexplorer.tab.file.util.FileExtensions;
 import com.raival.fileexplorer.tab.file.util.FileUtils;
 import com.raival.fileexplorer.util.Log;
 import com.raival.fileexplorer.util.PrefsUtils;
@@ -123,7 +124,7 @@ public class TextEditorActivity extends BaseActivity {
                 editor.setText(FileUtils.readFile(editorViewModel.file));
             }
         } catch (Exception exception) {
-            Log.e(TAG, "something went wrong while reading file: " + editorViewModel.file.getAbsolutePath(), exception);
+            Log.e(TAG, Log.SOMETHING_WENT_WRONG + " while reading file: " + editorViewModel.file.getAbsolutePath(), exception);
             App.showMsg("Failed to read file: " + editorViewModel.file.getAbsolutePath());
             finish();
         }
@@ -155,7 +156,7 @@ public class TextEditorActivity extends BaseActivity {
                     ? getJavaSampleCode()
                     : getKotlinSampleCode();
         } catch (Exception e) {
-            Log.e(TAG, "something went wrong while loading " + (isJava ? "java" : "kotlin") + " sample code", e);
+            Log.e(TAG, Log.SOMETHING_WENT_WRONG + " while loading " + (isJava ? FileExtensions.javaType : "kotlin") + " sample code", e);
             App.showMsg("Failed to load sample code");
             return "";
         }
@@ -181,10 +182,10 @@ public class TextEditorActivity extends BaseActivity {
     private void detectLanguage(File file) {
         String ext = FileUtils.getFileExtension(file).toLowerCase();
         switch (ext) {
-            case "java":
+            case FileExtensions.javaType:
                 setEditorLanguage(LANGUAGE_JAVA);
                 break;
-            case "kt":
+            case FileExtensions.KotlinType:
                 setEditorLanguage(LANGUAGE_KOTLIN);
                 break;
             case "json":
@@ -288,7 +289,7 @@ public class TextEditorActivity extends BaseActivity {
         menu.findItem(R.id.editor_option_line_number).setChecked(PrefsUtils.getTextEditorShowLineNumber());
         menu.findItem(R.id.editor_option_read_only).setChecked(PrefsUtils.getTextEditorReadOnly());
 
-        if (!"java".equals(FileUtils.getFileExtension(editorViewModel.file))
+        if (!FileExtensions.javaType.equals(FileUtils.getFileExtension(editorViewModel.file))
                 && !"xml".equals(FileUtils.getFileExtension(editorViewModel.file))
                 && !"json".equals(FileUtils.getFileExtension(editorViewModel.file))) {
             menu.findItem(R.id.editor_format).setVisible(false);
@@ -396,8 +397,8 @@ public class TextEditorActivity extends BaseActivity {
                     new InputStreamReader(getAssets().open("textmate/json/language-configuration.json")),
                     ((TextMateColorScheme) getColorScheme(true)).getRawTheme());
         } catch (IOException e) {
-            Log.e(TAG, "something went wrong while loading JsonLanguage", e);
-            App.showMsg("Unable to set the language: textmate/json/syntax/kotlin.tmLanguage.json");
+            Log.e(TAG, Log.SOMETHING_WENT_WRONG + " while loading JsonLanguage", e);
+            App.showMsg(Log.UNABLE_TO + " set the language: textmate/json/syntax/kotlin.tmLanguage.json");
             return new EmptyLanguage();
         }
     }
@@ -409,8 +410,8 @@ public class TextEditorActivity extends BaseActivity {
                     new InputStreamReader(getAssets().open("textmate/xml/language-configuration.json")),
                     ((TextMateColorScheme) getColorScheme(true)).getRawTheme());
         } catch (IOException e) {
-            Log.e(TAG, "something went wrong while loading XmlLanguage", e);
-            App.showMsg("Unable to set the language: textmate/xml/syntax/xml.tmLanguage.json");
+            Log.e(TAG, Log.SOMETHING_WENT_WRONG + " while loading XmlLanguage", e);
+            App.showMsg(Log.UNABLE_TO + " set the language: textmate/xml/syntax/xml.tmLanguage.json");
             return new EmptyLanguage();
         }
     }
@@ -422,8 +423,8 @@ public class TextEditorActivity extends BaseActivity {
                     new InputStreamReader(getAssets().open("textmate/kotlin/language-configuration.json")),
                     ((TextMateColorScheme) getColorScheme(true)).getRawTheme());
         } catch (IOException e) {
-            Log.e(TAG, "something went wrong while loading KotlinLanguage", e);
-            App.showMsg("Unable to set the language: textmate/kotlin/syntax/kotlin.tmLanguage");
+            Log.e(TAG, Log.SOMETHING_WENT_WRONG + " while loading KotlinLanguage", e);
+            App.showMsg(Log.UNABLE_TO + " set the language: textmate/kotlin/syntax/kotlin.tmLanguage");
             return new EmptyLanguage();
         }
     }
@@ -440,8 +441,8 @@ public class TextEditorActivity extends BaseActivity {
                 return TextMateColorScheme.create(ThemeReader.readThemeSync("light.tmTheme",
                         getAssets().open("textmate/light.tmTheme")));
             } catch (Exception e) {
-                Log.e(TAG, "something went wrong while creating light scheme for textmate language", e);
-                App.showMsg("Unable to load: textmate/light.tmTheme");
+                Log.e(TAG, Log.SOMETHING_WENT_WRONG + " while creating light scheme for textmate language", e);
+                App.showMsg(Log.UNABLE_TO + " load: textmate/light.tmTheme");
             }
         }
         EditorColorScheme scheme = new LightScheme();
@@ -457,8 +458,8 @@ public class TextEditorActivity extends BaseActivity {
                 return TextMateColorScheme.create(ThemeReader.readThemeSync("dark.json",
                         getAssets().open("textmate/dark.json")));
             } catch (Exception e) {
-                Log.e(TAG, "something went wrong while creating dark scheme for textmate language", e);
-                App.showMsg("Unable to load: textmate/dark.json");
+                Log.e(TAG, Log.SOMETHING_WENT_WRONG + " while creating dark scheme for textmate language", e);
+                App.showMsg(Log.UNABLE_TO + " load: textmate/dark.json");
             }
         }
         EditorColorScheme scheme = new DarkScheme();
@@ -510,8 +511,8 @@ public class TextEditorActivity extends BaseActivity {
         try {
             FileUtils.writeFile(editorViewModel.file, content);
         } catch (IOException e) {
-            Log.e(TAG, "Unable to write to file " + editorViewModel.file, e);
-            App.showMsg("Something went wrong, check app debug for more details");
+            Log.e(TAG, Log.UNABLE_TO + " write to file " + editorViewModel.file, e);
+            App.showMsg(Log.SOMETHING_WENT_WRONG + ", check app debug for more details");
         }
 
     }

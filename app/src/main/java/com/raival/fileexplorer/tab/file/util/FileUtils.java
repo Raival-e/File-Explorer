@@ -42,6 +42,7 @@ import java.util.Objects;
 
 public class FileUtils {
     public final static String INTERNAL_STORAGE = "Internal Storage";
+    public final static String CREATE_FILE = "create file";
     private static final String TAG = "FileUtils";
 
     public static Comparator<File> sortFoldersFirst() {
@@ -375,7 +376,7 @@ public class FileUtils {
             throw new IOException(file.getAbsolutePath() + " doesn't exist");
         }
         if (!file.exists() && !file.createNewFile()) {
-            throw new IOException("Failed to create file: " + file.getAbsolutePath());
+            throw new IOException(Log.UNABLE_TO + " " + FileUtils.CREATE_FILE + ": " + file.getAbsolutePath());
         }
         FileWriter fileWriter = new FileWriter(file, false);
         fileWriter.write(content);
@@ -476,13 +477,13 @@ public class FileUtils {
      */
     public static void copyFile(File fileToCopy, String fileName, File destinationFolder, boolean overwrite) throws Exception {
         if (!destinationFolder.exists() && !destinationFolder.mkdirs()) {
-            throw new Exception("Unable to create folder: " + destinationFolder);
+            throw new Exception(Log.UNABLE_TO + " create folder: " + destinationFolder);
         }
 
         final File newFile = new File(destinationFolder, fileName);
         if (newFile.exists() && !overwrite) return;
         if (!newFile.exists() && !newFile.createNewFile()) {
-            throw new Exception("Unable to create file: " + newFile);
+            throw new Exception(Log.UNABLE_TO + " " + FileUtils.CREATE_FILE + ": " + newFile);
         }
 
         FileInputStream fileInputStream = new FileInputStream(fileToCopy);
@@ -515,11 +516,11 @@ public class FileUtils {
     public static void copyFolder(File folderToCopy, String folderName, File destinationFolder, boolean overwrite) throws Exception {
         final File newFolder = new File(destinationFolder, folderName);
         if (!newFolder.exists() && !newFolder.mkdirs()) {
-            throw new Exception("Unable to create folder: " + newFolder);
+            throw new Exception(Log.UNABLE_TO + " create folder: " + newFolder);
         }
 
         if (newFolder.isFile()) {
-            throw new Exception("Unable to create folder: " + newFolder + ".\nA file with the same name exists.");
+            throw new Exception(Log.UNABLE_TO + " create folder: " + newFolder + ".\nA file with the same name exists.");
         }
 
         final File[] folderContent = folderToCopy.listFiles();
@@ -549,12 +550,12 @@ public class FileUtils {
 
                     if (subFile.isFile()) {
                         if (!subFile.delete())
-                            throw new Exception("Unable to delete file: " + subFile);
+                            throw new Exception(Log.UNABLE_TO + " delete file: " + subFile);
                     }
                 }
             }
         }
-        if (!file.delete()) throw new Exception("Unable to delete file: " + file);
+        if (!file.delete()) throw new Exception(Log.UNABLE_TO + " delete file: " + file);
     }
 
     public static void deleteFiles(ArrayList<File> selectedFiles) throws Exception {

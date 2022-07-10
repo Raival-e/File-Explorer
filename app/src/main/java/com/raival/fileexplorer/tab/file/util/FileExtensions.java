@@ -10,4 +10,6 @@ public class FileExtensions {
     public final static String apkType = "apk";
     public final static String rarType = "rar";
     public final static String pdfType = "pdf";
+    public final static String javaType = "java";
+    public final static String KotlinType = "kt";
 }

@@ -38,7 +38,7 @@ public class FileOpener {
                 new ModuleRunner(file, mainActivity).run();
             } catch (Exception e) {
                 Log.e(TAG, e);
-                App.showMsg("Something went wrong, check logs for more details");
+                App.showMsg(Log.SOMETHING_WENT_WRONG + ", check logs for more details");
             }
             return true;
         }

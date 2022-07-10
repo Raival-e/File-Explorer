@@ -3,6 +3,8 @@ package com.raival.fileexplorer.util;
 import android.annotation.SuppressLint;
 import android.content.Context;
 
+import com.raival.fileexplorer.tab.file.util.FileUtils;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
@@ -12,6 +14,10 @@ import java.text.SimpleDateFormat;
 
 public class Log {
     public final static String TAG = "CustomLog";
+    // This is just a common phrase used in many classes
+    public final static String UNABLE_TO = "Unable to";
+    public final static String SOMETHING_WENT_WRONG = "Something went wrong while";
+
     public static File logFile;
 
     public static void start(Context context) {
@@ -84,13 +90,13 @@ public class Log {
         if (logFile == null) return;
 
         if (!logFile.getParentFile().exists() && !logFile.getParentFile().mkdirs()) {
-            android.util.Log.e(TAG, "Unable to create file: " + logFile.getParentFile());
+            android.util.Log.e(TAG, Log.UNABLE_TO + " " + FileUtils.CREATE_FILE + ": " + logFile.getParentFile());
             return;
         }
 
         try {
             if (!logFile.exists() && !logFile.createNewFile()) {
-                android.util.Log.e(TAG, "Unable to create file: " + logFile);
+                android.util.Log.e(TAG, Log.UNABLE_TO + " " + FileUtils.CREATE_FILE + ": " + logFile);
                 return;
             }
 
@@ -112,7 +118,7 @@ public class Log {
             fileWriter.flush();
             fileWriter.close();
         } catch (Exception e) {
-            android.util.Log.e(TAG, "Unable to write to log file" + System.lineSeparator() + e);
+            android.util.Log.e(TAG, Log.UNABLE_TO + " write to log file" + System.lineSeparator() + e);
             android.util.Log.e(tag, msg, throwable);
         }
     }

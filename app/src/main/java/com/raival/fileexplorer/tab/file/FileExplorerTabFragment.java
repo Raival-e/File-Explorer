@@ -194,7 +194,7 @@ public class FileExplorerTabFragment extends BaseTabFragment {
                                 setCurrentDirectory(file);
                             }
                         } else {
-                            App.showMsg("Unable to read the provided file");
+                            App.showMsg(Log.UNABLE_TO + " read the provided file");
                         }
                     } else {
                         App.showMsg("The destination path doesn't exist!");
@@ -225,7 +225,7 @@ public class FileExplorerTabFragment extends BaseTabFragment {
         File file = new File(getCurrentDirectory(), name);
         if (isFolder) {
             if (!file.mkdir()) {
-                App.showMsg("Unable to create folder: " + file.getAbsolutePath());
+                App.showMsg(Log.UNABLE_TO + " create folder: " + file.getAbsolutePath());
             } else {
                 refresh();
                 focusOn(file);
@@ -233,7 +233,7 @@ public class FileExplorerTabFragment extends BaseTabFragment {
         } else {
             try {
                 if (!file.createNewFile()) {
-                    App.showMsg("Unable to create file: " + file.getAbsolutePath());
+                    App.showMsg(Log.UNABLE_TO + " " + FileUtils.CREATE_FILE + ": " + file.getAbsolutePath());
                 } else {
                     refresh();
                     focusOn(file);

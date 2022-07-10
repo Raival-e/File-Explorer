@@ -79,7 +79,7 @@ public class D8Utils {
                     if (!f.exists()) {
                         boolean success = f.createNewFile();
                         if (!success) {
-                            Log.w(TAG, "Failed to create file " + f.getName());
+                            Log.w(TAG, com.raival.fileexplorer.util.Log.UNABLE_TO + " " + FileUtils.CREATE_FILE + " " + f.getName());
                             continue;
                         }
                         FileOutputStream fileOutputStream = new FileOutputStream(f);

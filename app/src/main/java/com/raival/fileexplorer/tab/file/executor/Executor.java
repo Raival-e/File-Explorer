@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.tools.r8.D8;
 import com.raival.fileexplorer.tab.file.util.D8Utils;
 import com.raival.fileexplorer.tab.file.util.FileUtils;
+import com.raival.fileexplorer.util.Log;
 
 import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments;
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity;
@@ -89,11 +90,11 @@ public class Executor {
     private void compileKotlin() throws Exception {
         final File ktHome = new File(output, "ktHome");
         if (ktHome.mkdir()) {
-            throw new Exception("Unable to create file: " + ktHome);
+            throw new Exception(Log.UNABLE_TO + " " + FileUtils.CREATE_FILE + ": " + ktHome);
         }
         final File classes = new File(output, "classes");
         if (!classes.mkdir()) {
-            throw new Exception("Unable to create file: " + classes);
+            throw new Exception(Log.UNABLE_TO + " " + FileUtils.CREATE_FILE + ": " + classes);
         }
 
         K2JVMCompiler k2JVMCompiler = new K2JVMCompiler();
@@ -138,7 +139,7 @@ public class Executor {
         ArrayList<String> opt = new ArrayList<>();
         final File classes = new File(output, "classes");
         if (!classes.mkdir()) {
-            throw new Exception("Unable to create file: " + classes);
+            throw new Exception(Log.UNABLE_TO + " " + FileUtils.CREATE_FILE + ": " + classes);
         }
 
         opt.add("-11");

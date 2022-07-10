@@ -42,8 +42,6 @@ public class PathRootAdapter extends RecyclerView.Adapter<PathRootAdapter.ViewHo
         return getRootList(parentFragment.getCurrentDirectory()).size();
     }
 
-    //TODO: add this method to FileExplorerTabFragment and call it when setCurrentDirectory is called and
-    // store the result
     public ArrayList<File> getRootList(File dir) {
         ArrayList<File> list = new ArrayList<>();
         File file = dir;
