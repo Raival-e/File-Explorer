@@ -8,7 +8,7 @@
     android:gravity="center">
 
     <LinearLayout
-        android:id="@+id/path_treeview_layout"
+        android:id="@+id/path_history_layout"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:orientation="horizontal"
@@ -27,7 +27,7 @@
             android:clickable="true" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/path_root"
+            android:id="@+id/path_history"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:itemCount="2"
@@ -39,7 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:alpha="0.5"
-        app:layout_constraintTop_toBottomOf="@+id/path_treeview_layout" />
+        app:layout_constraintTop_toBottomOf="@+id/path_history_layout" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv"

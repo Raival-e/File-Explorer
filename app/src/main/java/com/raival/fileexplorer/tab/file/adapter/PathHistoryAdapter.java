@@ -10,47 +10,35 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.raival.fileexplorer.R;
 import com.raival.fileexplorer.tab.file.FileExplorerTabFragment;
+import com.raival.fileexplorer.tab.file.dialog.FileInfoDialog;
 import com.raival.fileexplorer.tab.file.util.FileUtils;
 import com.raival.fileexplorer.util.Utils;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
 
-public class PathRootAdapter extends RecyclerView.Adapter<PathRootAdapter.ViewHolder> {
+public class PathHistoryAdapter extends RecyclerView.Adapter<PathHistoryAdapter.ViewHolder> {
     private final FileExplorerTabFragment parentFragment;
 
-    public PathRootAdapter(FileExplorerTabFragment parentFragment) {
+    public PathHistoryAdapter(FileExplorerTabFragment parentFragment) {
         this.parentFragment = parentFragment;
     }
 
     @NonNull
     @Override
-    public PathRootAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        @SuppressLint("InflateParams") View v = parentFragment.requireActivity().getLayoutInflater().inflate(R.layout.file_explorer_tab_path_root_view, null);
+    public PathHistoryAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        @SuppressLint("InflateParams") View v = parentFragment.requireActivity().getLayoutInflater().inflate(R.layout.file_explorer_tab_path_history_view, null);
         v.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
         return new ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PathRootAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull PathHistoryAdapter.ViewHolder holder, int position) {
         holder.bind();
     }
 
     @Override
     public int getItemCount() {
-        return getRootList(parentFragment.getCurrentDirectory()).size();
-    }
-
-    public ArrayList<File> getRootList(File dir) {
-        ArrayList<File> list = new ArrayList<>();
-        File file = dir;
-        while (file != null && file.canRead()) {
-            list.add(file);
-            file = file.getParentFile();
-        }
-        Collections.reverse(list);
-        return list;
+        return parentFragment.getPathHistory().size();
     }
 
     protected class ViewHolder extends RecyclerView.ViewHolder {
@@ -63,16 +51,22 @@ public class PathRootAdapter extends RecyclerView.Adapter<PathRootAdapter.ViewHo
 
         public void bind() {
             final int position = getAdapterPosition();
-            label.setText(FileUtils.isExternalStorageFolder(getRootList(parentFragment.getCurrentDirectory()).get(position))
+            final File file = parentFragment.getPathHistory().get(position);
+
+            label.setText(FileUtils.isExternalStorageFolder(file)
                     ? FileUtils.INTERNAL_STORAGE
-                    : getRootList(parentFragment.getCurrentDirectory()).get(position).getName());
+                    : file.getName());
             label.setTextColor((position == getItemCount() - 1)
                     ? Utils.getColorAttribute(R.attr.colorPrimary, parentFragment.requireActivity())
                     : Utils.getColorAttribute(R.attr.colorOutline, parentFragment.requireActivity()));
             itemView.setOnClickListener(view -> {
-                parentFragment.setCurrentDirectory(getRootList(parentFragment.getCurrentDirectory()).get(position));
+                parentFragment.setCurrentDirectory(file);
                 // Restore RecyclerView state
                 parentFragment.restoreRecyclerViewState();
+            });
+            itemView.setOnLongClickListener(v -> {
+                new FileInfoDialog(file).setUseDefaultFileInfo(true).show(parentFragment.getParentFragmentManager(), "");
+                return true;
             });
         }
     }

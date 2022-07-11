@@ -25,7 +25,7 @@ import com.raival.fileexplorer.common.dialog.CustomDialog;
 import com.raival.fileexplorer.tab.BaseDataHolder;
 import com.raival.fileexplorer.tab.BaseTabFragment;
 import com.raival.fileexplorer.tab.file.adapter.FileListAdapter;
-import com.raival.fileexplorer.tab.file.adapter.PathRootAdapter;
+import com.raival.fileexplorer.tab.file.adapter.PathHistoryAdapter;
 import com.raival.fileexplorer.tab.file.dialog.SearchDialog;
 import com.raival.fileexplorer.tab.file.dialog.TasksDialog;
 import com.raival.fileexplorer.tab.file.model.FileItem;
@@ -41,6 +41,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -48,9 +49,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class FileExplorerTabFragment extends BaseTabFragment {
     public final static int MAX_NAME_LENGTH = 32;
     private static final String TAG = "FileExplorerTabFragment";
+
     private final ArrayList<FileItem> files = new ArrayList<>();
+    private ArrayList<File> pathHistory = new ArrayList<>();
     private RecyclerView fileList;
-    private RecyclerView pathRootRv;
+
+    private RecyclerView pathHistoryRv;
     private View placeHolder;
     private FileOptionHandler fileOptionHandler;
     private File previousDirectory;
@@ -76,7 +80,7 @@ public class FileExplorerTabFragment extends BaseTabFragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.file_explorer_tab_fragment, container, false);
         fileList = view.findViewById(R.id.rv);
-        pathRootRv = view.findViewById(R.id.path_root);
+        pathHistoryRv = view.findViewById(R.id.path_history);
         placeHolder = view.findViewById(R.id.place_holder);
 
         final View homeButton = view.findViewById(R.id.home);
@@ -350,12 +354,12 @@ public class FileExplorerTabFragment extends BaseTabFragment {
     private void initFileList() {
         fileList.setAdapter(new FileListAdapter(this));
         fileList.setHasFixedSize(true);
-        initPathRoot();
+        initPathHistory();
     }
 
-    private void initPathRoot() {
-        pathRootRv.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false));
-        pathRootRv.setAdapter(new PathRootAdapter(this));
+    private void initPathHistory() {
+        pathHistoryRv.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false));
+        pathHistoryRv.setAdapter(new PathHistoryAdapter(this));
     }
 
     /**
@@ -377,7 +381,7 @@ public class FileExplorerTabFragment extends BaseTabFragment {
      * This method is called when:
      * - Create the fragment
      * - #onBackPressed()
-     * - when select a directory from pathRoot RecyclerView
+     * - when select a directory from pathHistory RecyclerView
      */
     public void restoreRecyclerViewState() {
         Parcelable savedState = ((FileExplorerTabDataHolder) getDataHolder()).recyclerViewStates.get(getCurrentDirectory());
@@ -388,13 +392,13 @@ public class FileExplorerTabFragment extends BaseTabFragment {
     }
 
     /**
-     * Refreshes both fileList and pathRoot recyclerview (used by #setCurrentDirectory(File) ONLY)
+     * Refreshes both fileList and pathHistory recyclerview (used by #setCurrentDirectory(File) ONLY)
      */
     @SuppressLint("NotifyDataSetChanged")
     private void refreshFileList() {
         Objects.requireNonNull(fileList.getAdapter()).notifyDataSetChanged();
-        Objects.requireNonNull(pathRootRv.getAdapter()).notifyDataSetChanged();
-        pathRootRv.scrollToPosition(pathRootRv.getAdapter().getItemCount() - 1);
+        Objects.requireNonNull(pathHistoryRv.getAdapter()).notifyDataSetChanged();
+        pathHistoryRv.scrollToPosition(pathHistoryRv.getAdapter().getItemCount() - 1);
         fileList.scrollToPosition(0);
         if (getToolbar() != null)
             getToolbar().setSubtitle(FileUtils.getFormattedFileCount(getCurrentDirectory()));
@@ -476,7 +480,11 @@ public class FileExplorerTabFragment extends BaseTabFragment {
         return files;
     }
 
-    //______________| Getter and Setter |_______________\\
+    //______________| Getters and Setters |_______________\\
+
+    public ArrayList<File> getPathHistory() {
+        return pathHistory;
+    }
 
     public File getCurrentDirectory() {
         return currentDirectory;
@@ -488,7 +496,8 @@ public class FileExplorerTabFragment extends BaseTabFragment {
      * - Updating recyclerViewStates in DataHolder
      * - Sorting files based on the preferences
      * - Updating tabView title
-     * - Refreshing adapters (fileList & pathRoot)
+     * - Update pathHistory list
+     * - Refreshing adapters (fileList & pathHistory)
      * - Updating activeDirectory in DataHolder
      *
      * @param dir the directory to open
@@ -501,8 +510,20 @@ public class FileExplorerTabFragment extends BaseTabFragment {
                 .recyclerViewStates.put(previousDirectory, Objects.requireNonNull(fileList.getLayoutManager()).onSaveInstanceState());
         prepareFiles();
         updateTabTitle();
+        updatePathHistoryList();
         refreshFileList();
         ((FileExplorerTabDataHolder) getDataHolder()).activeDirectory = getCurrentDirectory();
+    }
+
+    private void updatePathHistoryList() {
+        ArrayList<File> list = new ArrayList<>();
+        File file = getCurrentDirectory();
+        while (file != null && file.canRead()) {
+            list.add(file);
+            file = file.getParentFile();
+        }
+        Collections.reverse(list);
+        pathHistory = list;
     }
 
     public File getPreviousDirectory() {
