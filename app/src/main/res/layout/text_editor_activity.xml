@@ -9,7 +9,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardElevation="2dp"
+        android:elevation="2dp"
         style="@style/Widget.Material3.Toolbar.Surface"/>
     <io.github.rosemoe.sora.widget.CodeEditor
         android:id="@+id/editor"

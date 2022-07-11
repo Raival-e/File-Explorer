@@ -81,7 +81,7 @@ public class TextEditorActivity extends BaseActivity {
 
         SymbolInputView inputView = findViewById(R.id.symbol_input);
         inputView.bindEditor(editor);
-        inputView.setBackgroundColor(SurfaceColors.SURFACE_1.getColor(this));
+        inputView.setBackgroundColor(SurfaceColors.SURFACE_2.getColor(this));
         inputView.setTextColor(Utils.getColorAttribute(R.attr.colorOnSurface, this));
         inputView.addSymbols(new String[]{"->", "_", "=", "{", "}", "<", ">", "|", "\\", "?", "+", "-", "*", "/"},
                 new String[]{"\t", "_", "=", "{", "}", "<", ">", "|", "\\", "?", "+", "-", "*", "/"});
