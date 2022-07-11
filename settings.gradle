@@ -6,7 +6,7 @@ dependencyResolutionManagement {
         jcenter() // Warning: this repository is going to shut down soon
     }
 }
-rootProject.name = "Quick tools"
+rootProject.name = "File Explorer"
 include ':app'
 include ':kotlinc'
 include ':build-logic'
