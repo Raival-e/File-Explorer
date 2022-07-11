@@ -2,6 +2,7 @@ package com.raival.fileexplorer.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.Menu;
@@ -43,6 +44,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class MainActivity extends BaseActivity {
+    private static final String LINK = "https://github.com/Raival-e/File-Explorer";
     private boolean confirmExit = false;
     private TabView tabView;
     private FragmentContainerView fragmentContainerView;
@@ -250,14 +252,22 @@ public class MainActivity extends BaseActivity {
 
         MaterialToolbar materialToolbar = drawerLayout.findViewById(R.id.toolbar);
         materialToolbar.setTitle(R.string.app_name);
-        materialToolbar.setSubtitle("https://github.com/Raival-e/File-Explorer");
+        materialToolbar.setSubtitle(LINK);
         materialToolbar.getMenu().clear();
-        materialToolbar.getMenu().add("Settings")
-                .setIcon(R.drawable.ic_round_settings_24)
+        materialToolbar.getMenu().add("GitHub")
+                .setOnMenuItemClickListener(item -> openGithubPage())
+                .setIcon(R.drawable.ic_baseline_open_in_browser_24)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         updateStorageSpace();
         updateRootSpace();
+    }
+
+    private boolean openGithubPage() {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(LINK));
+        startActivity(intent);
+        return true;
     }
 
     @SuppressLint("SetTextI18n")
@@ -299,6 +309,7 @@ public class MainActivity extends BaseActivity {
                 .commit();
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
