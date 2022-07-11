@@ -10,7 +10,14 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/icon"
-        android:layout_width="20dp"
-        android:layout_height="20dp" />
+        android:layout_width="21dp"
+        android:layout_height="21dp"
+        android:layout_marginBottom="2dp" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="11sp" />
 
 </LinearLayout>

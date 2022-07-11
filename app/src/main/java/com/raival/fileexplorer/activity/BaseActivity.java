@@ -25,7 +25,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setStatusBarColor(SurfaceColors.SURFACE_1.getColor(this));
+        getWindow().setStatusBarColor(SurfaceColors.SURFACE_2.getColor(this));
     }
 
     protected void checkPermissions() {

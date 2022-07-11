@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
@@ -30,6 +31,7 @@ public class BottomBarView extends LinearLayout {
                 .inflate(R.layout.bottom_bar_menu_item, this, false);
         view.setOnClickListener(clickListener);
         view.setTooltipText(tag);
+        ((TextView) view.findViewById(R.id.label)).setText(tag);
         ImageView image = view.findViewById(R.id.icon);
         image.setImageResource(icon);
         addView(view);
