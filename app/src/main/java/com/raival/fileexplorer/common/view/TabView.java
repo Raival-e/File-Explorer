@@ -290,7 +290,7 @@ public class TabView extends HorizontalScrollView {
         LinearLayout bg = new LinearLayout(getContext());
         bg.setOrientation(LinearLayout.VERTICAL);
         bg.setTag("tab_background");
-        bg.setPadding(padding, 0, padding, 0);
+        bg.setPadding(0, 0, padding, 0);
         bg.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
         bg.setLayoutParams(new ViewGroup.LayoutParams(-2, -1));
 
