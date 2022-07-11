@@ -89,7 +89,7 @@ public class Executor {
      */
     private void compileKotlin() throws Exception {
         final File ktHome = new File(output, "ktHome");
-        if (ktHome.mkdir()) {
+        if (!ktHome.mkdir()) {
             throw new Exception(Log.UNABLE_TO + " " + FileUtils.CREATE_FILE + ": " + ktHome);
         }
         final File classes = new File(output, "classes");
