@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             app:titleTextAppearance="@style/TextAppearance.Material3.TitleMedium"
             app:subtitleTextAppearance="@style/TextAppearance.Material3.BodySmall"
-            android:elevation="2dp"
+            android:elevation="3dp"
             style="@style/Widget.Material3.Toolbar.Surface" />
 
         <com.google.android.material.card.MaterialCardView
@@ -26,7 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardCornerRadius="0dp"
-            app:cardElevation="2dp">
+            app:cardElevation="3dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -64,7 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardCornerRadius="0dp"
-            app:cardElevation="2dp">
+            app:cardElevation="3dp">
 
             <com.raival.fileexplorer.common.view.BottomBarView
                 android:id="@+id/bottom_bar_view"

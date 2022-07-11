@@ -9,7 +9,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="2dp"
+        android:elevation="3dp"
         style="@style/Widget.Material3.Toolbar.Surface"/>
     <io.github.rosemoe.sora.widget.CodeEditor
         android:id="@+id/editor"
@@ -32,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardCornerRadius="0dp"
-        app:cardElevation="2dp">
+        app:cardElevation="3dp">
 
         <LinearLayout
             tools:ignore="HardcodedText"

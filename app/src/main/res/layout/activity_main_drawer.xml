@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         app:titleTextAppearance="@style/TextAppearance.Material3.TitleMedium"
         app:subtitleTextAppearance="@style/TextAppearance.Material3.BodySmall"
-        android:elevation="2dp"
+        android:elevation="3dp"
         style="@style/Widget.Material3.Toolbar.Surface" />
 
     <LinearLayout
