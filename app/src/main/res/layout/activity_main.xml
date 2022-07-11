@@ -36,15 +36,12 @@
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/tabs_options"
-                    android:layout_width="wrap_content"
+                    android:layout_width="56dp"
                     android:layout_height="match_parent"
                     android:src="@drawable/ic_baseline_add_24"
                     android:background="?android:attr/selectableItemBackground"
                     android:clickable="true"
-                    android:rotation="90"
-                    android:scaleType="centerInside"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp" />
+                    android:scaleType="centerInside" />
 
                 <com.raival.fileexplorer.common.view.TabView
                     android:id="@+id/tabs"
