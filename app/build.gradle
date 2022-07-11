@@ -42,6 +42,9 @@ android {
 }
 
 dependencies {
+    api project(path: ":kotlinc")
+    api project(path: ":build-logic")
+
     implementation fileTree(dir: "libs", include: ["*.aar"])
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
@@ -55,8 +58,14 @@ dependencies {
     implementation "com.pixplicity.easyprefs:EasyPrefs:1.10.0"
     implementation "net.lingala.zip4j:zip4j:2.11.1"
 
-    implementation "io.github.Rosemoe.sora-editor:editor:0.13.1", { exclude group: "androidx.annotation", module: "annotation" }
-    implementation "io.github.Rosemoe.sora-editor:language-textmate:0.13.1"
+    implementation "io.github.Rosemoe.sora-editor:editor:0.13.1", {
+        exclude group: "androidx.annotation", module: "annotation"
+    }
+    implementation "io.github.Rosemoe.sora-editor:language-textmate:0.13.1", {
+        // I had to exclude it to resolve a conflict with some kotlinc classes (javax.xml.stream.*)
+        // TODO: only exclude classes in javax.xml.stream
+        exclude group: "xml-apis", module: "xml-apis"
+    }
     implementation "io.github.Rosemoe.sora-editor:language-java:0.13.1"
 
     implementation "io.github.damianvdb:materialchecklist:1.0.0"
@@ -67,7 +76,4 @@ dependencies {
     testImplementation "junit:junit:4.13.2"
     androidTestImplementation "androidx.test.ext:junit:1.1.3"
     androidTestImplementation "androidx.test.espresso:espresso-core:3.4.0"
-
-    implementation project(path: ":kotlinc")
-    implementation project(path: ":build-logic")
 }

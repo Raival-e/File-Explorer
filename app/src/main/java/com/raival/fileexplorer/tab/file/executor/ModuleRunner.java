@@ -56,7 +56,7 @@ public class ModuleRunner {
 
         // Look for a public static method called `main` and invoke it
         for (Method method : clazz.getMethods()) {
-            if (method.getName().equals("main") && method.getModifiers() == Modifier.PUBLIC + Modifier.STATIC) {
+            if (method.getName().equals("main") && method.getModifiers() > Modifier.STATIC) {
                 ArrayList<Object> params = new ArrayList<>();
                 for (Object obj : method.getParameterTypes()) {
                     if (obj.equals(AppCompatActivity.class)) {
