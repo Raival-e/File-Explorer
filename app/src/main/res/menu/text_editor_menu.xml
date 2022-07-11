@@ -2,13 +2,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/editor_option_save"
-        android:title="Save"/>
+        android:id="@+id/editor_option_text_undo"
+        android:title="Undo"
+        android:icon="@drawable/ic_round_undo_24" />
+    <item
+        android:id="@+id/editor_option_text_redo"
+        android:title="Redo"
+        android:icon="@drawable/ic_round_redo_24" />
     <item
         android:id="@+id/editor_option_search"
-        android:title="Search"/>
+        android:title="Search"
+        android:icon="@drawable/ic_round_search_24" />
 
-    <item android:title="Languages">
+    <item
+        android:title="Languages"
+        android:icon="@drawable/ic_baseline_layers_24">
         <menu>
             <group android:checkableBehavior="single">
                 <item
@@ -25,7 +33,9 @@
         </menu>
     </item>
 
-    <item android:title="Configuration">
+    <item
+        android:title="Configuration"
+        android:icon="@drawable/ic_round_settings_24">
         <menu>
             <item
                 android:id="@+id/editor_option_wordwrap"
@@ -60,22 +70,16 @@
 
     <item
         android:id="@+id/editor_format"
-        android:title="Format" />
-
-    <item
-        android:id="@+id/editor_option_text_undo"
-        android:title="Undo"
-        android:icon="@drawable/ic_round_undo_24"
-        app:showAsAction="always"/>
-    <item
-        android:id="@+id/editor_option_text_redo"
-        android:title="Redo"
-        android:icon="@drawable/ic_round_redo_24"
-        app:showAsAction="always"/>
-
+        android:title="Format"
+        android:icon="@drawable/ic_baseline_sort_24" />
     <item
         android:id="@+id/editor_execute"
         android:title="Execute"
         android:icon="@drawable/ic_round_play_arrow_24"
-        app:showAsAction="always"/>
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/editor_option_save"
+        android:title="Save"
+        android:icon="@drawable/ic_baseline_save_24"
+        app:showAsAction="always" />
 </menu>

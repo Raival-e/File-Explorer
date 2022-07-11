@@ -1,5 +1,6 @@
 package com.raival.fileexplorer.activity;
 
+import android.annotation.SuppressLint;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
@@ -8,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -280,8 +282,10 @@ public class TextEditorActivity extends BaseActivity {
                 || new File(editorViewModel.file.getParentFile(), "Main.kt").exists();
     }
 
+    @SuppressLint("RestrictedApi")
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.text_editor_menu, menu);
+        ((MenuBuilder) menu).setOptionalIconsVisible(true);
 
         menu.findItem(R.id.editor_option_wordwrap).setChecked(PrefsUtils.getTextEditorWordwrap());
         menu.findItem(R.id.editor_option_magnifier).setChecked(PrefsUtils.getTextEditorMagnifier());
