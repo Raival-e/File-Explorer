@@ -76,18 +76,18 @@ public class FileOptionHandler {
         }
 
         if (selectedFiles.size() == 1) {
-            final ArrayList<String> list = PrefsUtils.getFileExplorerTabBookmarks();
+            final ArrayList<String> list = PrefsUtils.TextEditor.getFileExplorerTabBookmarks();
             if (!list.contains(selectedFiles.get(0).toString())) {
                 bottomDialog.addOption("Add to bookmarks", R.drawable.ic_baseline_bookmark_add_24, v -> {
                     list.add(selectedFiles.get(0).getAbsolutePath());
-                    PrefsUtils.setFileExplorerTabBookmarks(list);
+                    PrefsUtils.General.setFileExplorerTabBookmarks(list);
                     ((MainActivity) parentFragment.requireActivity()).refreshBookmarks();
                     App.showMsg("Added to bookmarks successfully");
                 }, true);
             } else {
                 bottomDialog.addOption("Remove from bookmarks", R.drawable.ic_baseline_bookmark_remove_24, v -> {
                     list.remove(selectedFiles.get(0).getAbsolutePath());
-                    PrefsUtils.setFileExplorerTabBookmarks(list);
+                    PrefsUtils.General.setFileExplorerTabBookmarks(list);
                     ((MainActivity) parentFragment.requireActivity()).refreshBookmarks();
                     App.showMsg("Removed from bookmarks successfully");
                 }, true);
