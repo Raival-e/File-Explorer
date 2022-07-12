@@ -22,7 +22,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     /**
      * This method is called after checking storage permissions
      */
-    public abstract void init();
+    public void init() {
+    }
+
+    ;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

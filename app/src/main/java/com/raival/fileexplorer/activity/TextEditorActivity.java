@@ -65,11 +65,6 @@ public class TextEditorActivity extends BaseActivity {
     private TextEditorViewModel editorViewModel;
 
     @Override
-    public void init() {
-
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.text_editor_activity);
