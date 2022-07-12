@@ -19,7 +19,9 @@ import com.google.android.material.elevation.SurfaceColors;
 import com.raival.fileexplorer.App;
 
 public abstract class BaseActivity extends AppCompatActivity {
-
+    /**
+     * This method is called after checking storage permissions
+     */
     public abstract void init();
 
     @Override
