@@ -3,8 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.raival.fileexplorer">
 
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
-        tools:ignore="ScopedStorage" />
+    <uses-permission
+       android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+       tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
@@ -15,18 +16,18 @@
         android:allowBackup="true"
         android:icon="@mipmap/app_icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/app_icon_round"
         android:largeHeap="true"
         android:requestLegacyExternalStorage="true"
+        android:roundIcon="@mipmap/app_icon_round"
         android:theme="@style/Theme.FileExplorer">
         <activity
-            android:exported="true"
             android:name="com.raival.fileexplorer.activity.TextEditorActivity"
+            android:exported="true"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="com.raival.fileexplorer.activity.MainActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,8 +35,8 @@
             </intent-filter>
         </activity>
         <provider
-            android:authorities="com.raival.fileexplorer.provider"
             android:name="androidx.core.content.FileProvider"
+            android:authorities="com.raival.fileexplorer.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
