@@ -6,6 +6,18 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="Theme.FileExplorer.Dark" parent="Theme.Material3.DynamicColors.Dark">
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.FileExplorer.Light" parent="Theme.Material3.DynamicColors.Light">
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <style name="circleImageView" parent="Theme.FileExplorer">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">20%</item>

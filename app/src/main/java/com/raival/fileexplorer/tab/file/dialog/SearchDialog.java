@@ -200,7 +200,7 @@ public class SearchDialog extends BottomSheetDialogFragment {
         @Override
         public RecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater _inflater = (LayoutInflater) requireActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            @SuppressLint("InflateParams") View _v = _inflater.inflate(R.layout.file_explorer_tab_fragment_file_item, null);
+            @SuppressLint("InflateParams") View _v = _inflater.inflate(R.layout.file_explorer_tab_file_item, null);
             RecyclerView.LayoutParams _lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             _v.setLayoutParams(_lp);
             return new ViewHolder(_v);

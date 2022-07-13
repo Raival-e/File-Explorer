@@ -121,43 +121,43 @@ public class FileExplorerTabFragment extends BaseTabFragment {
     private void showSortOptionsMenu(View view) {
         PopupMenu popupMenu = new PopupMenu(requireActivity(), view);
         popupMenu.getMenu().add("Sort by:").setEnabled(false);
-        popupMenu.getMenu().add("Name (A-Z)").setCheckable(true).setChecked(PrefsUtils.getSortingMethod() == PrefsUtils.SORT_NAME_A2Z);
-        popupMenu.getMenu().add("Name (Z-A)").setCheckable(true).setChecked(PrefsUtils.getSortingMethod() == PrefsUtils.SORT_NAME_Z2A);
-        popupMenu.getMenu().add("Size (Bigger)").setCheckable(true).setChecked(PrefsUtils.getSortingMethod() == PrefsUtils.SORT_SIZE_BIGGER);
-        popupMenu.getMenu().add("Size (Smaller)").setCheckable(true).setChecked(PrefsUtils.getSortingMethod() == PrefsUtils.SORT_SIZE_SMALLER);
-        popupMenu.getMenu().add("Date (Newer)").setCheckable(true).setChecked(PrefsUtils.getSortingMethod() == PrefsUtils.SORT_DATE_NEWER);
-        popupMenu.getMenu().add("Date (Older)").setCheckable(true).setChecked(PrefsUtils.getSortingMethod() == PrefsUtils.SORT_DATE_OLDER);
+        popupMenu.getMenu().add("Name (A-Z)").setCheckable(true).setChecked(PrefsUtils.FileExplorerTab.getSortingMethod() == PrefsUtils.SORT_NAME_A2Z);
+        popupMenu.getMenu().add("Name (Z-A)").setCheckable(true).setChecked(PrefsUtils.FileExplorerTab.getSortingMethod() == PrefsUtils.SORT_NAME_Z2A);
+        popupMenu.getMenu().add("Size (Bigger)").setCheckable(true).setChecked(PrefsUtils.FileExplorerTab.getSortingMethod() == PrefsUtils.SORT_SIZE_BIGGER);
+        popupMenu.getMenu().add("Size (Smaller)").setCheckable(true).setChecked(PrefsUtils.FileExplorerTab.getSortingMethod() == PrefsUtils.SORT_SIZE_SMALLER);
+        popupMenu.getMenu().add("Date (Newer)").setCheckable(true).setChecked(PrefsUtils.FileExplorerTab.getSortingMethod() == PrefsUtils.SORT_DATE_NEWER);
+        popupMenu.getMenu().add("Date (Older)").setCheckable(true).setChecked(PrefsUtils.FileExplorerTab.getSortingMethod() == PrefsUtils.SORT_DATE_OLDER);
         popupMenu.getMenu().add("Other options:").setEnabled(false);
-        popupMenu.getMenu().add("Folders first").setCheckable(true).setChecked(PrefsUtils.listFoldersFirst());
+        popupMenu.getMenu().add("Folders first").setCheckable(true).setChecked(PrefsUtils.FileExplorerTab.listFoldersFirst());
         popupMenu.setOnMenuItemClickListener(menuItem -> {
             menuItem.setChecked(!menuItem.isChecked());
             switch (menuItem.getTitle().toString()) {
                 case "Name (A-Z)": {
-                    PrefsUtils.setSortingMethod(PrefsUtils.SORT_NAME_A2Z);
+                    PrefsUtils.FileExplorerTab.setSortingMethod(PrefsUtils.SORT_NAME_A2Z);
                     break;
                 }
                 case "Name (Z-A)": {
-                    PrefsUtils.setSortingMethod(PrefsUtils.SORT_NAME_Z2A);
+                    PrefsUtils.FileExplorerTab.setSortingMethod(PrefsUtils.SORT_NAME_Z2A);
                     break;
                 }
                 case "Size (Bigger)": {
-                    PrefsUtils.setSortingMethod(PrefsUtils.SORT_SIZE_BIGGER);
+                    PrefsUtils.FileExplorerTab.setSortingMethod(PrefsUtils.SORT_SIZE_BIGGER);
                     break;
                 }
                 case "Size (Smaller)": {
-                    PrefsUtils.setSortingMethod(PrefsUtils.SORT_SIZE_SMALLER);
+                    PrefsUtils.FileExplorerTab.setSortingMethod(PrefsUtils.SORT_SIZE_SMALLER);
                     break;
                 }
                 case "Date (Older)": {
-                    PrefsUtils.setSortingMethod(PrefsUtils.SORT_DATE_OLDER);
+                    PrefsUtils.FileExplorerTab.setSortingMethod(PrefsUtils.SORT_DATE_OLDER);
                     break;
                 }
                 case "Date (Newer)": {
-                    PrefsUtils.setSortingMethod(PrefsUtils.SORT_DATE_NEWER);
+                    PrefsUtils.FileExplorerTab.setSortingMethod(PrefsUtils.SORT_DATE_NEWER);
                     break;
                 }
                 case "Folders first": {
-                    PrefsUtils.setListFoldersFirst(menuItem.isChecked());
+                    PrefsUtils.FileExplorerTab.setListFoldersFirst(menuItem.isChecked());
                     break;
                 }
             }

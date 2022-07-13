@@ -65,11 +65,6 @@ public class TextEditorActivity extends BaseActivity {
     private TextEditorViewModel editorViewModel;
 
     @Override
-    public void init() {
-
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.text_editor_activity);
@@ -287,11 +282,11 @@ public class TextEditorActivity extends BaseActivity {
         getMenuInflater().inflate(R.menu.text_editor_menu, menu);
         ((MenuBuilder) menu).setOptionalIconsVisible(true);
 
-        menu.findItem(R.id.editor_option_wordwrap).setChecked(PrefsUtils.getTextEditorWordwrap());
-        menu.findItem(R.id.editor_option_magnifier).setChecked(PrefsUtils.getTextEditorMagnifier());
-        menu.findItem(R.id.editor_option_pin_line_number).setChecked(PrefsUtils.getTextEditorPinLineNumber());
-        menu.findItem(R.id.editor_option_line_number).setChecked(PrefsUtils.getTextEditorShowLineNumber());
-        menu.findItem(R.id.editor_option_read_only).setChecked(PrefsUtils.getTextEditorReadOnly());
+        menu.findItem(R.id.editor_option_wordwrap).setChecked(PrefsUtils.TextEditor.getTextEditorWordwrap());
+        menu.findItem(R.id.editor_option_magnifier).setChecked(PrefsUtils.TextEditor.getTextEditorMagnifier());
+        menu.findItem(R.id.editor_option_pin_line_number).setChecked(PrefsUtils.TextEditor.getTextEditorPinLineNumber());
+        menu.findItem(R.id.editor_option_line_number).setChecked(PrefsUtils.TextEditor.getTextEditorShowLineNumber());
+        menu.findItem(R.id.editor_option_read_only).setChecked(PrefsUtils.TextEditor.getTextEditorReadOnly());
 
         if (!FileExtensions.javaType.equals(FileUtils.getFileExtension(editorViewModel.file))
                 && !"xml".equals(FileUtils.getFileExtension(editorViewModel.file))
@@ -303,12 +298,12 @@ public class TextEditorActivity extends BaseActivity {
     }
 
     private void loadEditorPrefs() {
-        editor.setPinLineNumber(PrefsUtils.getTextEditorPinLineNumber());
-        editor.setWordwrap(PrefsUtils.getTextEditorWordwrap());
-        editor.setLineNumberEnabled(PrefsUtils.getTextEditorShowLineNumber());
-        editor.getComponent(Magnifier.class).setEnabled(PrefsUtils.getTextEditorMagnifier());
-        editor.setEditable(!PrefsUtils.getTextEditorReadOnly());
-        editor.getComponent(EditorAutoCompletion.class).setEnabled(PrefsUtils.getTextEditorAutocomplete());
+        editor.setPinLineNumber(PrefsUtils.TextEditor.getTextEditorPinLineNumber());
+        editor.setWordwrap(PrefsUtils.TextEditor.getTextEditorWordwrap());
+        editor.setLineNumberEnabled(PrefsUtils.TextEditor.getTextEditorShowLineNumber());
+        editor.getComponent(Magnifier.class).setEnabled(PrefsUtils.TextEditor.getTextEditorMagnifier());
+        editor.setEditable(!PrefsUtils.TextEditor.getTextEditorReadOnly());
+        editor.getComponent(EditorAutoCompletion.class).setEnabled(PrefsUtils.TextEditor.getTextEditorAutocomplete());
     }
 
     @Override
@@ -330,7 +325,7 @@ public class TextEditorActivity extends BaseActivity {
             setEditorLanguage(LANGUAGE_KOTLIN);
         } else if (id == R.id.editor_option_read_only) {
             item.setChecked(!item.isChecked());
-            PrefsUtils.setTextEditorReadOnly(item.isChecked());
+            PrefsUtils.TextEditor.setTextEditorReadOnly(item.isChecked());
             editor.setEditable(!item.isChecked());
         } else if (id == R.id.editor_option_search) {
             if (searchPanel.getVisibility() == View.GONE) {
@@ -348,23 +343,23 @@ public class TextEditorActivity extends BaseActivity {
             editor.redo();
         } else if (id == R.id.editor_option_wordwrap) {
             item.setChecked(!item.isChecked());
-            PrefsUtils.setTextEditorWordwrap(item.isChecked());
+            PrefsUtils.TextEditor.setTextEditorWordwrap(item.isChecked());
             editor.setWordwrap(item.isChecked());
         } else if (id == R.id.editor_option_magnifier) {
             item.setChecked(!item.isChecked());
             editor.getComponent(Magnifier.class).setEnabled(item.isChecked());
-            PrefsUtils.setTextEditorMagnifier(item.isChecked());
+            PrefsUtils.TextEditor.setTextEditorMagnifier(item.isChecked());
         } else if (id == R.id.editor_option_line_number) {
             item.setChecked(!item.isChecked());
-            PrefsUtils.setTextEditorShowLineNumber(item.isChecked());
+            PrefsUtils.TextEditor.setTextEditorShowLineNumber(item.isChecked());
             editor.setLineNumberEnabled(item.isChecked());
         } else if (id == R.id.editor_option_pin_line_number) {
             item.setChecked(!item.isChecked());
-            PrefsUtils.setTextEditorPinLineNumber(item.isChecked());
+            PrefsUtils.TextEditor.setTextEditorPinLineNumber(item.isChecked());
             editor.setPinLineNumber(item.isChecked());
         } else if (id == R.id.editor_option_autocomplete) {
             item.setChecked(!item.isChecked());
-            PrefsUtils.setTextEditorAutocomplete(item.isChecked());
+            PrefsUtils.TextEditor.setTextEditorAutocomplete(item.isChecked());
             editor.getComponent(EditorAutoCompletion.class).setEnabled(item.isChecked());
         }
         return super.onOptionsItemSelected(item);

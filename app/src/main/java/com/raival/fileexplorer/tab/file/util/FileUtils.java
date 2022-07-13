@@ -83,7 +83,7 @@ public class FileUtils {
 
     public static ArrayList<Comparator<File>> getComparators() {
         ArrayList<Comparator<File>> list = new ArrayList<>();
-        switch (PrefsUtils.getSortingMethod()) {
+        switch (PrefsUtils.FileExplorerTab.getSortingMethod()) {
             case PrefsUtils.SORT_NAME_A2Z: {
                 list.add(FileUtils.sortNameAsc());
                 break;
@@ -109,7 +109,7 @@ public class FileUtils {
                 break;
             }
         }
-        if (PrefsUtils.listFoldersFirst()) {
+        if (PrefsUtils.FileExplorerTab.listFoldersFirst()) {
             list.add(FileUtils.sortFoldersFirst());
         } else {
             list.add(FileUtils.sortFilesFirst());

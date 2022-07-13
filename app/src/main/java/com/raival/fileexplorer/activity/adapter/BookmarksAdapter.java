@@ -43,7 +43,7 @@ public class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.View
 
     @Override
     public int getItemCount() {
-        return (list = PrefsUtils.getFileExplorerTabBookmarks()).size();
+        return (list = PrefsUtils.TextEditor.getFileExplorerTabBookmarks()).size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -78,7 +78,7 @@ public class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.View
                 background.setOnClickListener((v -> {
                     App.showMsg("This file doesn't exist anymore");
                     list.remove(file.getAbsolutePath());
-                    PrefsUtils.setFileExplorerTabBookmarks(list);
+                    PrefsUtils.General.setFileExplorerTabBookmarks(list);
                     list.clear();
                     notifyDataSetChanged();
                 }));
@@ -95,7 +95,7 @@ public class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.View
 
             background.setOnLongClickListener((v -> {
                 list.remove(file.getAbsolutePath());
-                PrefsUtils.setFileExplorerTabBookmarks(list);
+                PrefsUtils.General.setFileExplorerTabBookmarks(list);
                 list.clear();
                 notifyDataSetChanged();
                 return true;

@@ -36,6 +36,7 @@ import com.raival.fileexplorer.tab.file.FileExplorerTabDataHolder;
 import com.raival.fileexplorer.tab.file.FileExplorerTabFragment;
 import com.raival.fileexplorer.tab.file.util.FileOpener;
 import com.raival.fileexplorer.tab.file.util.FileUtils;
+import com.raival.fileexplorer.util.PrefsUtils;
 import com.raival.fileexplorer.util.Utils;
 
 import java.io.File;
@@ -219,6 +220,17 @@ public class MainActivity extends BaseActivity {
         setupDrawer();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        final String newTheme = PrefsUtils.Settings.getThemeMode();
+        if (!newTheme.equals(currentTheme)) {
+            recreate();
+        } else {
+            bottomBarView.onUpdatePrefs();
+        }
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     public void refreshBookmarks() {
         Objects.requireNonNull(bookmarksList.getAdapter()).notifyDataSetChanged();
@@ -258,15 +270,22 @@ public class MainActivity extends BaseActivity {
                 .setOnMenuItemClickListener(item -> openGithubPage())
                 .setIcon(R.drawable.ic_baseline_open_in_browser_24)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        materialToolbar.getMenu().add("Settings")
+                .setOnMenuItemClickListener(item -> openSettings())
+                .setIcon(R.drawable.ic_round_settings_24)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         updateStorageSpace();
         updateRootSpace();
     }
 
+    private boolean openSettings() {
+        startActivity(new Intent().setClass(this, SettingsActivity.class));
+        return true;
+    }
+
     private boolean openGithubPage() {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse(LINK));
-        startActivity(intent);
+        startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse(LINK)));
         return true;
     }
 

@@ -32,13 +32,18 @@ public class OptionsDialog extends BottomSheetDialogFragment {
         message = msg;
     }
 
-    public void addOption(String label, int resId, View.OnClickListener listener, boolean dismissOnClick) {
+    public OptionsDialog addOption(String label, View.OnClickListener listener, boolean dismissOnClick) {
+        return addOption(label, 0, listener, dismissOnClick);
+    }
+
+    public OptionsDialog addOption(String label, int resId, View.OnClickListener listener, boolean dismissOnClick) {
         OptionHolder optionHolder = new OptionHolder();
         optionHolder.dismissOnClick = dismissOnClick;
         optionHolder.label = label;
         optionHolder.listener = listener;
         optionHolder.res = resId;
         options.add(optionHolder);
+        return this;
     }
 
     @Nullable
@@ -69,12 +74,16 @@ public class OptionsDialog extends BottomSheetDialogFragment {
 
     private void addOptions() {
         for (OptionHolder optionHolder : options) {
-            View v = getLayoutInflater().inflate(R.layout.common_options_dialog_item, container, false);
-            ((ImageView) v.findViewById(R.id.icon)).setImageResource(optionHolder.res);
+            final View v = getLayoutInflater().inflate(R.layout.common_options_dialog_item, container, false);
+            if (optionHolder.res != 0) {
+                final ImageView icon = v.findViewById(R.id.icon);
+                icon.setVisibility(View.VISIBLE);
+                icon.setImageResource(optionHolder.res);
+            }
             ((TextView) v.findViewById(R.id.label)).setText(optionHolder.label);
             v.findViewById(R.id.background).setOnClickListener(view -> {
-                optionHolder.listener.onClick(view);
-                if (optionHolder.dismissOnClick) dismiss();
+                if (optionHolder.listener != null) optionHolder.listener.onClick(view);
+                if (optionHolder.dismissOnClick) v.post(this::dismiss);
             });
             container.addView(v);
         }

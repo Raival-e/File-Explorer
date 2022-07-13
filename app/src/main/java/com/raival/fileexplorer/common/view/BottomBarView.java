@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import com.raival.fileexplorer.R;
+import com.raival.fileexplorer.util.PrefsUtils;
 
 public class BottomBarView extends LinearLayout {
     public BottomBarView(Context context) {
@@ -31,7 +32,12 @@ public class BottomBarView extends LinearLayout {
                 .inflate(R.layout.bottom_bar_menu_item, this, false);
         view.setOnClickListener(clickListener);
         view.setTooltipText(tag);
-        ((TextView) view.findViewById(R.id.label)).setText(tag);
+        TextView label = view.findViewById(R.id.label);
+        if (PrefsUtils.Settings.getShowBottomToolbarLabels()) {
+            label.setText(tag);
+        } else {
+            label.setVisibility(GONE);
+        }
         ImageView image = view.findViewById(R.id.icon);
         image.setImageResource(icon);
         addView(view);
@@ -44,5 +50,15 @@ public class BottomBarView extends LinearLayout {
 
     public void clear() {
         removeAllViews();
+    }
+
+    public void onUpdatePrefs() {
+        for (int i = 0; i < getChildCount(); i++) {
+            final View view = getChildAt(i);
+            final View label = view.findViewById(R.id.label);
+            if (label != null) {
+                label.setVisibility(PrefsUtils.Settings.getShowBottomToolbarLabels() ? VISIBLE : GONE);
+            }
+        }
     }
 }
