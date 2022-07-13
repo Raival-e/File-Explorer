@@ -71,7 +71,7 @@ dependencies {
     implementation "io.github.damianvdb:materialchecklist:1.0.0"
 
     api "com.android.tools:r8:3.3.28"
-    implementation "org.eclipse.jdt:ecj:3.26.0"
+    implementation "org.eclipse.jdt:ecj:3.30.0"
 
     testImplementation "junit:junit:4.13.2"
     androidTestImplementation "androidx.test.ext:junit:1.1.3"
