@@ -17,18 +17,25 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.material.elevation.SurfaceColors;
 import com.raival.fileexplorer.App;
+import com.raival.fileexplorer.R;
+import com.raival.fileexplorer.util.PrefsUtils;
 
 public abstract class BaseActivity extends AppCompatActivity {
+    protected String currentTheme = PrefsUtils.Settings.getThemeMode();
+
     /**
      * This method is called after checking storage permissions
      */
     public void init() {
     }
 
-    ;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        if (currentTheme.equals(SettingsActivity.THEME_MODE_DARK)) {
+            setTheme(R.style.Theme_FileExplorer_Dark);
+        } else if (currentTheme.equals(SettingsActivity.THEME_MODE_LIGHT)) {
+            setTheme(R.style.Theme_FileExplorer_Light);
+        }
         super.onCreate(savedInstanceState);
         getWindow().setStatusBarColor(SurfaceColors.SURFACE_2.getColor(this));
     }

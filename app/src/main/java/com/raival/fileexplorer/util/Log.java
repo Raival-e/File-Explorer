@@ -3,6 +3,7 @@ package com.raival.fileexplorer.util;
 import android.annotation.SuppressLint;
 import android.content.Context;
 
+import com.raival.fileexplorer.activity.SettingsActivity;
 import com.raival.fileexplorer.tab.file.util.FileUtils;
 
 import java.io.File;
@@ -87,6 +88,8 @@ public class Log {
     }
 
     private static void write(String tag, String priority, String msg, Throwable throwable) {
+        if (!checkPrefs(tag)) return;
+
         if (logFile == null) return;
 
         if (!logFile.getParentFile().exists() && !logFile.getParentFile().mkdirs()) {
@@ -121,5 +124,10 @@ public class Log {
             android.util.Log.e(TAG, Log.UNABLE_TO + " write to log file" + System.lineSeparator() + e);
             android.util.Log.e(tag, msg, throwable);
         }
+    }
+
+    private static boolean checkPrefs(String tag) {
+        if (PrefsUtils.Settings.getLogMode().equals(SettingsActivity.LOG_MODE_ALL)) return true;
+        return PrefsUtils.Settings.getLogMode().equals(SettingsActivity.LOG_MODE_ERRORS_ONLY) && tag.equals("Error");
     }
 }

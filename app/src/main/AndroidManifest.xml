@@ -20,11 +20,15 @@
         android:requestLegacyExternalStorage="true"
         android:theme="@style/Theme.FileExplorer">
         <activity
+            android:name=".activity.SettingsActivity"
             android:exported="true"
-            android:name="com.raival.fileexplorer.activity.TextEditorActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name="com.raival.fileexplorer.activity.MainActivity"
+            android:name=".activity.TextEditorActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:exported="true" />
+        <activity
+            android:name=".activity.MainActivity"
             android:windowSoftInputMode="adjustResize"
             android:exported="true">
             <intent-filter>
@@ -33,6 +37,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <provider
             android:authorities="com.raival.fileexplorer.provider"
             android:name="androidx.core.content.FileProvider"

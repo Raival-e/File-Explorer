@@ -36,7 +36,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
     @NonNull
     @Override
     public FileListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        @SuppressLint("InflateParams") View _v = parentFragment.getLayoutInflater().inflate(R.layout.file_explorer_tab_fragment_file_item, null);
+        @SuppressLint("InflateParams") View _v = parentFragment.getLayoutInflater().inflate(R.layout.file_explorer_tab_file_item, null);
         _v.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         return new FileListAdapter.ViewHolder(_v);
     }

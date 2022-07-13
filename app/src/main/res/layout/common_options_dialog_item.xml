@@ -18,7 +18,7 @@
         android:layout_marginTop="2dp"
         android:layout_marginBottom="2dp"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_round_menu_24" />
+        android:visibility="gone" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/label"
