@@ -81,7 +81,7 @@ public class TextEditorActivity extends BaseActivity {
         inputView.setBackgroundColor(SurfaceColors.SURFACE_2.getColor(this));
         inputView.setTextColor(Utils.getColorAttribute(R.attr.colorOnSurface, this));
         inputView.addSymbols(new String[]{"->", "_", "=", "{", "}", "<", ">", "|", "\\", "?", "+", "-", "*", "/"},
-                new String[]{"\t", "_", "=", "{", "}", "<", ">", "|", "\\", "?", "+", "-", "*", "/"});
+                new String[]{"    ", "_", "=", "{", "}", "<", ">", "|", "\\", "?", "+", "-", "*", "/"});
 
         editor.getComponent(EditorAutoCompletion.class).setLayout(new CustomCompletionLayout());
         editor.getComponent(EditorAutoCompletion.class).setAdapter(new CustomCompletionItemAdapter());
