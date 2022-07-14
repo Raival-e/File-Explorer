@@ -38,17 +38,17 @@ public class TabView extends HorizontalScrollView {
 
     public TabView(Context context) {
         super(context);
-        init(context);
+        init();
     }
 
     public TabView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context);
+        init();
     }
 
-    private void init(Context c) {
-        container = new LinearLayout(c);
-        addView(container, new ViewGroup.LayoutParams(-1, -1));
+    private void init() {
+        container = new LinearLayout(getContext());
+        addView(container, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         setFillViewport(true);
         setVerticalScrollBarEnabled(false);
         setHorizontalScrollBarEnabled(false);
@@ -292,7 +292,7 @@ public class TabView extends HorizontalScrollView {
         bg.setTag("tab_background");
         bg.setPadding(0, 0, padding, 0);
         bg.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-        bg.setLayoutParams(new ViewGroup.LayoutParams(-2, -1));
+        bg.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
         TypedValue out = new TypedValue();
         getContext().getTheme().resolveAttribute(android.R.attr.selectableItemBackground, out, true);
