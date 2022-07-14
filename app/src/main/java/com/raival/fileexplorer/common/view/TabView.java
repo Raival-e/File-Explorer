@@ -292,6 +292,7 @@ public class TabView extends HorizontalScrollView {
         bg.setTag("tab_background");
         bg.setPadding(0, 0, padding, 0);
         bg.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+        bg.setMinimumWidth((int) Utils.pxToDp(80));
         bg.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
         TypedValue out = new TypedValue();
