@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,7 +16,10 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.android.material.textview.MaterialTextView;
 import com.raival.fileexplorer.App;
 import com.raival.fileexplorer.R;
 import com.raival.fileexplorer.activity.MainActivity;
@@ -172,24 +174,41 @@ public class FileExplorerTabFragment extends BaseTabFragment {
         input.setHint("File path");
         Objects.requireNonNull(input.getEditText()).setSingleLine();
 
-        final TextView label1 = new TextView(requireActivity());
-        label1.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
-        label1.setTextColor(Utils.getColorAttribute(R.attr.colorOnSurface, requireActivity()));
-        label1.setPadding(0, (int) Utils.pxToDp(8), 0, 0);
-        label1.setTextSize(10);
-        label1.setAlpha(0.7f);
-        label1.setText("Shortcuts:\n*indata -> App internal data directory\n*extdata -> App external data directory");
+        CustomDialog customDialog = new CustomDialog();
+
+        MaterialTextView textView = new MaterialTextView(requireContext());
+        textView.setPadding(0, (int) Utils.pxToDp(8), 0, 0);
+        textView.setAlpha(0.7f);
+        textView.setText("Quick Links:");
+
+        ChipGroup layout = new ChipGroup(requireContext());
+
+        Chip internal = new Chip(requireContext());
+        internal.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        internal.setText("Internal Data Files");
+        internal.setOnClickListener(v -> {
+            setCurrentDirectory(requireActivity().getFilesDir());
+            customDialog.dismiss();
+        });
+
+        Chip external = new Chip(requireContext());
+        external.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        external.setText("External Data Files");
+        external.setOnClickListener(v -> {
+            setCurrentDirectory(requireActivity().getExternalFilesDir(null));
+            customDialog.dismiss();
+        });
+
+        layout.addView(internal);
+        layout.addView(external);
 
 
-        new CustomDialog()
-                .setTitle("Jump to path")
+        customDialog.setTitle("Jump to path")
                 .addView(input)
-                .addView(label1)
+                .addView(textView)
+                .addView(layout)
                 .setPositiveButton("Go", view -> {
-                    final String path = input.getEditText().getText().toString()
-                            .replace("*extdata", requireActivity().getExternalFilesDir(null).getAbsolutePath())
-                            .replace("*indata", requireActivity().getFilesDir().getAbsolutePath());
-                    final File file = new File(path);
+                    final File file = new File(input.getEditText().getText().toString());
                     if (file.exists()) {
                         if (file.canRead()) {
                             if (file.isFile()) {
