@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.tools.r8.D8;
+import com.raival.fileexplorer.App;
 import com.raival.fileexplorer.tab.file.util.D8Utils;
 import com.raival.fileexplorer.tab.file.util.FileUtils;
 import com.raival.fileexplorer.util.Log;
@@ -38,6 +39,7 @@ public class Executor {
         this.activity = activity;
         project = folder;
         parseInputFolder(project);
+        getCommonLibs();
     }
 
     public void execute() throws Exception {
@@ -205,6 +207,17 @@ public class Executor {
         return output.mkdir();
     }
 
+    private void getCommonLibs() {
+        final File libs = new File(App.appContext.getExternalFilesDir(null), "build/libs");
+        if (libs.exists() && libs.isDirectory()) {
+            for (File file : libs.listFiles()) {
+                if (file.isFile() && FileUtils.getFileExtension(file).equals("jar")) {
+                    jarFiles.add(file);
+                }
+            }
+        }
+    }
+
     private void parseInputFolder(File input) {
         for (File file : Objects.requireNonNull(input.listFiles())) {
             if (file.isFile()) {
@@ -227,7 +240,6 @@ public class Executor {
                     }
                 }
             }
-
         }
     }
 
