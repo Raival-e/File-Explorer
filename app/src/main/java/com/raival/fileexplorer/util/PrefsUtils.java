@@ -73,12 +73,12 @@ public class PrefsUtils {
             return Prefs.getInt("sorting_method", SORT_NAME_A2Z);
         }
 
-        public static void setListFoldersFirst(boolean b) {
-            Prefs.putBoolean("list_folders_first", b);
-        }
-
         public static void setSortingMethod(int method) {
             Prefs.putInt("sorting_method", method);
+        }
+
+        public static void setListFoldersFirst(boolean b) {
+            Prefs.putBoolean("list_folders_first", b);
         }
 
         public static boolean listFoldersFirst() {
@@ -87,28 +87,28 @@ public class PrefsUtils {
     }
 
     public static class Settings {
-        public static void setThemeMode(String themeMode) {
-            Prefs.putString("settings_theme_mode", themeMode);
-        }
-
         public static String getThemeMode() {
             return Prefs.getString("settings_theme_mode", SettingsActivity.THEME_MODE_AUTO);
         }
 
-        public static void setLogMode(String logMode) {
-            Prefs.putString("settings_log_mode", logMode);
+        public static void setThemeMode(String themeMode) {
+            Prefs.putString("settings_theme_mode", themeMode);
         }
 
         public static String getLogMode() {
             return Prefs.getString("settings_log_mode", SettingsActivity.LOG_MODE_ERRORS_ONLY);
         }
 
-        public static void setShowBottomToolbarLabels(boolean showBottomToolbarLabels) {
-            Prefs.putBoolean("settings_show_bottom_toolbar_labels", showBottomToolbarLabels);
+        public static void setLogMode(String logMode) {
+            Prefs.putString("settings_log_mode", logMode);
         }
 
         public static boolean getShowBottomToolbarLabels() {
             return Prefs.getBoolean("settings_show_bottom_toolbar_labels", true);
+        }
+
+        public static void setShowBottomToolbarLabels(boolean showBottomToolbarLabels) {
+            Prefs.putBoolean("settings_show_bottom_toolbar_labels", showBottomToolbarLabels);
         }
     }
 

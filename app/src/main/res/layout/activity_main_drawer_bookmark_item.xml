@@ -11,11 +11,11 @@
         android:id="@+id/background"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
+        android:background="?android:attr/selectableItemBackground"
         android:clickable="true"
-        android:paddingVertical="8dp"
-        android:background="?android:attr/selectableItemBackground">
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingVertical="8dp">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/icon"
@@ -27,25 +27,25 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="vertical">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingTop="2dp"
                 android:text="App Manager"
-                android:textSize="14sp"
-                android:paddingTop="2dp" />
+                android:textSize="14sp" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/details"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:alpha="0.7"
+                android:paddingBottom="2dp"
                 android:text="extract APK files from the installed apps"
-                android:textSize="10sp"
-                android:paddingBottom="2dp" />
+                android:textSize="10sp" />
         </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

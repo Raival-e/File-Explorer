@@ -1,60 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="8dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="8dp">
 
-   <LinearLayout
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:orientation="horizontal"
-       android:gravity="center">
-       <LinearLayout
-           android:id="@+id/icon_container"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:gravity="center"
-           android:padding="8dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
 
-           <com.google.android.material.imageview.ShapeableImageView
-               android:id="@+id/file_icon"
-               android:layout_width="36dp"
-               android:layout_height="36dp"
-               android:layout_marginStart="4dp"
-               android:src="@drawable/ic_baseline_folder_24"
-               android:scaleType="fitXY"
-               app:shapeAppearanceOverlay="@style/circleImageView" />
-       </LinearLayout>
-       <LinearLayout
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:orientation="vertical"
-           android:padding="8dp">
+        <LinearLayout
+            android:id="@+id/icon_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="8dp">
 
-           <com.google.android.material.textview.MaterialTextView
-               android:id="@+id/file_name"
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:paddingEnd="8dp"
-               android:text="file name"
-               android:maxLines="1"
-               android:textSize="16sp" />
-       </LinearLayout>
-   </LinearLayout>
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/file_icon"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="4dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_baseline_folder_24"
+                app:shapeAppearanceOverlay="@style/circleImageView" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/file_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:paddingEnd="8dp"
+                android:text="file name"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </LinearLayout>
 
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fillViewport="true">
+
         <LinearLayout
             android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="8dp"/>
+            android:padding="8dp" />
     </androidx.core.widget.NestedScrollView>
 
 </LinearLayout>

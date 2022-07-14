@@ -1,4 +1,4 @@
-plugins{
+plugins {
     id "com.android.application"
 }
 apply plugin: "kotlin-android"

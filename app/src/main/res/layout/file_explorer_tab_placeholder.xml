@@ -13,7 +13,7 @@
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="No Files"
         android:textSize="24sp"
-        android:textStyle="bold"
-        android:text="No Files" />
+        android:textStyle="bold" />
 </LinearLayout>

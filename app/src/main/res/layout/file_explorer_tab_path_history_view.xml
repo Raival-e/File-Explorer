@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/background"
-    android:gravity="center"
-    android:orientation="horizontal"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:clickable="true"
     android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:gravity="center"
+    android:orientation="horizontal"
     android:paddingHorizontal="2dp">
 
     <com.google.android.material.imageview.ShapeableImageView
@@ -21,6 +21,6 @@
         android:layout_height="wrap_content"
         android:focusable="false"
         android:gravity="center"
-        android:textSize="14sp"
-        android:paddingHorizontal="2dp" />
+        android:paddingHorizontal="2dp"
+        android:textSize="14sp" />
 </LinearLayout>

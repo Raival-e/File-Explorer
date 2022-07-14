@@ -19,6 +19,7 @@ import java.util.Random;
 public class Utils {
     public final static String REGULAR_DATE_FORMAT = "MMM dd , hh:mm a";
     public final static String TAB = "  ";
+    private static final String ALLOWED_CHARACTERS = "0123456789qwertyuiopasdfghjklzxcvbnm_";
 
     @ColorInt
     public static int getColorAttribute(int id, Context context) {
@@ -40,8 +41,6 @@ public class Utils {
         return (App.appContext.getResources().getConfiguration().uiMode
                 & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
     }
-
-    private static final String ALLOWED_CHARACTERS = "0123456789qwertyuiopasdfghjklzxcvbnm_";
 
     public static String getRandomString(final int sizeOfRandomString) {
         final Random random = new Random();

@@ -4,18 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="start"
-    android:focusable="true"
     android:background="?android:attr/colorBackground"
+    android:focusable="true"
     android:orientation="vertical">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
+        style="@style/Widget.Material3.Toolbar.Surface"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:titleTextAppearance="@style/TextAppearance.Material3.TitleMedium"
-        app:subtitleTextAppearance="@style/TextAppearance.Material3.BodySmall"
         android:elevation="3dp"
-        style="@style/Widget.Material3.Toolbar.Surface" />
+        app:subtitleTextAppearance="@style/TextAppearance.Material3.BodySmall"
+        app:titleTextAppearance="@style/TextAppearance.Material3.TitleMedium" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,19 +26,19 @@
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:layout_marginBottom="12dp"
             android:alpha="0.7"
             android:text="Storage"
-            android:layout_marginBottom="12dp" />
+            android:textSize="14sp" />
 
         <!-- Storage Directory -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
+            android:layout_marginBottom="12dp"
             android:clickable="true"
-            android:layout_marginBottom="12dp">
+            android:gravity="center"
+            android:orientation="horizontal">
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:layout_width="30dp"
@@ -49,31 +49,31 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingVertical="2dp"
                     android:text="Storage Directory"
-                    android:textSize="14sp"
-                    android:paddingVertical="2dp" />
+                    android:textSize="14sp" />
 
                 <com.google.android.material.progressindicator.LinearProgressIndicator
                     android:id="@+id/storage_space_progress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingVertical="2dp"
                     android:progress="50"
-                    app:trackCornerRadius="16dp"
-                    android:paddingVertical="2dp" />
+                    app:trackCornerRadius="16dp" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/storage_space"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:alpha="0.7"
-                    android:textSize="10sp"
-                    android:paddingVertical="2dp" />
+                    android:paddingVertical="2dp"
+                    android:textSize="10sp" />
             </LinearLayout>
         </LinearLayout>
 
@@ -81,9 +81,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:clickable="true"
             android:gravity="center"
-            android:clickable="true">
+            android:orientation="horizontal">
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:layout_width="30dp"
@@ -94,41 +94,41 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingVertical="2dp"
                     android:text="Root Directory"
-                    android:textSize="14sp"
-                    android:paddingVertical="2dp" />
+                    android:textSize="14sp" />
 
                 <com.google.android.material.progressindicator.LinearProgressIndicator
                     android:id="@+id/root_space_progress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingVertical="2dp"
                     android:progress="88"
-                    app:trackCornerRadius="16dp"
-                    android:paddingVertical="2dp" />
+                    app:trackCornerRadius="16dp" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/root_space"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:alpha="0.7"
-                    android:textSize="10sp"
-                    android:paddingVertical="2dp" />
+                    android:paddingVertical="2dp"
+                    android:textSize="10sp" />
             </LinearLayout>
         </LinearLayout>
 
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:layout_marginVertical="12dp"
             android:alpha="0.7"
             android:text="Tools"
-            android:layout_marginVertical="12dp" />
+            android:textSize="14sp" />
 
         <!-- Apps -->
         <com.google.android.material.card.MaterialCardView
@@ -140,11 +140,11 @@
                 android:id="@+id/apps"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center"
+                android:background="?android:attr/selectableItemBackground"
                 android:clickable="true"
-                android:paddingVertical="8dp"
-                android:background="?android:attr/selectableItemBackground">
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingVertical="8dp">
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:layout_width="30dp"
@@ -155,23 +155,23 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:orientation="vertical">
 
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:paddingVertical="2dp"
                         android:text="App Manager"
-                        android:textSize="14sp"
-                        android:paddingVertical="2dp" />
+                        android:textSize="14sp" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:alpha="0.7"
+                        android:paddingVertical="2dp"
                         android:text="extract APK files from the installed apps"
-                        android:textSize="10sp"
-                        android:paddingVertical="2dp" />
+                        android:textSize="10sp" />
                 </LinearLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -179,10 +179,10 @@
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:layout_marginVertical="12dp"
             android:alpha="0.7"
             android:text="Bookmarks"
-            android:layout_marginVertical="12dp" />
+            android:textSize="14sp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv"

@@ -20,8 +20,8 @@ public class ModuleRunner {
     private static final String TAG = "DexRunner";
 
     private final AppCompatActivity activity;
-    private File directory;
     private final ArrayList<File> relatedDexFiles = new ArrayList<>();
+    private File directory;
 
     public ModuleRunner(File dexFile, AppCompatActivity activity) {
         this.activity = activity;

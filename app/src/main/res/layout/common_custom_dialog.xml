@@ -8,8 +8,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/dialog_icon"
@@ -20,13 +20,13 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/dialog_title"
+            style="@style/Theme.Material3.Light.Dialog.Alert"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="8dp"
             android:textSize="16sp"
             android:textStyle="normal"
-            android:padding="8dp"
-            android:visibility="gone"
-            style="@style/Theme.Material3.Light.Dialog.Alert" />
+            android:visibility="gone" />
     </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -41,13 +41,13 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/dialog_msg"
-                android:textIsSelectable="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="8dp"
                 android:text=""
+                android:textIsSelectable="true"
                 android:textSize="14sp"
                 android:textStyle="normal"
-                android:padding="8dp"
                 android:visibility="gone" />
 
             <LinearLayout
@@ -64,34 +64,37 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="end"
         android:orientation="horizontal"
-        android:padding="8dp"
-        android:gravity="end">
+        android:padding="8dp">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/dialog_neutral_button"
+            style="@style/Widget.Material3.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            style="@style/Widget.Material3.Button" />
+            android:visibility="gone" />
+
         <Space
             android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/dialog_negative_button"
+            style="@style/Widget.Material3.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:visibility="gone"
-            style="@style/Widget.Material3.Button"/>
+            android:visibility="gone" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/dialog_positive_button"
+            style="@style/Widget.Material3.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:visibility="gone"
-            style="@style/Widget.Material3.Button"/>
+            android:visibility="gone" />
 
     </LinearLayout>
 

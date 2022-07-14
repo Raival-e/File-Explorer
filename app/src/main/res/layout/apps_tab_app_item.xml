@@ -9,10 +9,10 @@
         android:id="@+id/background"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
         android:background="?android:attr/selectableItemBackground"
-        android:clickable="true">
+        android:clickable="true"
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -41,24 +41,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingEnd="8dp"
-                android:text="loading..."
                 android:singleLine="true"
+                android:text="loading..."
                 android:textSize="14sp" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/app_pkg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="loading..."
                 android:paddingEnd="8dp"
+                android:text="loading..."
                 android:textSize="10sp" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/app_details"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="loading..."
                 android:paddingEnd="8dp"
+                android:text="loading..."
                 android:textSize="10sp" />
         </LinearLayout>
     </LinearLayout>
@@ -67,6 +67,6 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:alpha="0.5"
-        android:layout_marginStart="64dp" />
+        android:layout_marginStart="64dp"
+        android:alpha="0.5" />
 </LinearLayout>

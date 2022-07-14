@@ -3,20 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/editor_option_text_undo"
-        android:title="Undo"
-        android:icon="@drawable/ic_round_undo_24" />
+        android:icon="@drawable/ic_round_undo_24"
+        android:title="Undo" />
     <item
         android:id="@+id/editor_option_text_redo"
-        android:title="Redo"
-        android:icon="@drawable/ic_round_redo_24" />
+        android:icon="@drawable/ic_round_redo_24"
+        android:title="Redo" />
     <item
         android:id="@+id/editor_option_search"
-        android:title="Search"
-        android:icon="@drawable/ic_round_search_24" />
+        android:icon="@drawable/ic_round_search_24"
+        android:title="Search" />
 
     <item
-        android:title="Languages"
-        android:icon="@drawable/ic_baseline_layers_24">
+        android:icon="@drawable/ic_baseline_layers_24"
+        android:title="Languages">
         <menu>
             <group android:checkableBehavior="single">
                 <item
@@ -34,8 +34,8 @@
     </item>
 
     <item
-        android:title="Configuration"
-        android:icon="@drawable/ic_round_settings_24">
+        android:icon="@drawable/ic_round_settings_24"
+        android:title="Configuration">
         <menu>
             <item
                 android:id="@+id/editor_option_wordwrap"
@@ -70,16 +70,16 @@
 
     <item
         android:id="@+id/editor_format"
-        android:title="Format"
-        android:icon="@drawable/ic_baseline_sort_24" />
+        android:icon="@drawable/ic_baseline_sort_24"
+        android:title="Format" />
     <item
         android:id="@+id/editor_execute"
-        android:title="Execute"
         android:icon="@drawable/ic_round_play_arrow_24"
+        android:title="Execute"
         app:showAsAction="always" />
     <item
         android:id="@+id/editor_option_save"
-        android:title="Save"
         android:icon="@drawable/ic_baseline_save_24"
+        android:title="Save"
         app:showAsAction="always" />
 </menu>

@@ -2,20 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
+    android:background="?attr/selectableItemBackground"
     android:gravity="center_vertical"
-    android:background="?attr/selectableItemBackground">
+    android:orientation="horizontal">
 
     <com.google.android.material.textview.MaterialTextView
-        android:layout_height="match_parent"
+        android:id="@+id/result_item_image"
         android:layout_width="30dp"
-        android:gravity="center"
-        android:textSize="20sp"
-        android:textStyle="bold"
+        android:layout_height="match_parent"
         android:fontFamily="monospace"
-        android:text="K"
+        android:gravity="center"
         android:paddingHorizontal="8dp"
-        android:id="@+id/result_item_image" />
+        android:text="K"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="1px"
@@ -23,24 +23,24 @@
         android:background="?attr/colorOnSurface" />
 
     <LinearLayout
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:orientation="vertical"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical"
+        android:orientation="vertical"
         android:padding="8dp">
 
         <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/result_item_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Medium Text"
-            android:id="@+id/result_item_label"
             android:textSize="16sp" />
 
         <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/result_item_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Small Text"
-            android:id="@+id/result_item_desc"
             android:textSize="12sp" />
     </LinearLayout>
 </LinearLayout>

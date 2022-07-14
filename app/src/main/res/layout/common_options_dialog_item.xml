@@ -3,30 +3,31 @@
     android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     android:background="?android:attr/selectableItemBackground"
     android:clickable="true"
-    android:padding="8dp"
-    android:gravity="center">
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:padding="8dp">
+
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/icon"
-        android:focusable="false"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginTop="2dp"
+        android:layout_marginRight="8dp"
         android:layout_marginBottom="2dp"
+        android:focusable="false"
         android:scaleType="fitXY"
         android:visibility="gone" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/label"
-        android:focusable="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:focusable="false"
         android:padding="8dp"
-        android:textStyle="normal"
+        android:text="this is an option"
         android:textSize="16sp"
-        android:text="this is an option" />
+        android:textStyle="normal" />
 </LinearLayout>

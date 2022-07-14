@@ -14,12 +14,12 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
+            style="@style/Widget.Material3.Toolbar.Surface"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:titleTextAppearance="@style/TextAppearance.Material3.TitleMedium"
-            app:subtitleTextAppearance="@style/TextAppearance.Material3.BodySmall"
             android:elevation="3dp"
-            style="@style/Widget.Material3.Toolbar.Surface" />
+            app:subtitleTextAppearance="@style/TextAppearance.Material3.BodySmall"
+            app:titleTextAppearance="@style/TextAppearance.Material3.TitleMedium" />
 
         <com.google.android.material.card.MaterialCardView
             style="@style/Widget.Material3.CardView.Elevated"
@@ -31,17 +31,17 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/tabs_options"
                     android:layout_width="56dp"
                     android:layout_height="match_parent"
-                    android:src="@drawable/ic_baseline_add_24"
                     android:background="?android:attr/selectableItemBackground"
                     android:clickable="true"
-                    android:scaleType="centerInside" />
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_baseline_add_24" />
 
                 <com.raival.fileexplorer.common.view.TabView
                     android:id="@+id/tabs"
@@ -72,6 +72,6 @@
 
     <!-- Drawer Layout -->
     <include
-        layout="@layout/activity_main_drawer"
-        android:id="@+id/drawer_layout" />
+        android:id="@+id/drawer_layout"
+        layout="@layout/activity_main_drawer" />
 </androidx.drawerlayout.widget.DrawerLayout>
