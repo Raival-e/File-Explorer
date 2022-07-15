@@ -24,7 +24,7 @@
         android:layout_height="36dp"
         android:scrollbars="none">
 
-        <io.github.rosemoe.sora.widget.SymbolInputView
+        <com.raival.fileexplorer.activity.editor.view.SymbolInputView
             android:id="@+id/symbol_input"
             android:layout_width="wrap_content"
             android:layout_height="36dp" />

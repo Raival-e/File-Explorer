@@ -22,6 +22,7 @@ import com.raival.fileexplorer.activity.editor.autocomplete.CustomCompletionLayo
 import com.raival.fileexplorer.activity.editor.scheme.DarkScheme;
 import com.raival.fileexplorer.activity.editor.scheme.LightScheme;
 import com.raival.fileexplorer.activity.editor.util.CodeFormatter;
+import com.raival.fileexplorer.activity.editor.view.SymbolInputView;
 import com.raival.fileexplorer.activity.model.TextEditorViewModel;
 import com.raival.fileexplorer.common.BackgroundTask;
 import com.raival.fileexplorer.common.dialog.CustomDialog;
@@ -47,7 +48,6 @@ import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
 import io.github.rosemoe.sora.langs.textmate.TextMateLanguage;
 import io.github.rosemoe.sora.widget.CodeEditor;
 import io.github.rosemoe.sora.widget.EditorSearcher;
-import io.github.rosemoe.sora.widget.SymbolInputView;
 import io.github.rosemoe.sora.widget.component.EditorAutoCompletion;
 import io.github.rosemoe.sora.widget.component.Magnifier;
 import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
@@ -77,11 +77,11 @@ public class TextEditorActivity extends BaseActivity {
         setupSearchPanel();
 
         SymbolInputView inputView = findViewById(R.id.symbol_input);
-        inputView.bindEditor(editor);
-        inputView.setBackgroundColor(SurfaceColors.SURFACE_2.getColor(this));
-        inputView.setTextColor(Utils.getColorAttribute(R.attr.colorOnSurface, this));
-        inputView.addSymbols(new String[]{"->", "_", "=", "{", "}", "<", ">", "|", "\\", "?", "+", "-", "*", "/"},
-                new String[]{"    ", "_", "=", "{", "}", "<", ">", "|", "\\", "?", "+", "-", "*", "/"});
+        inputView.bindEditor(editor)
+                .setTextColor(Utils.getColorAttribute(R.attr.colorOnSurface, this))
+                .setBackgroundColor(SurfaceColors.SURFACE_2.getColor(this));
+        inputView.addSymbol("->", "    ")
+                .addSymbols(new String[]{"_", "=", "{", "}", "<", ">", "|", "\\", "?", "+", "-", "*", "/"});
 
         editor.getComponent(EditorAutoCompletion.class).setLayout(new CustomCompletionLayout());
         editor.getComponent(EditorAutoCompletion.class).setAdapter(new CustomCompletionItemAdapter());
