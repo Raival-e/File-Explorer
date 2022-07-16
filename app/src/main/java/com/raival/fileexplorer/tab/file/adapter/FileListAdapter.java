@@ -16,7 +16,6 @@ import com.raival.fileexplorer.tab.file.FileExplorerTabDataHolder;
 import com.raival.fileexplorer.tab.file.FileExplorerTabFragment;
 import com.raival.fileexplorer.tab.file.model.FileItem;
 import com.raival.fileexplorer.tab.file.observer.FileListObserver;
-import com.raival.fileexplorer.tab.file.util.FileExtensions;
 import com.raival.fileexplorer.tab.file.util.FileUtils;
 
 import java.io.File;
@@ -76,16 +75,8 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
             final int position = getAdapterPosition();
             final FileItem fileItem = parentFragment.getFiles().get(position);
 
-            if (!FileUtils.getFileExtension(fileItem.file).equalsIgnoreCase(FileExtensions.apkType)) {
-                if (prevFile == null) {
-                    FileUtils.setFileIcon(icon, fileItem.file);
-                } else if (!fileItem.file.isDirectory()) {
-                    FileUtils.setFileIcon(icon, fileItem.file);
-                } else if (!prevFile.isDirectory()) {
-                    FileUtils.setFileIcon(icon, fileItem.file);
-                }
-            } else {
-                fileItem.img.observe(parentFragment, (drawable -> icon.setImageDrawable(drawable)));
+            if (prevFile == null || !fileItem.file.isDirectory() || !prevFile.isDirectory()) {
+                FileUtils.setFileIcon(icon, fileItem.file);
             }
 
             if (TextUtils.isEmpty(fileItem.name)) {

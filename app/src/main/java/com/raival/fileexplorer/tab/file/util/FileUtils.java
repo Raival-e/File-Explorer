@@ -173,16 +173,6 @@ public class FileUtils {
 
         final String ext = getFileExtension(file).toLowerCase();
 
-        if (ext.equals(FileExtensions.apkType)) {
-            PackageInfo info = App.appContext.getPackageManager().getPackageArchiveInfo(file.getAbsolutePath(), PackageManager.GET_ACTIVITIES);
-            if (info != null) {
-                ApplicationInfo applicationInfo = info.applicationInfo;
-                applicationInfo.sourceDir = file.getAbsolutePath();
-                applicationInfo.publicSourceDir = file.getAbsolutePath();
-                icon.setImageDrawable(applicationInfo.loadIcon(App.appContext.getPackageManager()));
-            }
-            return;
-        }
         if (ext.equals(FileExtensions.pdfType)) {
             icon.setImageResource(R.drawable.pdf_file);
             return;
@@ -195,10 +185,18 @@ public class FileUtils {
             icon.setImageResource(R.drawable.java_file);
             return;
         }
+        if (ext.equals(FileExtensions.apkType)) {
+            Glide.with(App.appContext)
+                    .load(file.getAbsolutePath())
+                    .error(R.drawable.apk_placeholder)
+                    .into(icon);
+            return;
+        }
         if (isArchiveFile(file) || ext.equals(FileExtensions.rarType)) {
             icon.setImageResource(R.drawable.zip_file);
             return;
         }
+
         if (isVideoFile(file)) {
             Glide.with(App.appContext)
                     .load(file)

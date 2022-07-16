@@ -1,7 +1,6 @@
 package com.raival.fileexplorer.tab.file;
 
 import android.annotation.SuppressLint;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
@@ -32,7 +31,6 @@ import com.raival.fileexplorer.tab.file.dialog.SearchDialog;
 import com.raival.fileexplorer.tab.file.dialog.TasksDialog;
 import com.raival.fileexplorer.tab.file.model.FileItem;
 import com.raival.fileexplorer.tab.file.option.FileOptionHandler;
-import com.raival.fileexplorer.tab.file.util.FileExtensions;
 import com.raival.fileexplorer.tab.file.util.FileOpener;
 import com.raival.fileexplorer.tab.file.util.FileUtils;
 import com.raival.fileexplorer.util.Log;
@@ -46,7 +44,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class FileExplorerTabFragment extends BaseTabFragment {
     public final static int MAX_NAME_LENGTH = 32;
@@ -63,9 +60,6 @@ public class FileExplorerTabFragment extends BaseTabFragment {
     private File currentDirectory;
 
     private boolean requireRefresh = false;
-
-    private IconResolver iconResolver;
-    private Thread iconResolverThread;
 
     public FileExplorerTabFragment() {
         super();
@@ -169,6 +163,7 @@ public class FileExplorerTabFragment extends BaseTabFragment {
         popupMenu.show();
     }
 
+    @SuppressLint("SetTextI18n")
     private boolean showSetPathDialog() {
         @SuppressLint("InflateParams") TextInputLayout input = (TextInputLayout) getLayoutInflater().inflate(R.layout.input, null, false);
         input.setHint("File path");
@@ -457,7 +452,6 @@ public class FileExplorerTabFragment extends BaseTabFragment {
                 this.files.add(fileItem);
             }
         }
-        iconResolver = new IconResolver().start();
     }
 
     public void focusOn(File file) {
@@ -547,26 +541,5 @@ public class FileExplorerTabFragment extends BaseTabFragment {
 
     public File getPreviousDirectory() {
         return previousDirectory;
-    }
-
-    private class IconResolver {
-        public boolean isWorking = false;
-
-        public IconResolver start() {
-            isWorking = true;
-            AtomicInteger i = new AtomicInteger();
-            iconResolverThread = new Thread(() -> {
-                for (FileItem fileItem : files) {
-                    if (FileUtils.getFileExtension(fileItem.file).equalsIgnoreCase(FileExtensions.apkType)) {
-                        Drawable drawable = FileUtils.getApkIcon(fileItem.file);
-                        App.appHandler.post(() -> fileItem.img.setValue(drawable));
-                    }
-                    i.incrementAndGet();
-                }
-                isWorking = false;
-            });
-            iconResolverThread.start();
-            return this;
-        }
     }
 }
