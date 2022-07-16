@@ -10,6 +10,7 @@ import androidx.annotation.ColorInt;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.raival.fileexplorer.App;
+import com.raival.fileexplorer.activity.SettingsActivity;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -38,8 +39,14 @@ public class Utils {
     }
 
     public static boolean isDarkMode() {
-        return (App.appContext.getResources().getConfiguration().uiMode
-                & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+        if (PrefsUtils.Settings.getThemeMode().equals(SettingsActivity.THEME_MODE_DARK)) {
+            return true;
+        } else if (PrefsUtils.Settings.getThemeMode().equals(SettingsActivity.THEME_MODE_LIGHT)) {
+            return false;
+        } else {
+            return (App.appContext.getResources().getConfiguration().uiMode
+                    & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+        }
     }
 
     public static String getRandomString(final int sizeOfRandomString) {
