@@ -24,6 +24,7 @@ import java.util.Objects;
 
 public class CustomDialog extends BottomSheetDialogFragment {
     private final ArrayList<View> views = new ArrayList<>();
+
     private Drawable icon;
     private String title;
     private String msg;
@@ -33,6 +34,8 @@ public class CustomDialog extends BottomSheetDialogFragment {
     private Listener negativeListener;
     private String neutralButton;
     private Listener neutralListener;
+
+    private TextView msgView;
 
     @Nullable
     @Override
@@ -56,7 +59,7 @@ public class CustomDialog extends BottomSheetDialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         TextView titleView = view.findViewById(R.id.dialog_title);
-        TextView msgView = view.findViewById(R.id.dialog_msg);
+        msgView = view.findViewById(R.id.dialog_msg);
         ShapeableImageView imageView = view.findViewById(R.id.dialog_icon);
         LinearLayout containerView = view.findViewById(R.id.dialog_container);
         MaterialButton positiveButtonView = view.findViewById(R.id.dialog_positive_button);
@@ -128,6 +131,7 @@ public class CustomDialog extends BottomSheetDialogFragment {
 
     public CustomDialog setMsg(String msg) {
         this.msg = msg;
+        if (msgView != null) msgView.setText(msg);
         return this;
     }
 

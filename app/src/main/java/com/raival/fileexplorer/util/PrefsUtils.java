@@ -87,6 +87,14 @@ public class PrefsUtils {
     }
 
     public static class Settings {
+        public static long getDeepSearchFileSizeLimit() {
+            return Prefs.getLong("settings_deep_search_file_size_limit", 6 * 1024 * 1024);
+        }
+
+        public static void setDeepSearchFileSizeLimit(long limit) {
+            Prefs.putLong("settings_deep_search_file_size_limit", limit);
+        }
+
         public static String getThemeMode() {
             return Prefs.getString("settings_theme_mode", SettingsActivity.THEME_MODE_AUTO);
         }

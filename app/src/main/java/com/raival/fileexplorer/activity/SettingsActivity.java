@@ -8,8 +8,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
 
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.slider.Slider;
 import com.raival.fileexplorer.R;
+import com.raival.fileexplorer.common.dialog.CustomDialog;
 import com.raival.fileexplorer.common.dialog.OptionsDialog;
+import com.raival.fileexplorer.tab.file.util.FileUtils;
 import com.raival.fileexplorer.util.PrefsUtils;
 
 import java.util.Objects;
@@ -25,6 +28,7 @@ public class SettingsActivity extends BaseActivity {
 
     private TextView logModeValue;
     private TextView themeModeValue;
+    private TextView deepSearchSizeLimitValue;
     private SwitchCompat showBottomToolbarLabels;
 
     @Override
@@ -64,6 +68,33 @@ public class SettingsActivity extends BaseActivity {
                     .addOption(LOG_MODE_ERRORS_ONLY, v1 -> setLogMode(LOG_MODE_ERRORS_ONLY), true)
                     .addOption(LOG_MODE_ALL, v1 -> setLogMode(LOG_MODE_ALL), true)
                     .show(getSupportFragmentManager(), "");
+        });
+
+        deepSearchSizeLimitValue = findViewById(R.id.settings_deep_search_limit_value);
+        deepSearchSizeLimitValue.setText(FileUtils.getFormattedSize(PrefsUtils.Settings.getDeepSearchFileSizeLimit(), "%.0f"));
+        findViewById(R.id.settings_deep_search_limit).setOnClickListener(v -> {
+            Slider seekBar = new Slider(this);
+            seekBar.setValueFrom(0);
+            seekBar.setValueTo(80);
+            seekBar.setStepSize(1);
+            seekBar.setValue((float) PrefsUtils.Settings.getDeepSearchFileSizeLimit() / 1024 / 1024);
+
+            CustomDialog customDialog = new CustomDialog();
+            customDialog.setTitle("Max file size limit (MB)")
+                    .setMsg("Any file larger than "
+                            + FileUtils.getFormattedSize(PrefsUtils.Settings.getDeepSearchFileSizeLimit())
+                            + " will be ignored")
+                    .addView(seekBar)
+                    .setPositiveButton("Save", (v1 -> {
+                        PrefsUtils.Settings.setDeepSearchFileSizeLimit((long) seekBar.getValue() * 1024 * 1024);
+                        deepSearchSizeLimitValue.setText(FileUtils.getFormattedSize(PrefsUtils.Settings.getDeepSearchFileSizeLimit(), "%.0f"));
+                    }), true)
+                    .setNegativeButton("Cancel", null, true)
+                    .show(getSupportFragmentManager(), "");
+
+            seekBar.addOnChangeListener((slider, value, fromUser) -> customDialog.setMsg("Any file larger than "
+                    + FileUtils.getFormattedSize((long) (value * 1024 * 1024), "%.0f")
+                    + " will be ignored"));
         });
     }
 

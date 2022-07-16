@@ -253,12 +253,16 @@ public class FileUtils {
     }
 
     public static String getFormattedSize(long bytes) {
+        return getFormattedSize(bytes, "%.02f");
+    }
+
+    public static String getFormattedSize(long bytes, String format) {
         if (bytes > 1073741824)
-            return String.format(Locale.ENGLISH, "%.02f", (float) bytes / 1073741824) + "GB";
+            return String.format(Locale.ENGLISH, format, (float) bytes / 1073741824) + "GB";
         if (bytes > 1048576)
-            return String.format(Locale.ENGLISH, "%.02f", (float) bytes / 1048576) + "MB";
+            return String.format(Locale.ENGLISH, format, (float) bytes / 1048576) + "MB";
         if (bytes > 1024)
-            return String.format(Locale.ENGLISH, "%.02f", (float) bytes / 1024) + "KB";
+            return String.format(Locale.ENGLISH, format, (float) bytes / 1024) + "KB";
         return bytes + "B";
     }
 

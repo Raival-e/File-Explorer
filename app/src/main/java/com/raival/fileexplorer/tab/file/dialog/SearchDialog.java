@@ -25,6 +25,7 @@ import com.raival.fileexplorer.tab.file.FileExplorerTabDataHolder;
 import com.raival.fileexplorer.tab.file.FileExplorerTabFragment;
 import com.raival.fileexplorer.tab.file.model.FileItem;
 import com.raival.fileexplorer.tab.file.util.FileUtils;
+import com.raival.fileexplorer.util.PrefsUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -143,19 +144,21 @@ public class SearchDialog extends BottomSheetDialogFragment {
     private void searchIn(File file, boolean isDeepSearch, boolean useRegex, boolean startWith, boolean endWith) {
         if (file.isFile()) {
             if (isDeepSearch) {
-                if (useRegex) {
-                    try {
-                        if (Pattern.compile(query).matcher(FileUtils.readFile(file)).find())
-                            addFileItem(file);
-                    } catch (Exception exception) {
-                        exception.printStackTrace();
-                    }
-                } else {
-                    try {
-                        if (FileUtils.readFile(file).contains(query))
-                            addFileItem(file);
-                    } catch (Exception exception) {
-                        exception.printStackTrace();
+                if (PrefsUtils.Settings.getDeepSearchFileSizeLimit() >= file.length()) {
+                    if (useRegex) {
+                        try {
+                            if (Pattern.compile(query).matcher(FileUtils.readFile(file)).find())
+                                addFileItem(file);
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+                        }
+                    } else {
+                        try {
+                            if (FileUtils.readFile(file).contains(query))
+                                addFileItem(file);
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+                        }
                     }
                 }
             } else {
