@@ -130,6 +130,7 @@ public class SearchDialog extends BottomSheetDialogFragment {
                         recyclerView.getAdapter().notifyDataSetChanged();
                         active = false;
                         setCancelable(true);
+                        updateFileCount();
                     });
                 });
                 searchThread.start();
