@@ -25,7 +25,10 @@ import com.raival.fileexplorer.tab.file.FileExplorerTabDataHolder;
 import com.raival.fileexplorer.tab.file.FileExplorerTabFragment;
 import com.raival.fileexplorer.tab.file.model.FileItem;
 import com.raival.fileexplorer.tab.file.util.FileUtils;
+import com.raival.fileexplorer.util.Log;
 import com.raival.fileexplorer.util.PrefsUtils;
+
+import org.apache.commons.io.LineIterator;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -33,12 +36,14 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class SearchDialog extends BottomSheetDialogFragment {
+    private static final String TAG = "Search Dialog";
     private final FileExplorerTabFragment tab;
     private final ArrayList<File> filesToSearchIn;
     private RecyclerView recyclerView;
 
     private TextInputLayout input;
     private CheckBox deepSearch;
+    private CheckBox optimizedSearching;
     private CheckBox regEx;
     private CheckBox suffix;
     private CheckBox prefix;
@@ -86,6 +91,7 @@ public class SearchDialog extends BottomSheetDialogFragment {
         recyclerView = view.findViewById(R.id.rv);
         input = view.findViewById(R.id.input);
         deepSearch = view.findViewById(R.id.search_option_deep_search);
+        optimizedSearching = view.findViewById(R.id.search_option_optimized_searching);
         regEx = view.findViewById(R.id.search_option_regex);
         suffix = view.findViewById(R.id.search_option_suffix);
         prefix = view.findViewById(R.id.search_option_prefix);
@@ -116,7 +122,7 @@ public class SearchDialog extends BottomSheetDialogFragment {
                 query = Objects.requireNonNull(input.getEditText()).getText().toString();
                 searchThread = new Thread(() -> {
                     for (File file : filesToSearchIn) {
-                        searchIn(file, deepSearch.isChecked(), regEx.isChecked(), prefix.isChecked(), suffix.isChecked());
+                        searchIn(file, deepSearch.isChecked(), optimizedSearching.isChecked(), regEx.isChecked(), prefix.isChecked(), suffix.isChecked());
                     }
                     recyclerView.post(() -> {
                         searchButton.setText("Search");
@@ -141,23 +147,45 @@ public class SearchDialog extends BottomSheetDialogFragment {
         fileCount.setText(((FileExplorerTabDataHolder) tab.getDataHolder()).searchList.size() + " results found");
     }
 
-    private void searchIn(File file, boolean isDeepSearch, boolean useRegex, boolean startWith, boolean endWith) {
+    private void searchIn(File file, boolean isDeepSearch, boolean optimized, boolean useRegex, boolean startWith, boolean endWith) {
         if (file.isFile()) {
             if (isDeepSearch) {
                 if (PrefsUtils.Settings.getDeepSearchFileSizeLimit() >= file.length()) {
-                    if (useRegex) {
+                    if (optimized) {
+                        LineIterator lineIterator = null;
                         try {
-                            if (Pattern.compile(query).matcher(FileUtils.readFile(file)).find())
-                                addFileItem(file);
-                        } catch (Exception exception) {
-                            exception.printStackTrace();
+                            lineIterator = org.apache.commons.io.FileUtils.lineIterator(file);
+                            while (lineIterator.hasNext()) {
+                                if (useRegex) {
+                                    if (Pattern.compile(query).matcher(lineIterator.nextLine()).find()) {
+                                        addFileItem(file);
+                                        break;
+                                    }
+                                } else {
+                                    if (lineIterator.nextLine().contains(query)) {
+                                        addFileItem(file);
+                                        break;
+                                    }
+                                }
+                            }
+                        } catch (Exception e) {
+                            Log.e(TAG, e);
+                        } finally {
+                            LineIterator.closeQuietly(lineIterator);
                         }
                     } else {
                         try {
-                            if (FileUtils.readFile(file).contains(query))
-                                addFileItem(file);
-                        } catch (Exception exception) {
-                            exception.printStackTrace();
+                            if (useRegex) {
+                                if (Pattern.compile(query).matcher(FileUtils.readFile(file)).find()) {
+                                    addFileItem(file);
+                                }
+                            } else {
+                                if (FileUtils.readFile(file).contains(query)) {
+                                    addFileItem(file);
+                                }
+                            }
+                        } catch (Exception e) {
+                            Log.e(TAG, e);
                         }
                     }
                 }
@@ -177,7 +205,7 @@ public class SearchDialog extends BottomSheetDialogFragment {
             File[] children = file.listFiles();
             if (children != null) {
                 for (File child : children) {
-                    searchIn(child, isDeepSearch, useRegex, startWith, endWith);
+                    searchIn(child, isDeepSearch, optimized, useRegex, startWith, endWith);
                 }
             }
         }

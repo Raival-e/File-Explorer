@@ -31,11 +31,12 @@
             android:text="Deep search" />
 
         <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/search_option_regex"
+            android:id="@+id/search_option_optimized_searching"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="RegEx" />
+            android:checked="true"
+            android:text="Optimized searching" />
     </LinearLayout>
 
     <LinearLayout
@@ -56,6 +57,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Prefix" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/search_option_regex"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="RegEx" />
     </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
