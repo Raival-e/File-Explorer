@@ -359,11 +359,11 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (getActiveFragment().onBackPressed()) {
-            return;
-        }
         if (drawer.isDrawerOpen(drawerLayout)) {
             drawer.close();
+            return;
+        }
+        if (getActiveFragment().onBackPressed()) {
             return;
         }
         if (!confirmExit) {
