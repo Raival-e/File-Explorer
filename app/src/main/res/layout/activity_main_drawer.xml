@@ -6,6 +6,7 @@
     android:layout_gravity="start"
     android:background="?android:attr/colorBackground"
     android:focusable="true"
+    android:clickable="true"
     android:orientation="vertical">
 
     <com.google.android.material.appbar.MaterialToolbar
