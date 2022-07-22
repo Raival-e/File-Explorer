@@ -221,7 +221,11 @@ public class FileUtils {
             icon.setImageResource(R.drawable.ic_baseline_extension_24);
             return;
         }
-        icon.setImageResource(R.drawable.unknown_file);
+        Glide.with(App.appContext)
+                .applyDefaultRequestOptions(new RequestOptions().override(100).encodeQuality(80))
+                .load(file)
+                .error(R.drawable.unknown_file)
+                .into(icon);
     }
 
     public static boolean isExternalStorageFolder(File file) {
