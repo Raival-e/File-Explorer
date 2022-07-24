@@ -42,11 +42,8 @@ android {
 }
 
 dependencies {
-    api project(path: ":kotlinc")
-    api project(path: ":build-logic")
-
-    implementation fileTree(dir: "libs", include: ["*.aar"])
     implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation project(path: ':kotlinc')
 
     implementation "androidx.appcompat:appcompat:1.4.2"
     implementation "com.google.android.material:material:1.6.1"
@@ -58,7 +55,7 @@ dependencies {
 
     implementation "com.pixplicity.easyprefs:EasyPrefs:1.10.0"
     implementation "net.lingala.zip4j:zip4j:2.11.1"
-
+    implementation "io.github.damianvdb:materialchecklist:1.0.0"
     implementation "io.github.Rosemoe.sora-editor:editor:0.15.1", {
         exclude group: "androidx.annotation", module: "annotation"
     }
@@ -69,10 +66,9 @@ dependencies {
     }
     implementation "io.github.Rosemoe.sora-editor:language-java:0.15.1"
 
-    implementation "io.github.damianvdb:materialchecklist:1.0.0"
-
     api "com.android.tools:r8:3.3.28"
     implementation "org.eclipse.jdt:ecj:3.26.0"
+    implementation 'io.github.itsaky:nb-javac-android:17.0.0.1'
 
     testImplementation "junit:junit:4.13.2"
     androidTestImplementation "androidx.test.ext:junit:1.1.3"

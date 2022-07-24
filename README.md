@@ -1,6 +1,6 @@
 # File Explorer
 
-A full-featured file manager with Material You design.
+A full-featured file manager with Material You design and Java/Kotlin compiler!
 
 # Features
 
@@ -33,7 +33,6 @@ Using this features, the possibilities are endless, and you can create any exten
 <img src="/assets/screenshot1.png" width="32%" /> <img src="/assets/screenshot2.png" width="32%" /> <img src="/assets/screenshot3.png" width="32%" />
 </div>
 
-
 # Special thanks
 
 - [Mike Anderson](https://github.com/MikeAndrson).
@@ -41,3 +40,5 @@ Using this features, the possibilities are endless, and you can create any exten
 - [Tyron](https://github.com/tyron12233).
 
 - [Sketchware Pro](https://github.com/Sketchware-Pro/Sketchware-Pro).
+
+- [PranavPurwar](https://github.com/PranavPurwar)

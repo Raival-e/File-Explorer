@@ -5,8 +5,6 @@
 
 package org.jetbrains.kotlin.com.intellij.util.lang;
 
-import org.jetbrains.kotlin.com.intellij.openapi.util.text.StringUtil;
-
 public final class JavaVersion implements Comparable<JavaVersion> {
     public final int feature;
     public final int minor;
