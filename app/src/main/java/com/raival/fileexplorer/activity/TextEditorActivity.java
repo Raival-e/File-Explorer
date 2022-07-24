@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
@@ -19,9 +20,9 @@ import com.raival.fileexplorer.App;
 import com.raival.fileexplorer.R;
 import com.raival.fileexplorer.activity.editor.autocomplete.CustomCompletionItemAdapter;
 import com.raival.fileexplorer.activity.editor.autocomplete.CustomCompletionLayout;
+import com.raival.fileexplorer.activity.editor.formatter.java.JavaFormatter;
 import com.raival.fileexplorer.activity.editor.scheme.DarkScheme;
 import com.raival.fileexplorer.activity.editor.scheme.LightScheme;
-import com.raival.fileexplorer.activity.editor.util.CodeFormatter;
 import com.raival.fileexplorer.activity.editor.view.SymbolInputView;
 import com.raival.fileexplorer.activity.model.TextEditorViewModel;
 import com.raival.fileexplorer.common.BackgroundTask;
@@ -43,6 +44,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import io.github.rosemoe.sora.lang.EmptyLanguage;
 import io.github.rosemoe.sora.lang.Language;
+import io.github.rosemoe.sora.lang.format.Formatter;
 import io.github.rosemoe.sora.langs.java.JavaLanguage;
 import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
 import io.github.rosemoe.sora.langs.textmate.TextMateLanguage;
@@ -368,12 +370,7 @@ public class TextEditorActivity extends BaseActivity {
     private void setEditorLanguage(int language) {
         if (language == LANGUAGE_JAVA) {
             editor.setColorScheme(getColorScheme(false));
-            editor.setEditorLanguage(new JavaLanguage() {
-                @Override
-                public CharSequence format(CharSequence text) {
-                    return CodeFormatter.internalJavaFormat(text.toString());
-                }
-            });
+            editor.setEditorLanguage(getJavaLanguage());
         } else if (language == LANGUAGE_KOTLIN) {
             editor.setColorScheme(getColorScheme(true));
             editor.setEditorLanguage(getKotlinLang());
@@ -387,6 +384,18 @@ public class TextEditorActivity extends BaseActivity {
             editor.setColorScheme(getColorScheme(false));
             editor.setEditorLanguage(new EmptyLanguage());
         }
+    }
+
+    private Language getJavaLanguage() {
+        return new JavaLanguage() {
+            private final JavaFormatter javaFormatter = new JavaFormatter();
+
+            @NonNull
+            @Override
+            public Formatter getFormatter() {
+                return javaFormatter;
+            }
+        };
     }
 
     private Language getJsonLang() {
@@ -447,7 +456,7 @@ public class TextEditorActivity extends BaseActivity {
         EditorColorScheme scheme = new LightScheme();
         scheme.setColor(EditorColorScheme.WHOLE_BACKGROUND, SurfaceColors.SURFACE_0.getColor(this));
         scheme.setColor(EditorColorScheme.LINE_NUMBER_BACKGROUND, SurfaceColors.SURFACE_0.getColor(this));
-        scheme.setColor(EditorColorScheme.AUTO_COMP_PANEL_BG, SurfaceColors.SURFACE_1.getColor(this));
+        scheme.setColor(EditorColorScheme.COMPLETION_WND_BACKGROUND, SurfaceColors.SURFACE_1.getColor(this));
         return scheme;
     }
 
@@ -464,7 +473,7 @@ public class TextEditorActivity extends BaseActivity {
         EditorColorScheme scheme = new DarkScheme();
         scheme.setColor(EditorColorScheme.WHOLE_BACKGROUND, SurfaceColors.SURFACE_0.getColor(this));
         scheme.setColor(EditorColorScheme.LINE_NUMBER_BACKGROUND, SurfaceColors.SURFACE_0.getColor(this));
-        scheme.setColor(EditorColorScheme.AUTO_COMP_PANEL_BG, SurfaceColors.SURFACE_1.getColor(this));
+        scheme.setColor(EditorColorScheme.COMPLETION_WND_BACKGROUND, SurfaceColors.SURFACE_1.getColor(this));
         return scheme;
     }
 

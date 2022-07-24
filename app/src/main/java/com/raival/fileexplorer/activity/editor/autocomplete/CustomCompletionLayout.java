@@ -27,8 +27,8 @@ public class CustomCompletionLayout implements CompletionLayout {
 
     @Override
     public void onApplyColorScheme(EditorColorScheme colorScheme) {
-        mBackground.setStroke(1, colorScheme.getColor(EditorColorScheme.AUTO_COMP_PANEL_CORNER));
-        mBackground.setColor(colorScheme.getColor(EditorColorScheme.AUTO_COMP_PANEL_BG));
+        mBackground.setStroke(1, colorScheme.getColor(EditorColorScheme.COMPLETION_WND_BACKGROUND));
+        mBackground.setColor(colorScheme.getColor(EditorColorScheme.COMPLETION_WND_BACKGROUND));
     }
 
     @Override
