@@ -14,6 +14,7 @@ android {
         versionName "1.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
 
     packagingOptions {
@@ -23,6 +24,7 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
         }
     }
@@ -38,6 +40,13 @@ android {
             keyAlias "testkey"
             keyPassword "testkey"
         }
+        
+        release {
+            storeFile file("../testkey.keystore")
+            storePassword "testkey"
+            keyAlias "testkey"
+            keyPassword "testkey"
+        }
     }
 }
 
@@ -45,7 +54,6 @@ dependencies {
     api project(path: ":kotlinc")
     api project(path: ":build-logic")
 
-    implementation fileTree(dir: "libs", include: ["*.aar"])
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
     implementation "androidx.appcompat:appcompat:1.4.2"
