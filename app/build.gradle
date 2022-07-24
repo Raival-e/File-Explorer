@@ -51,6 +51,7 @@ dependencies {
     implementation "androidx.appcompat:appcompat:1.4.2"
     implementation "com.google.android.material:material:1.6.1"
     implementation "com.google.code.gson:gson:2.9.0"
+    implementation 'commons-io:commons-io:2.11.0'
 
     implementation "com.github.bumptech.glide:glide:4.13.2"
     annotationProcessor "com.github.bumptech.glide:compiler:4.13.2"
@@ -58,15 +59,15 @@ dependencies {
     implementation "com.pixplicity.easyprefs:EasyPrefs:1.10.0"
     implementation "net.lingala.zip4j:zip4j:2.11.1"
 
-    implementation "io.github.Rosemoe.sora-editor:editor:0.13.1", {
+    implementation "io.github.Rosemoe.sora-editor:editor:0.15.1", {
         exclude group: "androidx.annotation", module: "annotation"
     }
-    implementation "io.github.Rosemoe.sora-editor:language-textmate:0.13.1", {
+    implementation "io.github.Rosemoe.sora-editor:language-textmate:0.15.1", {
         // I had to exclude it to resolve a conflict with some kotlinc classes (javax.xml.stream.*)
         // TODO: only exclude classes in javax.xml.stream
         exclude group: "xml-apis", module: "xml-apis"
     }
-    implementation "io.github.Rosemoe.sora-editor:language-java:0.13.1"
+    implementation "io.github.Rosemoe.sora-editor:language-java:0.15.1"
 
     implementation "io.github.damianvdb:materialchecklist:1.0.0"
 
