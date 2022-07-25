@@ -68,7 +68,7 @@ dependencies {
 
     api "com.android.tools:r8:3.3.28"
     implementation "org.eclipse.jdt:ecj:3.26.0"
-    implementation 'io.github.itsaky:nb-javac-android:17.0.0.1'
+    implementation 'io.github.itsaky:nb-javac-android:17.0.0.2'
 
     testImplementation "junit:junit:4.13.2"
     androidTestImplementation "androidx.test.ext:junit:1.1.3"
