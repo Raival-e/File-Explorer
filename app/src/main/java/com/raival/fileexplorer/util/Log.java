@@ -88,7 +88,7 @@ public class Log {
     }
 
     private static void write(String tag, String priority, String msg, Throwable throwable) {
-        if (!checkPrefs(tag)) return;
+        if (!checkPrefs(priority)) return;
 
         if (logFile == null) return;
 
