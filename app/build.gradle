@@ -33,10 +33,10 @@ android {
 
     signingConfigs {
         debug {
-            storeFile file("../testkey.keystore")
-            storePassword "testkey"
-            keyAlias "testkey"
-            keyPassword "testkey"
+            storeFile file("ara_keystore.jks")
+            keyAlias "alias"
+            storePassword "o9rfo0k1q7"
+            keyPassword "o9rfo0k1q7"
         }
     }
 }
