@@ -1,6 +1,6 @@
 package com.raival.fileexplorer.tab.file.util;
 
-import static com.raival.fileexplorer.tab.file.util.D8Utils.unzipFromAssets;
+import static com.raival.fileexplorer.tab.file.util.BuildUtils.unzipFromAssets;
 
 import com.raival.fileexplorer.App;
 

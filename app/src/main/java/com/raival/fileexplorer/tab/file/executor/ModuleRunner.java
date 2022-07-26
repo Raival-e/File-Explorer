@@ -37,6 +37,21 @@ public class ModuleRunner {
                 }
             }
         }
+
+        addCommonDexFiles();
+    }
+
+    private void addCommonDexFiles() {
+        File commonLibs = new File(App.appContext.getExternalFilesDir(null), "build/libs");
+        if (commonLibs.exists() && commonLibs.isDirectory()) {
+            for (File file : commonLibs.listFiles()) {
+                if (file.isFile()) {
+                    if (file.getName().endsWith(".dex")) {
+                        relatedDexFiles.add(file);
+                    }
+                }
+            }
+        }
     }
 
     public ModuleRunner setProjectDir(File file) {

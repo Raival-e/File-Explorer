@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.tools.r8.D8;
 import com.raival.fileexplorer.App;
-import com.raival.fileexplorer.tab.file.util.D8Utils;
+import com.raival.fileexplorer.tab.file.util.BuildUtils;
 import com.raival.fileexplorer.tab.file.util.FileUtils;
 import com.raival.fileexplorer.util.Log;
 
@@ -64,7 +64,7 @@ public class Executor {
 
         opt.add("--intermediate");
         opt.add("--lib");
-        opt.add(D8Utils.getRtJarFile().getAbsolutePath());
+        opt.add(BuildUtils.getRtJarFile().getAbsolutePath());
         opt.add("--output");
         opt.add(output.getAbsolutePath());
         ArrayList<String> classes = FileUtils.getAllFilesInDir(new File(output, "classes"), "class");
@@ -107,7 +107,7 @@ public class Executor {
 
         final StringBuilder sb = new StringBuilder();
         for (File jar : jarFiles) sb.append(":").append(jar.getAbsolutePath());
-        sb.append(":").append(D8Utils.getRtJarFile().getAbsolutePath());
+        sb.append(":").append(BuildUtils.getRtJarFile().getAbsolutePath());
         args.add(sb.substring(1));
 
         for (File file : kotlinFiles) {
@@ -158,9 +158,9 @@ public class Executor {
         sb.append(":")
                 .append(classes.getAbsolutePath())
                 .append(":")
-                .append(D8Utils.getLambdaStubsJarFile().getAbsolutePath())
+                .append(BuildUtils.getLambdaStubsJarFile().getAbsolutePath())
                 .append(":")
-                .append(D8Utils.getRtJarFile().getAbsolutePath());
+                .append(BuildUtils.getRtJarFile().getAbsolutePath());
         opt.add(sb.substring(1));
 
         opt.add("-proc:none");
@@ -237,6 +237,20 @@ public class Executor {
                                 jarFiles.add(subFile);
                             }
                         }
+                    }
+                }
+            }
+        }
+        addCommonLibs();
+    }
+
+    private void addCommonLibs() {
+        File commonLibs = new File(App.appContext.getExternalFilesDir(null), "build/libs");
+        if (commonLibs.exists() && commonLibs.isDirectory()) {
+            for (File file : commonLibs.listFiles()) {
+                if (file.isFile()) {
+                    if (file.getName().endsWith(".jar")) {
+                        jarFiles.add(file);
                     }
                 }
             }
