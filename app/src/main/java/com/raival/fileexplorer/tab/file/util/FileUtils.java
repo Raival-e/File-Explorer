@@ -3,10 +3,6 @@ package com.raival.fileexplorer.tab.file.util;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.StatFs;
@@ -150,19 +146,6 @@ public class FileUtils {
             name = name.substring(0, maxLength - 3) + "...";
         }
         return name;
-    }
-
-    public static Drawable getApkIcon(File file) {
-        if (file.isDirectory()) return null;
-        if (!getFileExtension(file).equalsIgnoreCase(FileExtensions.apkType)) return null;
-        PackageInfo info = App.appContext.getPackageManager().getPackageArchiveInfo(file.getAbsolutePath(), PackageManager.GET_ACTIVITIES);
-        if (info != null) {
-            ApplicationInfo applicationInfo = info.applicationInfo;
-            applicationInfo.sourceDir = file.getAbsolutePath();
-            applicationInfo.publicSourceDir = file.getAbsolutePath();
-            return applicationInfo.loadIcon(App.appContext.getPackageManager());
-        }
-        return null;
     }
 
     public static void setFileIcon(ImageView icon, File file) {

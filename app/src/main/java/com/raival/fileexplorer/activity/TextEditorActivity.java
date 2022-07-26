@@ -1,6 +1,7 @@
 package com.raival.fileexplorer.activity;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
@@ -444,36 +445,47 @@ public class TextEditorActivity extends BaseActivity {
     }
 
     private EditorColorScheme getLightScheme(boolean isTextmate) {
+        EditorColorScheme scheme;
         if (isTextmate) {
             try {
-                return TextMateColorScheme.create(ThemeReader.readThemeSync("light.tmTheme",
+                scheme = TextMateColorScheme.create(ThemeReader.readThemeSync("light.tmTheme",
                         getAssets().open("textmate/light.tmTheme")));
+
             } catch (Exception e) {
                 Log.e(TAG, Log.SOMETHING_WENT_WRONG + " while creating light scheme for textmate language", e);
                 App.showMsg(Log.UNABLE_TO + " load: textmate/light.tmTheme");
+                scheme = new LightScheme();
             }
+        } else {
+            scheme = new LightScheme();
         }
-        EditorColorScheme scheme = new LightScheme();
+
         scheme.setColor(EditorColorScheme.WHOLE_BACKGROUND, SurfaceColors.SURFACE_0.getColor(this));
         scheme.setColor(EditorColorScheme.LINE_NUMBER_BACKGROUND, SurfaceColors.SURFACE_0.getColor(this));
         scheme.setColor(EditorColorScheme.COMPLETION_WND_BACKGROUND, SurfaceColors.SURFACE_1.getColor(this));
+        scheme.setColor(EditorColorScheme.HIGHLIGHTED_DELIMITERS_FOREGROUND, Color.RED);
         return scheme;
     }
 
     private EditorColorScheme getDarkScheme(boolean isTextmate) {
+        EditorColorScheme scheme;
         if (isTextmate) {
             try {
-                return TextMateColorScheme.create(ThemeReader.readThemeSync("dark.json",
+                scheme = TextMateColorScheme.create(ThemeReader.readThemeSync("dark.json",
                         getAssets().open("textmate/dark.json")));
             } catch (Exception e) {
                 Log.e(TAG, Log.SOMETHING_WENT_WRONG + " while creating dark scheme for textmate language", e);
                 App.showMsg(Log.UNABLE_TO + " load: textmate/dark.json");
+                scheme = new DarkScheme();
             }
+        } else {
+            scheme = new DarkScheme();
         }
-        EditorColorScheme scheme = new DarkScheme();
+
         scheme.setColor(EditorColorScheme.WHOLE_BACKGROUND, SurfaceColors.SURFACE_0.getColor(this));
         scheme.setColor(EditorColorScheme.LINE_NUMBER_BACKGROUND, SurfaceColors.SURFACE_0.getColor(this));
         scheme.setColor(EditorColorScheme.COMPLETION_WND_BACKGROUND, SurfaceColors.SURFACE_1.getColor(this));
+        scheme.setColor(EditorColorScheme.HIGHLIGHTED_DELIMITERS_FOREGROUND, Color.RED);
         return scheme;
     }
 
