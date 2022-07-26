@@ -447,8 +447,11 @@ public class FileUtils {
     }
 
     public static void copy(File fileToCopy, File destinationFolder, boolean overwrite) throws Exception {
-        if (fileToCopy.isFile()) copyFile(fileToCopy, destinationFolder, overwrite);
-        else copyFolder(fileToCopy, destinationFolder, overwrite);
+        if (!fileToCopy.exists())
+            throw new Exception("File " + fileToCopy.getAbsolutePath() + " doesn't exist");
+        if (fileToCopy.isFile()) {
+            copyFile(fileToCopy, destinationFolder, overwrite);
+        } else copyFolder(fileToCopy, destinationFolder, overwrite);
     }
 
     public static void copyFile(File fileToCopy, File destinationFolder, boolean overwrite) throws Exception {
