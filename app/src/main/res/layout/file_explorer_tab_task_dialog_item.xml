@@ -43,6 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
+                android:paddingBottom="3dp"
                 android:text="7 files copied"
                 android:textSize="16sp"
                 android:textStyle="normal" />
@@ -51,6 +52,7 @@
                 android:id="@+id/task_details"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:alpha="0.6"
                 android:maxLines="2"
                 android:text="from: /sdcard/download"
                 android:textSize="12sp"
@@ -59,9 +61,9 @@
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
+    <com.google.android.material.divider.MaterialDivider
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginStart="30dp" />
+        android:layout_height="1px"
+        android:alpha="0.6" />
 
 </LinearLayout>
