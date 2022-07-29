@@ -8,7 +8,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.textfield.TextInputLayout
 import com.raival.fileexplorer.App.Companion.showMsg
 import com.raival.fileexplorer.R
 import com.raival.fileexplorer.activity.MainActivity
@@ -308,13 +307,9 @@ class FileOptionHandler(private val parentFragment: FileExplorerTabFragment) {
 
     @SuppressLint("SetTextI18n")
     private fun compressFiles(task: CompressTask) {
-        @SuppressLint("InflateParams") val input =
-            parentFragment.requireActivity().layoutInflater.inflate(
-                R.layout.input,
-                null,
-                false
-            ) as TextInputLayout
-        input.hint = "Archive name"
+        val customDialog = CustomDialog()
+        val input = customDialog.createInput(parentFragment.requireActivity(), "Archive name")
+
         input.editText?.setText(".zip")
         FileUtils.setFileValidator(input, parentFragment.currentDirectory)
         CustomDialog()
@@ -443,14 +438,14 @@ class FileOptionHandler(private val parentFragment: FileExplorerTabFragment) {
     }
 
     private fun showRenameDialog(selectedFiles: ArrayList<File>) {
-        @SuppressLint("InflateParams") val input =
-            parentFragment.layoutInflater.inflate(R.layout.input, null, false) as TextInputLayout
-        input.hint = "File name"
+        val customDialog = CustomDialog()
+        val input = customDialog.createInput(parentFragment.requireActivity(), "File name")
+
         input.editText?.setText(selectedFiles[0].name)
         input.editText!!.setSingleLine()
         FileUtils.setFileValidator(input, selectedFiles[0], selectedFiles[0].parentFile)
-        CustomDialog()
-            .setTitle("Rename")
+
+        customDialog.setTitle("Rename")
             .addView(input)
             .setPositiveButton("Save", {
                 if (input.error == null) {

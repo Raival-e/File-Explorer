@@ -1,5 +1,6 @@
 package com.raival.fileexplorer.common.dialog
 
+import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,6 +13,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.imageview.ShapeableImageView
+import com.google.android.material.textfield.TextInputLayout
 import com.raival.fileexplorer.R
 
 class CustomDialog : BottomSheetDialogFragment() {
@@ -42,6 +44,7 @@ class CustomDialog : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         val titleView = view.findViewById<TextView>(R.id.dialog_title)
         msgView = view.findViewById(R.id.dialog_msg)
         val imageView = view.findViewById<ShapeableImageView>(R.id.dialog_icon)
@@ -49,6 +52,7 @@ class CustomDialog : BottomSheetDialogFragment() {
         val positiveButtonView = view.findViewById<MaterialButton>(R.id.dialog_positive_button)
         val negativeButtonView = view.findViewById<MaterialButton>(R.id.dialog_negative_button)
         val neutralButtonView = view.findViewById<MaterialButton>(R.id.dialog_neutral_button)
+
         if (this::icon.isInitialized) {
             imageView.visibility = View.VISIBLE
             imageView.setImageDrawable(icon)
@@ -147,6 +151,14 @@ class CustomDialog : BottomSheetDialogFragment() {
         neutralButton = label
         neutralListener = Listener(listener ?: emptyListener(), dismiss)
         return this
+    }
+
+    fun createInput(context: Context, hint: String): TextInputLayout {
+        return (LayoutInflater.from(context)
+            .inflate(R.layout.input, null, false) as TextInputLayout)
+            .apply {
+                setHint(hint)
+            }
     }
 
     private fun emptyListener(): View.OnClickListener = View.OnClickListener { }

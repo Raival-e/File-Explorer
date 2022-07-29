@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.textview.MaterialTextView
 import com.raival.fileexplorer.App.Companion.showMsg
 import com.raival.fileexplorer.R
@@ -190,11 +189,9 @@ class FileExplorerTabFragment : BaseTabFragment {
 
     @SuppressLint("SetTextI18n")
     private fun showSetPathDialog(): Boolean {
-        @SuppressLint("InflateParams") val input =
-            layoutInflater.inflate(R.layout.input, null, false) as TextInputLayout
-        input.hint = "File path"
-        input.editText?.setSingleLine()
         val customDialog = CustomDialog()
+        val input = customDialog.createInput(requireActivity(), "File path")
+        input.editText?.setSingleLine()
         val textView = MaterialTextView(requireContext())
         textView.setPadding(0, Utils.pxToDp(8f).toInt(), 0, 0)
         textView.alpha = 0.7f
@@ -249,9 +246,9 @@ class FileExplorerTabFragment : BaseTabFragment {
     }
 
     private fun showAddNewFileDialog() {
-        @SuppressLint("InflateParams") val input =
-            layoutInflater.inflate(R.layout.input, null, false) as TextInputLayout
-        input.hint = "File name"
+        val customDialog = CustomDialog()
+        val input = customDialog.createInput(requireActivity(), "File name")
+
         input.editText?.setSingleLine()
         FileUtils.setFileValidator(input, currentDirectory)
         CustomDialog()
