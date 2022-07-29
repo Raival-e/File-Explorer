@@ -31,7 +31,7 @@ public class ApkIconDataFetcher implements DataFetcher<Drawable> {
             pi.applicationInfo.publicSourceDir = model;
             apkIcon = pi.applicationInfo.loadIcon(context.getPackageManager());
         } else {
-            apkIcon = ContextCompat.getDrawable(context, R.drawable.unknown_file);
+            apkIcon = ContextCompat.getDrawable(context, R.drawable.unknown_file_extension);
         }
         callback.onDataReady(apkIcon);
     }

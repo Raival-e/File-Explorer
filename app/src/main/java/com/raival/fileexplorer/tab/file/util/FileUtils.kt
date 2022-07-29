@@ -122,16 +122,23 @@ object FileUtils {
             return
         }
         val ext: String = file.getFileExtension().lowercase(Locale.ROOT)
+
         if (ext == FileExtensions.pdfType) {
-            icon.setImageResource(R.drawable.pdf_file)
+            Glide.with(App.appContext)
+                .load(R.drawable.pdf_file_extension)
+                .into(icon)
             return
         }
         if (file.isTextFile()) {
-            icon.setImageResource(R.drawable.text_file)
+            Glide.with(App.appContext)
+                .load(R.drawable.txt_file_extension)
+                .into(icon)
             return
         }
         if (file.isCodeFile()) {
-            icon.setImageResource(R.drawable.java_file)
+            Glide.with(App.appContext)
+                .load(R.drawable.code_file_extension)
+                .into(icon)
             return
         }
         if (ext == FileExtensions.apkType) {
@@ -142,37 +149,95 @@ object FileUtils {
             return
         }
         if (file.isArchiveFile() || ext == FileExtensions.rarType) {
-            icon.setImageResource(R.drawable.zip_file)
+            Glide.with(App.appContext)
+                .load(R.drawable.zip_file_extension)
+                .into(icon)
             return
         }
         if (file.isVideoFile()) {
             Glide.with(App.appContext)
                 .load(file)
-                .error(R.drawable.video_file)
-                .placeholder(R.drawable.video_file)
+                .error(R.drawable.mp4_file_extension)
+                .placeholder(R.drawable.mp4_file_extension)
                 .into(icon)
             return
         }
         if (file.isAudioFile()) {
-            icon.setImageResource(R.drawable.sound_file)
+            Glide.with(App.appContext)
+                .load(file)
+                .error(R.drawable.music_file_extension)
+                .placeholder(R.drawable.music_file_extension)
+                .into(icon)
             return
         }
+
+        if (ext == FileExtensions.ttfType) {
+            Glide.with(App.appContext)
+                .load(R.drawable.font_file_extension)
+                .into(icon)
+            return
+        }
+
+        if (ext == FileExtensions.sqlType) {
+            Glide.with(App.appContext)
+                .load(R.drawable.sql_file_extension)
+                .into(icon)
+            return
+        }
+
+        if (ext == FileExtensions.aiType) {
+            Glide.with(App.appContext)
+                .load(R.drawable.ai_file_extension)
+                .into(icon)
+            return
+        }
+
+        if (ext == FileExtensions.svgType) {
+            Glide.with(App.appContext)
+                .load(R.drawable.svg_file_extension)
+                .into(icon)
+            return
+        }
+
         if (file.isImageFile()) {
             Glide.with(App.appContext)
                 .applyDefaultRequestOptions(RequestOptions().override(100).encodeQuality(80))
                 .load(file)
-                .error(R.drawable.unknown_file)
+                .error(R.drawable.jpg_file_extension)
                 .into(icon)
             return
         }
+
+        if (ext == FileExtensions.docType || ext == FileExtensions.docxType) {
+            Glide.with(App.appContext)
+                .load(R.drawable.doc_file_extension)
+                .into(icon)
+            return
+        }
+
+        if (ext == FileExtensions.xlsType || ext == FileExtensions.xlsxType) {
+            Glide.with(App.appContext)
+                .load(R.drawable.xls_file_extension)
+                .into(icon)
+            return
+        }
+
+        if (ext == FileExtensions.pptType || ext == FileExtensions.pptxType) {
+            Glide.with(App.appContext)
+                .load(R.drawable.powerpoint_file_extension)
+                .into(icon)
+            return
+        }
+
         if (file.getFileExtension() == "extension") {
-            icon.setImageResource(R.drawable.ic_baseline_extension_24)
+            Glide.with(App.appContext)
+                .load(R.drawable.ic_baseline_extension_24)
+                .into(icon)
             return
         }
         Glide.with(App.appContext)
-            .applyDefaultRequestOptions(RequestOptions().override(100).encodeQuality(80))
             .load(file)
-            .error(R.drawable.unknown_file)
+            .error(R.drawable.unknown_file_extension)
             .into(icon)
     }
 
