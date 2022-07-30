@@ -1,6 +1,6 @@
 # File Explorer
 
-A full-featured file manager with Material You design and Java/Kotlin compiler!
+A full-featured file manager with Material 3 Dynamic colors and Java/Kotlin compiler!
 
 # Features
 
