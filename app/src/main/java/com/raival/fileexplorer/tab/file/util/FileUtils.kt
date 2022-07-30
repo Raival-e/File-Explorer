@@ -25,9 +25,8 @@ import java.util.*
 object FileUtils {
     const val INTERNAL_STORAGE = "Internal Storage"
     const val CREATE_FILE = "create file"
-    private const val TAG = "FileUtils"
 
-    fun sortFoldersFirst(): Comparator<File> {
+    private fun sortFoldersFirst(): Comparator<File> {
         return Comparator { file1: File, file2: File ->
             if (file1.isDirectory && !file2.isDirectory) {
                 return@Comparator -1
@@ -39,7 +38,7 @@ object FileUtils {
         }
     }
 
-    fun sortFilesFirst(): Comparator<File> {
+    private fun sortFilesFirst(): Comparator<File> {
         return Comparator { file2: File, file1: File ->
             if (file1.isDirectory && !file2.isDirectory) {
                 return@Comparator -1
@@ -82,21 +81,21 @@ object FileUtils {
             return list
         }
 
-    fun sortDateAsc(): Comparator<File> {
+    private fun sortDateAsc(): Comparator<File> {
         return Comparator.comparingLong { obj: File -> obj.lastModified() }
     }
 
-    fun sortDateDesc(): Comparator<File> {
+    private fun sortDateDesc(): Comparator<File> {
         return Comparator { file1: File, file2: File ->
             file2.lastModified().compareTo(file1.lastModified())
         }
     }
 
-    fun sortNameAsc(): Comparator<File> {
+    private fun sortNameAsc(): Comparator<File> {
         return Comparator.comparing { file: File -> file.name.lowercase(Locale.getDefault()) }
     }
 
-    fun sortNameDesc(): Comparator<File> {
+    private fun sortNameDesc(): Comparator<File> {
         return Comparator { file1: File, file2: File ->
             file2.name.lowercase(Locale.getDefault()).compareTo(
                 file1.name.lowercase(
@@ -106,11 +105,11 @@ object FileUtils {
         }
     }
 
-    fun sortSizeAsc(): Comparator<File> {
+    private fun sortSizeAsc(): Comparator<File> {
         return Comparator.comparingLong { obj: File -> obj.length() }
     }
 
-    fun sortSizeDesc(): Comparator<File> {
+    private fun sortSizeDesc(): Comparator<File> {
         return Comparator { file1: File, file2: File ->
             file2.length().compareTo(file1.length())
         }
