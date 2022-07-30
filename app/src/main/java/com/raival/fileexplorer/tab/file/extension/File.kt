@@ -1,5 +1,6 @@
 package com.raival.fileexplorer.tab.file.extension
 
+import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
@@ -11,16 +12,16 @@ import com.raival.fileexplorer.App
 import com.raival.fileexplorer.App.Companion.showMsg
 import com.raival.fileexplorer.tab.file.util.FileExtensions
 import com.raival.fileexplorer.tab.file.util.FileUtils
-import com.raival.fileexplorer.util.Utils.getLastModifiedDate
 import java.io.File
 import java.text.DecimalFormat
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.log10
 import kotlin.math.pow
 
 fun File.getFileDetails(): String {
     val sb = StringBuilder()
-    sb.append(getLastModifiedDate(this))
+    sb.append(getLastModifiedDate())
     sb.append("  |  ")
     if (this.isFile) {
         sb.append(getFormattedFileSize())
@@ -232,4 +233,9 @@ fun File.getAllFilesInDir(extension: String): ArrayList<String> {
 
 fun File.getNameWithoutExtension(): String {
     return name.substring(0, name.length - getFileExtension().length - 1)
+}
+
+@SuppressLint("SimpleDateFormat")
+fun File.getLastModifiedDate(REGULAR_DATE_FORMAT: String = "MMM dd , hh:mm a"): String {
+    return SimpleDateFormat(REGULAR_DATE_FORMAT).format(lastModified())
 }

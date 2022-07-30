@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import com.raival.fileexplorer.activity.SettingsActivity
+import com.raival.fileexplorer.extension.surroundWithBrackets
 import com.raival.fileexplorer.tab.file.util.FileUtils
 import java.io.*
 import java.text.SimpleDateFormat
@@ -82,10 +83,10 @@ object Log {
             }
             val logToWrite = StringBuilder()
             if (logFile!!.length() > 0) logToWrite.append(System.lineSeparator())
-            logToWrite.append(Utils.surroundWithBrackets(currentTime))
-                .append(Utils.surroundWithBrackets(priority))
-                .append(Utils.surroundWithBrackets(tag!!))
-                .append(":").append(Utils.TAB)
+            logToWrite.append(currentTime.surroundWithBrackets())
+                .append(priority.surroundWithBrackets())
+                .append(tag!!.surroundWithBrackets())
+                .append(":").append("    ")
             if (msg.isNotEmpty()) {
                 logToWrite.append(msg)
             }

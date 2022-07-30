@@ -5,11 +5,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.raival.fileexplorer.R
-import com.raival.fileexplorer.util.Utils
+import com.raival.fileexplorer.extension.toDp
 import io.github.rosemoe.sora.widget.component.EditorCompletionAdapter
 
 class CustomCompletionItemAdapter : EditorCompletionAdapter() {
-    override fun getItemHeight(): Int = Utils.pxToDp(45f).toInt()
+    override fun getItemHeight(): Int = 45.toDp()
 
     public override fun getView(
         pos: Int,

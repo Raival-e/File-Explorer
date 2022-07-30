@@ -3,6 +3,7 @@ package com.raival.fileexplorer.util
 import com.google.gson.Gson
 import com.pixplicity.easyprefs.library.Prefs
 import com.raival.fileexplorer.activity.SettingsActivity
+import com.raival.fileexplorer.extension.getStringList
 
 object PrefsUtils {
     const val SORT_NAME_A2Z = 1
@@ -44,7 +45,7 @@ object PrefsUtils {
                 Prefs.putBoolean("text_editor_autocomplete", autocomplete)
             }
         val fileExplorerTabBookmarks: ArrayList<String>
-            get() = Utils.getStringList(Prefs.getString("file_explorer_tab_bookmarks", "[]"))
+            get() = Prefs.getString("file_explorer_tab_bookmarks", "[]").getStringList()
     }
 
     object FileExplorerTab {

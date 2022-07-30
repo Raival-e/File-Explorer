@@ -12,6 +12,7 @@ import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.raival.fileexplorer.R
+import com.raival.fileexplorer.extension.toDp
 import com.raival.fileexplorer.util.Utils
 
 class TabView : HorizontalScrollView {
@@ -254,32 +255,32 @@ class TabView : HorizontalScrollView {
                 ObjectAnimator.ofFloat(
                     indicator,
                     "translationY",
-                    Utils.pxToDp(2f),
-                    -Utils.pxToDp(3f),
+                    2f.toDp(),
+                    (-3f).toDp(),
                     0f
                 ).setDuration(500).start()
             }
             "onReselect" -> {
                 val indicator = v!!.findViewWithTag<View>("tab_indicator")
-                ObjectAnimator.ofFloat(indicator, "translationY", 0f, Utils.pxToDp(1.5f), 0f)
+                ObjectAnimator.ofFloat(indicator, "translationY", 0f, (1.5f).toDp(), 0f)
                     .setDuration(400).start()
             }
             "onUnselect" -> {
                 val indicator = v!!.findViewWithTag<View>("tab_indicator")
-                ObjectAnimator.ofFloat(indicator, "translationY", 0f, Utils.pxToDp(2f))
+                ObjectAnimator.ofFloat(indicator, "translationY", 0f, 2f.toDp())
                     .setDuration(400).start()
             }
         }
     }
 
     private fun createTabView(): View {
-        val padding = Utils.pxToDp(8f).toInt()
+        val padding = 8.toDp()
         val bg = LinearLayout(context)
         bg.orientation = LinearLayout.VERTICAL
         bg.tag = "tab_background"
         bg.setPadding(0, 0, padding, 0)
         bg.gravity = Gravity.CENTER_VERTICAL or Gravity.CENTER_HORIZONTAL
-        bg.minimumWidth = Utils.pxToDp(80f).toInt()
+        bg.minimumWidth = 80.toDp()
         bg.layoutParams = ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.MATCH_PARENT
@@ -295,12 +296,13 @@ class TabView : HorizontalScrollView {
         text.gravity = Gravity.CENTER_VERTICAL or Gravity.CENTER_HORIZONTAL
         val line = LinearLayout(context)
         val gd = GradientDrawable()
+        val dp8 = 8f.toDp()
         gd.setColor(indicatorColor)
         gd.cornerRadii = floatArrayOf(
-            Utils.pxToDp(8f),
-            Utils.pxToDp(8f),
-            Utils.pxToDp(8f),
-            Utils.pxToDp(8f),
+            dp8,
+            dp8,
+            dp8,
+            dp8,
             0f,
             0f,
             0f,
@@ -309,13 +311,13 @@ class TabView : HorizontalScrollView {
         line.background = gd
         line.tag = "tab_indicator"
         bg.addView(text, LinearLayout.LayoutParams(-2, 0, 1f))
-        bg.addView(line, LinearLayout.LayoutParams(-1, Utils.pxToDp(3f).toInt()))
+        bg.addView(line, LinearLayout.LayoutParams(-1, 3.toDp()))
         return bg
     }
 
     fun scrollToTab(tab: Tab?) {
         if (tab?.view == null) return
-        post { smoothScrollTo(tab.view.x.toInt() - Utils.pxToDp(50f).toInt(), 0) }
+        post { smoothScrollTo(tab.view.x.toInt() - 50.toDp(), 0) }
     }
 
     val tags: ArrayList<String>

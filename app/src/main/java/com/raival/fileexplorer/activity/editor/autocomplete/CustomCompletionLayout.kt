@@ -8,7 +8,7 @@ import android.view.View
 import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
 import com.raival.fileexplorer.App.Companion.showMsg
-import com.raival.fileexplorer.util.Utils
+import com.raival.fileexplorer.extension.toDp
 import io.github.rosemoe.sora.widget.component.CompletionLayout
 import io.github.rosemoe.sora.widget.component.EditorAutoCompletion
 import io.github.rosemoe.sora.widget.schemes.EditorColorScheme
@@ -38,11 +38,11 @@ class CustomCompletionLayout : CompletionLayout {
 
         val params = mProgressBar.layoutParams as RelativeLayout.LayoutParams
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
-        params.height = Utils.pxToDp(30f).toInt()
+        params.height = 30.toDp()
         params.width = params.height
 
         mBackground = GradientDrawable()
-        mBackground.cornerRadius = Utils.pxToDp(8f)
+        mBackground.cornerRadius = 8f.toDp()
         layout.background = mBackground
 
         mListView = ListView(context)

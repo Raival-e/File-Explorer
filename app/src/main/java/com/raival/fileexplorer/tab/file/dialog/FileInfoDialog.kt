@@ -13,8 +13,8 @@ import com.raival.fileexplorer.R
 import com.raival.fileexplorer.tab.file.extension.getFileExtension
 import com.raival.fileexplorer.tab.file.extension.getFormattedFileCount
 import com.raival.fileexplorer.tab.file.extension.getFormattedFileSize
+import com.raival.fileexplorer.tab.file.extension.getLastModifiedDate
 import com.raival.fileexplorer.tab.file.util.FileUtils
-import com.raival.fileexplorer.util.Utils
 import java.io.File
 
 class FileInfoDialog(private val file: File) : BottomSheetDialogFragment() {
@@ -57,9 +57,7 @@ class FileInfoDialog(private val file: File) : BottomSheetDialogFragment() {
         addItemView(InfoHolder("Path:", file.absolutePath, true), container)
         addItemView(
             InfoHolder(
-                "Modified:", Utils.getLastModifiedDate(
-                    file
-                ), true
+                "Modified:", file.getLastModifiedDate(), true
             ), container
         )
         addItemView(
@@ -86,9 +84,7 @@ class FileInfoDialog(private val file: File) : BottomSheetDialogFragment() {
         )
         addItemView(
             InfoHolder(
-                "Modified:", Utils.getLastModifiedDate(
-                    file
-                ), true
+                "Modified:", file.getLastModifiedDate(), true
             ), container
         )
         addItemView(InfoHolder("Type:", if (file.isFile) "File" else "Folder", true), container)

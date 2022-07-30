@@ -1,22 +1,15 @@
 package com.raival.fileexplorer.util
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Configuration
 import android.util.TypedValue
 import androidx.annotation.ColorInt
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.raival.fileexplorer.App
 import com.raival.fileexplorer.activity.SettingsActivity
 import com.raival.fileexplorer.util.PrefsUtils.Settings.themeMode
-import java.io.File
-import java.text.SimpleDateFormat
 import java.util.*
 
 object Utils {
-    private const val REGULAR_DATE_FORMAT = "MMM dd , hh:mm a"
-    const val TAB = "  "
     private const val ALLOWED_CHARACTERS = "0123456789qwertyuiopasdfghjklzxcvbnm_"
 
     @ColorInt
@@ -24,20 +17,6 @@ object Utils {
         val out = TypedValue()
         context.theme.resolveAttribute(id, out, true)
         return out.data
-    }
-
-    fun pxToDp(`val`: Float): Float {
-        return TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            `val`,
-            App.appContext.resources.displayMetrics
-        )
-    }
-
-    @JvmStatic
-    @SuppressLint("SimpleDateFormat")
-    fun getLastModifiedDate(file: File): String {
-        return SimpleDateFormat(REGULAR_DATE_FORMAT).format(file.lastModified())
     }
 
     val isDarkMode: Boolean
@@ -61,13 +40,5 @@ object Utils {
             sb.append(ALLOWED_CHARACTERS[random.nextInt(ALLOWED_CHARACTERS.length)])
         }
         return sb.toString()
-    }
-
-    fun getStringList(json: String?): ArrayList<String> {
-        return Gson().fromJson(json, object : TypeToken<ArrayList<String?>?>() {}.type)
-    }
-
-    fun surroundWithBrackets(string: String): String {
-        return "[$string]"
     }
 }

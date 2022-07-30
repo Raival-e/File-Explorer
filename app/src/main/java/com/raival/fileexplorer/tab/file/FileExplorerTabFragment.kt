@@ -18,6 +18,7 @@ import com.raival.fileexplorer.App.Companion.showMsg
 import com.raival.fileexplorer.R
 import com.raival.fileexplorer.activity.MainActivity
 import com.raival.fileexplorer.common.dialog.CustomDialog
+import com.raival.fileexplorer.extension.toDp
 import com.raival.fileexplorer.tab.BaseDataHolder
 import com.raival.fileexplorer.tab.BaseTabFragment
 import com.raival.fileexplorer.tab.file.adapter.FileListAdapter
@@ -32,7 +33,6 @@ import com.raival.fileexplorer.tab.file.util.FileOpener
 import com.raival.fileexplorer.tab.file.util.FileUtils
 import com.raival.fileexplorer.util.Log
 import com.raival.fileexplorer.util.PrefsUtils
-import com.raival.fileexplorer.util.Utils
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -193,7 +193,7 @@ class FileExplorerTabFragment : BaseTabFragment {
         val input = customDialog.createInput(requireActivity(), "File path")
         input.editText?.setSingleLine()
         val textView = MaterialTextView(requireContext())
-        textView.setPadding(0, Utils.pxToDp(8f).toInt(), 0, 0)
+        textView.setPadding(0, 8.toDp(), 0, 0)
         textView.alpha = 0.7f
         textView.text = "Quick Links:"
         val layout = ChipGroup(requireContext())
