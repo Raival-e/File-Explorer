@@ -1,4 +1,4 @@
-package com.raival.fileexplorer.tab.file.option
+package com.raival.fileexplorer.tab.file.options
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -16,26 +16,24 @@ import com.raival.fileexplorer.activity.model.MainViewModel
 import com.raival.fileexplorer.common.BackgroundTask
 import com.raival.fileexplorer.common.dialog.CustomDialog
 import com.raival.fileexplorer.common.dialog.OptionsDialog
+import com.raival.fileexplorer.extension.openFileWith
 import com.raival.fileexplorer.tab.BaseTabFragment
 import com.raival.fileexplorer.tab.file.FileExplorerTabFragment
 import com.raival.fileexplorer.tab.file.dialog.FileInfoDialog
 import com.raival.fileexplorer.tab.file.dialog.SearchDialog
 import com.raival.fileexplorer.tab.file.executor.Executor
-import com.raival.fileexplorer.tab.file.extension.getFileExtension
-import com.raival.fileexplorer.tab.file.extension.getNameWithoutExtension
-import com.raival.fileexplorer.tab.file.extension.openFileWith
+import com.raival.fileexplorer.tab.file.misc.FileUtils
 import com.raival.fileexplorer.tab.file.model.FileItem
 import com.raival.fileexplorer.tab.file.model.Task.OnFinishListener
 import com.raival.fileexplorer.tab.file.model.Task.OnUpdateListener
 import com.raival.fileexplorer.tab.file.task.*
-import com.raival.fileexplorer.tab.file.util.FileUtils
 import com.raival.fileexplorer.util.Log
 import com.raival.fileexplorer.util.PrefsUtils
 import java.io.File
 import java.util.*
 import java.util.concurrent.atomic.AtomicReference
 
-class FileOptionHandler(private val parentFragment: FileExplorerTabFragment) {
+class FileOptionsHandler(private val parentFragment: FileExplorerTabFragment) {
     private var mainViewModel: MainViewModel? = null
         get() {
             if (field == null) {
@@ -195,7 +193,7 @@ class FileOptionHandler(private val parentFragment: FileExplorerTabFragment) {
             true
         )
         if (FileUtils.isSingleFile(selectedFiles)) {
-            if (selectedFiles[0].getFileExtension().equals("jar", ignoreCase = true)) {
+            if (selectedFiles[0].extension.equals("jar", ignoreCase = true)) {
                 bottomDialog.addOption("Jar2Dex", R.drawable.ic_round_code_24, {
                     jar2Dex(
                         Jar2DexTask(
@@ -203,22 +201,6 @@ class FileOptionHandler(private val parentFragment: FileExplorerTabFragment) {
                         )
                     )
                 }, true)
-            }
-        }
-        if (FileUtils.isSingleFile(selectedFiles)) {
-            if (selectedFiles[0].getFileExtension().equals("apk", ignoreCase = true)) {
-                bottomDialog.addOption(
-                    "Sign with test key",
-                    R.drawable.ic_round_key_24,
-                    {
-                        signApkWithTestKey(
-                            APKSignerTask(
-                                selectedFiles[0]
-                            )
-                        )
-                    },
-                    true
-                )
             }
         }
         if (selectedFiles.size == 1) {
@@ -248,9 +230,9 @@ class FileOptionHandler(private val parentFragment: FileExplorerTabFragment) {
             try {
                 FileUtils.copyFile(
                     file, generateUniqueFileName(
-                        file.getNameWithoutExtension()
+                        file.nameWithoutExtension
                                 + "_copy."
-                                + file.getFileExtension(), file.parentFile!!
+                                + file.extension, file.parentFile!!
                     ), file.parentFile!!, true
                 )
             } catch (e: Exception) {
@@ -271,7 +253,7 @@ class FileOptionHandler(private val parentFragment: FileExplorerTabFragment) {
         while (file.exists()) {
             file = File(directory, name)
             val newName =
-                file.getNameWithoutExtension() + i + "." + file.getFileExtension()
+                file.nameWithoutExtension + i + "." + file.extension
             file = File(directory, newName)
             i++
         }
@@ -311,7 +293,7 @@ class FileOptionHandler(private val parentFragment: FileExplorerTabFragment) {
         val input = customDialog.createInput(parentFragment.requireActivity(), "Archive name")
 
         input.editText?.setText(".zip")
-        FileUtils.setFileValidator(input, parentFragment.currentDirectory)
+        FileUtils.setFileValidator(input, (parentFragment).currentDirectory!!)
         CustomDialog()
             .setTitle("Compress")
             .addView(input)
@@ -365,33 +347,6 @@ class FileOptionHandler(private val parentFragment: FileExplorerTabFragment) {
     private fun showFileInfoDialog(file: File) {
         FileInfoDialog(file).setUseDefaultFileInfo(true)
             .show(parentFragment.parentFragmentManager, "")
-    }
-
-    @SuppressLint("SetTextI18n")
-    private fun signApkWithTestKey(task: APKSignerTask) {
-        if (task.isValid) {
-            val dir = parentFragment.currentDirectory
-            task.setActiveDirectory(dir!!)
-            val view = progressView
-            val progressText = view.findViewById<TextView>(R.id.msg)
-            progressText.text = "Processing..."
-            val dialog = dialog.setView(view).show()
-            task.start(
-                object : OnUpdateListener {
-                    override fun onUpdate(progress: String) {
-                        progressText.text = progress
-                    }
-                },
-                object : OnFinishListener {
-                    override fun onFinish(result: String) {
-                        showMsg(result)
-                        parentFragment.refresh()
-                        dialog.dismiss()
-                    }
-                })
-        } else {
-            showMsg("The APK file doesn't exist")
-        }
     }
 
     @get:SuppressLint("InflateParams")
@@ -467,12 +422,12 @@ class FileOptionHandler(private val parentFragment: FileExplorerTabFragment) {
     }
 
     private fun confirmDeletion(selectedFiles: ArrayList<File>) {
-        CustomDialog()
+        MaterialAlertDialogBuilder(parentFragment.requireContext())
             .setTitle("Delete")
-            .setMsg("Do you want to delete selected files? this action cannot be redone.")
-            .setPositiveButton("Confirm", { doDelete(selectedFiles) }, true)
-            .setNegativeButton("Cancel", null, true)
-            .show(parentFragment.parentFragmentManager, "")
+            .setMessage("Do you want to delete selected files? this action cannot be redone.")
+            .setPositiveButton("Confirm") { _, _ -> doDelete(selectedFiles) }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     private fun doDelete(selectedFiles: ArrayList<File>) {

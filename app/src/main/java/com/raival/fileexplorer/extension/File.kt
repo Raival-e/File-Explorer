@@ -1,4 +1,4 @@
-package com.raival.fileexplorer.tab.file.extension
+package com.raival.fileexplorer.extension
 
 import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
@@ -10,21 +10,17 @@ import android.webkit.MimeTypeMap
 import androidx.core.content.FileProvider
 import com.raival.fileexplorer.App
 import com.raival.fileexplorer.App.Companion.showMsg
-import com.raival.fileexplorer.tab.file.util.FileExtensions
-import com.raival.fileexplorer.tab.file.util.FileUtils
+import com.raival.fileexplorer.tab.file.misc.FileMimeTypes
+import com.raival.fileexplorer.tab.file.misc.FileUtils
 import java.io.File
-import java.text.DecimalFormat
 import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.math.log10
-import kotlin.math.pow
 
 fun File.getFileDetails(): String {
     val sb = StringBuilder()
     sb.append(getLastModifiedDate())
     sb.append("  |  ")
     if (this.isFile) {
-        sb.append(getFormattedFileSize())
+        sb.append(length().toFormattedSize())
     } else {
         sb.append(getFormattedFileCount())
     }
@@ -46,48 +42,6 @@ fun File.isExternalStorageFolder(): Boolean {
     return this.absolutePath == Environment.getExternalStorageDirectory().absolutePath
 }
 
-fun File.isImageFile(): Boolean {
-    for (extension in FileExtensions.imageType) {
-        if (extension == getFileExtension()) return true
-    }
-    return false
-}
-
-fun File.isAudioFile(): Boolean {
-    for (ext in FileExtensions.audioType) {
-        if (getFileExtension() == ext) return true
-    }
-    return false
-}
-
-fun File.isVideoFile(): Boolean {
-    for (extension in FileExtensions.videoType) {
-        if (extension == getFileExtension()) return true
-    }
-    return false
-}
-
-fun File.isArchiveFile(): Boolean {
-    for (extension in FileExtensions.archiveType) {
-        if (extension == getFileExtension()) return true
-    }
-    return false
-}
-
-fun File.isCodeFile(): Boolean {
-    for (extension in FileExtensions.codeType) {
-        if (extension == getFileExtension()) return true
-    }
-    return false
-}
-
-fun File.isTextFile(): Boolean {
-    for (extension in FileExtensions.textType) {
-        if (extension == getFileExtension()) return true
-    }
-    return false
-}
-
 fun File.getAvailableMemoryBytes(): Long {
     val statFs = StatFs(this.absolutePath)
     return statFs.blockSizeLong * statFs.availableBlocksLong
@@ -100,29 +54,6 @@ fun File.getTotalMemoryBytes(): Long {
 
 fun File.getUsedMemoryBytes(): Long {
     return getTotalMemoryBytes() - getAvailableMemoryBytes()
-}
-
-fun File.getFormattedSize(): String {
-    return getFormattedSize("%.02f")
-}
-
-fun File.getFormattedSize(format: String): String {
-    val length = length()
-    if (length > 1073741824) return String.format(
-        Locale.ENGLISH,
-        format,
-        length.toFloat() / 1073741824
-    ) + "GB"
-    if (length > 1048576) return String.format(
-        Locale.ENGLISH,
-        format,
-        length.toFloat() / 1048576
-    ) + "MB"
-    return if (length > 1024) String.format(
-        Locale.ENGLISH,
-        format,
-        length.toFloat() / 1024
-    ) + "KB" else length.toString() + "B"
 }
 
 fun File.getFormattedFileCount(): String {
@@ -151,17 +82,14 @@ fun File.getFormattedFileCount(): String {
     return if (folders == 0 && files == 0) noItemsString else sb.toString()
 }
 
-fun File.getFileExtension(): String {
-    if (this.isDirectory) return ""
-    val name = this.name
-    val last = name.lastIndexOf(".")
-    return if (!name.contains(".") || last == -1) {
-        ""
-    } else name.substring(last + 1)
+fun File.getMimeTypeFromFile(): String {
+    return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+        ?: getMimeTypeFromExtension()
 }
 
-fun File.getMimeTypeFromFile(): String {
-    return MimeTypeMap.getSingleton().getMimeTypeFromExtension(getFileExtension())!!
+fun File.getMimeTypeFromExtension(): String {
+    val type = FileMimeTypes.mimeTypes[extension]
+    return type ?: FileMimeTypes.default
 }
 
 fun File.openFileWith(anonymous: Boolean) {
@@ -186,16 +114,6 @@ fun File.openFileWith(anonymous: Boolean) {
         //Log.i(TAG, e);
         showMsg("Failed to open this file")
     }
-}
-
-fun File.getFormattedFileSize(): String {
-    val size = if (isFile) length() else getFolderSize()
-    if (size <= 0) return "0 B"
-    val units = arrayOf("B", "kB", "MB", "GB", "TB")
-    val digitGroups = (log10(size.toDouble()) / log10(1024.0)).toInt()
-    return DecimalFormat("#,##0.#").format(
-        size / 1024.0.pow(digitGroups.toDouble())
-    ) + " " + units[digitGroups]
 }
 
 fun File.getFolderSize(): Long {
@@ -229,10 +147,6 @@ fun File.getAllFilesInDir(extension: String): ArrayList<String> {
         }
     }
     return list
-}
-
-fun File.getNameWithoutExtension(): String {
-    return name.substring(0, name.length - getFileExtension().length - 1)
 }
 
 @SuppressLint("SimpleDateFormat")

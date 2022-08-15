@@ -1,9 +1,8 @@
-package com.raival.fileexplorer.tab.file.util
+package com.raival.fileexplorer.tab.file.misc
 
 import com.raival.fileexplorer.App
-import com.raival.fileexplorer.tab.file.util.BuildUtils.unzipFromAssets
+import com.raival.fileexplorer.tab.file.misc.BuildUtils.unzipFromAssets
 import java.io.File
-import java.util.*
 
 object APKSignerUtils {
     val pk8: File
@@ -15,7 +14,7 @@ object APKSignerUtils {
             unzipFromAssets(
                 App.appContext,
                 "build/testkey.pk8.zip",
-                Objects.requireNonNull(check.parentFile).absolutePath
+                check.parentFile?.absolutePath
             )
             return check
         }
@@ -28,7 +27,7 @@ object APKSignerUtils {
             unzipFromAssets(
                 App.appContext,
                 "build/testkey.x509.pem.zip",
-                Objects.requireNonNull(check.parentFile).absolutePath
+                check.parentFile?.absolutePath
             )
             return check
         }

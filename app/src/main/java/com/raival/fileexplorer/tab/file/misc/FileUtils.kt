@@ -1,26 +1,26 @@
-package com.raival.fileexplorer.tab.file.util
+package com.raival.fileexplorer.tab.file.misc
 
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageInfo
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.text.Editable
 import android.text.TextWatcher
 import android.webkit.MimeTypeMap
-import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.textfield.TextInputLayout
 import com.raival.fileexplorer.App
 import com.raival.fileexplorer.App.Companion.showMsg
 import com.raival.fileexplorer.R
-import com.raival.fileexplorer.tab.file.extension.*
 import com.raival.fileexplorer.util.Log
 import com.raival.fileexplorer.util.PrefsUtils
 import com.raival.fileexplorer.util.PrefsUtils.FileExplorerTab.listFoldersFirst
 import com.raival.fileexplorer.util.PrefsUtils.FileExplorerTab.sortingMethod
 import java.io.*
 import java.util.*
+
 
 object FileUtils {
     const val INTERNAL_STORAGE = "Internal Storage"
@@ -115,131 +115,6 @@ object FileUtils {
         }
     }
 
-    fun setFileIcon(icon: ImageView, file: File) {
-        if (!file.isFile) {
-            icon.setImageResource(R.drawable.ic_baseline_folder_24)
-            return
-        }
-        val ext: String = file.getFileExtension().lowercase(Locale.ROOT)
-
-        if (ext == FileExtensions.pdfType) {
-            Glide.with(App.appContext)
-                .load(R.drawable.pdf_file_extension)
-                .into(icon)
-            return
-        }
-        if (file.isTextFile()) {
-            Glide.with(App.appContext)
-                .load(R.drawable.txt_file_extension)
-                .into(icon)
-            return
-        }
-        if (file.isCodeFile()) {
-            Glide.with(App.appContext)
-                .load(R.drawable.code_file_extension)
-                .into(icon)
-            return
-        }
-        if (ext == FileExtensions.apkType) {
-            Glide.with(App.appContext)
-                .load(file.absolutePath)
-                .error(R.drawable.apk_placeholder)
-                .into(icon)
-            return
-        }
-        if (file.isArchiveFile() || ext == FileExtensions.rarType) {
-            Glide.with(App.appContext)
-                .load(R.drawable.zip_file_extension)
-                .into(icon)
-            return
-        }
-        if (file.isVideoFile()) {
-            Glide.with(App.appContext)
-                .load(file)
-                .error(R.drawable.mp4_file_extension)
-                .placeholder(R.drawable.mp4_file_extension)
-                .into(icon)
-            return
-        }
-        if (file.isAudioFile()) {
-            Glide.with(App.appContext)
-                .load(file)
-                .error(R.drawable.music_file_extension)
-                .placeholder(R.drawable.music_file_extension)
-                .into(icon)
-            return
-        }
-
-        if (ext == FileExtensions.ttfType) {
-            Glide.with(App.appContext)
-                .load(R.drawable.font_file_extension)
-                .into(icon)
-            return
-        }
-
-        if (ext == FileExtensions.sqlType) {
-            Glide.with(App.appContext)
-                .load(R.drawable.sql_file_extension)
-                .into(icon)
-            return
-        }
-
-        if (ext == FileExtensions.aiType) {
-            Glide.with(App.appContext)
-                .load(R.drawable.ai_file_extension)
-                .into(icon)
-            return
-        }
-
-        if (ext == FileExtensions.svgType) {
-            Glide.with(App.appContext)
-                .load(R.drawable.svg_file_extension)
-                .into(icon)
-            return
-        }
-
-        if (file.isImageFile()) {
-            Glide.with(App.appContext)
-                .applyDefaultRequestOptions(RequestOptions().override(100).encodeQuality(80))
-                .load(file)
-                .error(R.drawable.jpg_file_extension)
-                .into(icon)
-            return
-        }
-
-        if (ext == FileExtensions.docType || ext == FileExtensions.docxType) {
-            Glide.with(App.appContext)
-                .load(R.drawable.doc_file_extension)
-                .into(icon)
-            return
-        }
-
-        if (ext == FileExtensions.xlsType || ext == FileExtensions.xlsxType) {
-            Glide.with(App.appContext)
-                .load(R.drawable.xls_file_extension)
-                .into(icon)
-            return
-        }
-
-        if (ext == FileExtensions.pptType || ext == FileExtensions.pptxType) {
-            Glide.with(App.appContext)
-                .load(R.drawable.powerpoint_file_extension)
-                .into(icon)
-            return
-        }
-
-        if (file.getFileExtension() == "extension") {
-            Glide.with(App.appContext)
-                .load(R.drawable.ic_baseline_extension_24)
-                .into(icon)
-            return
-        }
-        Glide.with(App.appContext)
-            .load(file)
-            .error(R.drawable.unknown_file_extension)
-            .into(icon)
-    }
-
     fun isSingleFolder(selectedFiles: ArrayList<File>): Boolean {
         return selectedFiles.size == 1 && !selectedFiles[0].isFile
     }
@@ -257,12 +132,11 @@ object FileUtils {
 
     fun isArchiveFiles(selectedFiles: ArrayList<File>): Boolean {
         for (file in selectedFiles) {
-            if (!file.isArchiveFile()) return false
+            if (!FileMimeTypes.archiveType.contains(file.extension.lowercase())) return false
         }
         return true
     }
 
-    @Throws(Exception::class)
     fun copy(fileToCopy: File, destinationFolder: File, overwrite: Boolean) {
         if (!fileToCopy.exists()) throw Exception("File " + fileToCopy.absolutePath + " doesn't exist")
         if (fileToCopy.isFile) {
@@ -270,7 +144,6 @@ object FileUtils {
         } else copyFolder(fileToCopy, destinationFolder, overwrite)
     }
 
-    @Throws(Exception::class)
     fun copyFile(fileToCopy: File, destinationFolder: File, overwrite: Boolean) {
         copyFile(fileToCopy, fileToCopy.name, destinationFolder, overwrite)
     }
@@ -284,7 +157,6 @@ object FileUtils {
      * @param overwrite:         Whether or not to overwrite the already existed file in the destination folder
      * @throws Exception: Any errors that occur during the copying process
      */
-    @Throws(Exception::class)
     fun copyFile(
         fileToCopy: File,
         fileName: String,
@@ -310,7 +182,6 @@ object FileUtils {
         fileOutputStream.close()
     }
 
-    @Throws(Exception::class)
     fun copyFolder(folderToCopy: File, destinationFolder: File, overwrite: Boolean) {
         copyFolder(folderToCopy, folderToCopy.name, destinationFolder, overwrite)
     }
@@ -324,7 +195,6 @@ object FileUtils {
      * @param overwrite:         Whether or not to overwrite the already existed files in the destination folder
      * @throws Exception: Any errors that occur during the copying process
      */
-    @Throws(Exception::class)
     fun copyFolder(
         folderToCopy: File,
         folderName: String,
@@ -353,7 +223,6 @@ A file with the same name exists."""
         }
     }
 
-    @Throws(Exception::class)
     fun deleteFile(file: File) {
         if (!file.exists()) {
             throw Exception("File $file doesn't exist")
@@ -374,14 +243,12 @@ A file with the same name exists."""
         if (!file.delete()) throw Exception(Log.UNABLE_TO + " delete file: " + file)
     }
 
-    @Throws(Exception::class)
     fun deleteFiles(selectedFiles: ArrayList<File>) {
         for (file in selectedFiles) {
             deleteFile(file)
         }
     }
 
-    @Throws(IOException::class)
     fun move(file: File, destination: File?) {
         if (file.isFile) {
             if (!file.renameTo(File(destination, file.name))) {
@@ -405,17 +272,24 @@ A file with the same name exists."""
         }
     }
 
-    fun setFileValidator(input: TextInputLayout, directory: File?) {
+    fun setFileValidator(input: TextInputLayout, directory: File) {
         setFileValidator(input, null, directory)
     }
 
-    fun setFileValidator(input: TextInputLayout, file: File?, directory: File?) {
+    fun setFileValidator(input: TextInputLayout, file: File?, directory: File) {
+        setFileValidator(input, file, directory.list()?.toMutableList() as ArrayList<String>)
+    }
+
+    fun setFileValidator(input: TextInputLayout, file: File?, nameList: ArrayList<String>) {
+        if (file != null) input.error = "This name is the same as before"
+        else input.error = "Invalid file name"
+
         input.editText?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
             override fun afterTextChanged(editable: Editable) {
                 if (isValidFileName(editable.toString())) {
-                    if (!File(directory, editable.toString()).exists()) {
+                    if (!nameList.contains(editable.toString())) {
                         input.error = null
                     } else if (file != null && editable.toString() == file.name) {
                         input.error = "This name is the same as before"
@@ -468,7 +342,7 @@ A file with the same name exists."""
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
             intent.type =
-                MimeTypeMap.getSingleton().getMimeTypeFromExtension(file.getFileExtension())
+                MimeTypeMap.getSingleton().getMimeTypeFromExtension(file.extension)
             intent.putExtra(Intent.EXTRA_STREAM, uri)
             activity.startActivity(Intent.createChooser(intent, "Share file"))
             return
@@ -527,5 +401,26 @@ A file with the same name exists."""
         } catch (ignored: IOException) {
         }
         return outputStream.toString()
+    }
+
+    fun getApkIcon(file: File): Drawable? {
+        val pi: PackageInfo? =
+            App.appContext.packageManager.getPackageArchiveInfo(file.absolutePath, 0)
+        return if (pi != null) {
+            pi.applicationInfo.sourceDir = file.absolutePath
+            pi.applicationInfo.publicSourceDir = file.absolutePath
+            pi.applicationInfo.loadIcon(App.appContext.packageManager)
+        } else {
+            ContextCompat.getDrawable(App.appContext, R.drawable.unknown_file_extension)
+        }
+    }
+
+    fun getApkName(file: File): String? {
+        val pi = App.appContext.packageManager.getPackageArchiveInfo(file.absolutePath, 0)
+        return if (pi != null) {
+            App.appContext.packageManager.getApplicationLabel(pi.applicationInfo).toString()
+        } else {
+            pi?.applicationInfo?.name
+        }
     }
 }

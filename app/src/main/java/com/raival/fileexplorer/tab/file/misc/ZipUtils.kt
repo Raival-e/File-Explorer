@@ -1,9 +1,8 @@
-package com.raival.fileexplorer.tab.file.util
+package com.raival.fileexplorer.tab.file.misc
 
 import net.lingala.zip4j.ZipFile
 import java.io.File
 
-@Throws(Exception::class)
 fun archive(filesToCompress: ArrayList<File>, zipFile: File?) {
     val zip = ZipFile(zipFile)
     for (file in filesToCompress) {
@@ -15,7 +14,6 @@ fun archive(filesToCompress: ArrayList<File>, zipFile: File?) {
     }
 }
 
-@Throws(Exception::class)
 fun extract(filesToExtract: ArrayList<File>, directory: File) {
     for (file in filesToExtract) {
         if (file.isFile) {
