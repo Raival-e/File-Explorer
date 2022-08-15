@@ -20,6 +20,15 @@ android {
         resources.excludes.add("license/*")
     }
 
+    signingConfigs {
+        release {
+            storeFile file("../testkey.keystore")
+            storePassword "testkey"
+            keyAlias "testkey"
+            keyPassword "testkey"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -36,15 +45,6 @@ android {
 
     kotlinOptions {
         jvmTarget = '1.8'
-    }
-
-    signingConfigs {
-        release {
-            storeFile file("../testkey.keystore")
-            storePassword "testkey"
-            keyAlias "testkey"
-            keyPassword "testkey"
-        }
     }
 }
 
