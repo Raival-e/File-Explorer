@@ -5,7 +5,7 @@ import android.content.Context
 import android.util.Log
 import com.raival.fileexplorer.activity.SettingsActivity
 import com.raival.fileexplorer.extension.surroundWithBrackets
-import com.raival.fileexplorer.tab.file.util.FileUtils
+import com.raival.fileexplorer.tab.file.misc.FileUtils
 import java.io.*
 import java.text.SimpleDateFormat
 
@@ -86,7 +86,7 @@ object Log {
             logToWrite.append(currentTime.surroundWithBrackets())
                 .append(priority.surroundWithBrackets())
                 .append(tag!!.surroundWithBrackets())
-                .append(":").append("    ")
+                .append(":").append(" ")
             if (msg.isNotEmpty()) {
                 logToWrite.append(msg)
             }

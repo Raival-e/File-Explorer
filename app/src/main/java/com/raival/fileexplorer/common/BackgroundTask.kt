@@ -9,6 +9,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.raival.fileexplorer.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class BackgroundTask {
     private lateinit var preTask: Runnable
@@ -23,7 +26,7 @@ class BackgroundTask {
     }
 
     fun run() {
-        Thread {
+        CoroutineScope(Dispatchers.IO).launch {
             Handler(Looper.getMainLooper()).post(preTask)
             task.run()
             Handler(Looper.getMainLooper()).post(postTask)

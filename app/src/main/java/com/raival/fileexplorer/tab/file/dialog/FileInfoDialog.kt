@@ -10,11 +10,15 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.raival.fileexplorer.App.Companion.copyString
 import com.raival.fileexplorer.App.Companion.showMsg
 import com.raival.fileexplorer.R
-import com.raival.fileexplorer.tab.file.extension.getFileExtension
-import com.raival.fileexplorer.tab.file.extension.getFormattedFileCount
-import com.raival.fileexplorer.tab.file.extension.getFormattedFileSize
-import com.raival.fileexplorer.tab.file.extension.getLastModifiedDate
-import com.raival.fileexplorer.tab.file.util.FileUtils
+import com.raival.fileexplorer.extension.getFolderSize
+import com.raival.fileexplorer.extension.getFormattedFileCount
+import com.raival.fileexplorer.extension.getLastModifiedDate
+import com.raival.fileexplorer.extension.toFormattedSize
+import com.raival.fileexplorer.tab.file.misc.IconHelper
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 class FileInfoDialog(private val file: File) : BottomSheetDialogFragment() {
@@ -38,7 +42,7 @@ class FileInfoDialog(private val file: File) : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (view.findViewById<View>(R.id.file_name) as TextView).text = file.name
-        FileUtils.setFileIcon(view.findViewById(R.id.file_icon), file)
+        IconHelper.setFileIcon(view.findViewById(R.id.file_icon), file)
         container = view.findViewById(R.id.container)
         if (!useDefaultFileInfo) {
             for (holder in infoList) {
@@ -69,9 +73,9 @@ class FileInfoDialog(private val file: File) : BottomSheetDialogFragment() {
         addItemView(InfoHolder("Read:", if (file.canRead()) "Yes" else "No", true), container)
         addItemView(InfoHolder("Write:", if (file.canWrite()) "Yes" else "No", true), container)
         val size = addItemView(InfoHolder("Size:", "Counting...", true), container)
-        Thread {
-            val s = file.getFormattedFileSize()
-            size.post { size.text = s }
+        CoroutineScope(Dispatchers.IO).launch {
+            val s = file.getFolderSize().toFormattedSize()
+            withContext(Dispatchers.Main) { size.text = s }
         }.start()
     }
 
@@ -79,7 +83,7 @@ class FileInfoDialog(private val file: File) : BottomSheetDialogFragment() {
         addItemView(InfoHolder("Path:", file.absolutePath, true), container)
         addItemView(
             InfoHolder(
-                "Extension:", file.getFileExtension(), true
+                "Extension:", file.extension, true
             ), container
         )
         addItemView(
@@ -92,7 +96,7 @@ class FileInfoDialog(private val file: File) : BottomSheetDialogFragment() {
         addItemView(InfoHolder("Write:", if (file.canWrite()) "Yes" else "No", true), container)
         addItemView(
             InfoHolder(
-                "Size:", file.getFormattedFileSize(), true
+                "Size:", file.length().toFormattedSize(), true
             ), container
         )
     }

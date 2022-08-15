@@ -13,11 +13,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textview.MaterialTextView
 import com.raival.fileexplorer.App.Companion.showMsg
 import com.raival.fileexplorer.R
 import com.raival.fileexplorer.activity.MainActivity
 import com.raival.fileexplorer.common.dialog.CustomDialog
+import com.raival.fileexplorer.extension.getFormattedFileCount
+import com.raival.fileexplorer.extension.getShortLabel
 import com.raival.fileexplorer.extension.toDp
 import com.raival.fileexplorer.tab.BaseDataHolder
 import com.raival.fileexplorer.tab.BaseTabFragment
@@ -25,12 +28,10 @@ import com.raival.fileexplorer.tab.file.adapter.FileListAdapter
 import com.raival.fileexplorer.tab.file.adapter.PathHistoryAdapter
 import com.raival.fileexplorer.tab.file.dialog.SearchDialog
 import com.raival.fileexplorer.tab.file.dialog.TasksDialog
-import com.raival.fileexplorer.tab.file.extension.getFormattedFileCount
-import com.raival.fileexplorer.tab.file.extension.getShortLabel
+import com.raival.fileexplorer.tab.file.misc.FileOpener
+import com.raival.fileexplorer.tab.file.misc.FileUtils
 import com.raival.fileexplorer.tab.file.model.FileItem
-import com.raival.fileexplorer.tab.file.option.FileOptionHandler
-import com.raival.fileexplorer.tab.file.util.FileOpener
-import com.raival.fileexplorer.tab.file.util.FileUtils
+import com.raival.fileexplorer.tab.file.options.FileOptionsHandler
 import com.raival.fileexplorer.util.Log
 import com.raival.fileexplorer.util.PrefsUtils
 import java.io.File
@@ -44,7 +45,7 @@ class FileExplorerTabFragment : BaseTabFragment {
     private lateinit var fileList: RecyclerView
     private lateinit var pathHistoryRv: RecyclerView
     private lateinit var placeHolder: View
-    private lateinit var fileOptionHandler: FileOptionHandler
+    private lateinit var fileOptionsHandler: FileOptionsHandler
     private var requireRefresh = false
     var previousDirectory: File? = null
 
@@ -250,7 +251,7 @@ class FileExplorerTabFragment : BaseTabFragment {
         val input = customDialog.createInput(requireActivity(), "File name")
 
         input.editText?.setSingleLine()
-        FileUtils.setFileValidator(input, currentDirectory)
+        FileUtils.setFileValidator(input, currentDirectory!!)
         CustomDialog()
             .setTitle("Create new file")
             .addView(input)
@@ -437,8 +438,8 @@ class FileExplorerTabFragment : BaseTabFragment {
      */
     @SuppressLint("NotifyDataSetChanged")
     private fun refreshFileList() {
-        Objects.requireNonNull(fileList.adapter).notifyDataSetChanged()
-        Objects.requireNonNull(pathHistoryRv.adapter).notifyDataSetChanged()
+        fileList.adapter?.notifyDataSetChanged()
+        pathHistoryRv.adapter?.notifyDataSetChanged()
         pathHistoryRv.scrollToPosition(pathHistoryRv.adapter!!.itemCount - 1)
         fileList.scrollToPosition(0)
         if (toolbar != null) toolbar!!.subtitle =
@@ -496,10 +497,10 @@ class FileExplorerTabFragment : BaseTabFragment {
         get() = currentDirectory?.getShortLabel(MAX_NAME_LENGTH)!!
 
     fun showFileOptions(fileItem: FileItem?) {
-        if (!this::fileOptionHandler.isInitialized) {
-            fileOptionHandler = FileOptionHandler(this)
+        if (!this::fileOptionsHandler.isInitialized) {
+            fileOptionsHandler = FileOptionsHandler(this)
         }
-        fileOptionHandler.showOptions(fileItem!!)
+        fileOptionsHandler.showOptions(fileItem!!)
     }
 
     fun openFile(fileItem: FileItem) {
@@ -507,11 +508,11 @@ class FileExplorerTabFragment : BaseTabFragment {
     }
 
     fun showDialog(title: String?, msg: String?) {
-        CustomDialog()
+        MaterialAlertDialogBuilder(requireContext())
             .setTitle(title!!)
-            .setMsg(msg!!)
-            .setPositiveButton("Ok", null, true)
-            .show(parentFragmentManager, "")
+            .setMessage(msg!!)
+            .setPositiveButton("Ok", null)
+            .show()
     }
 
     private fun updatePathHistoryList() {
@@ -522,11 +523,11 @@ class FileExplorerTabFragment : BaseTabFragment {
             file = file.parentFile
         }
         list.reverse()
-        pathHistory = list
+        if (list.size > 0) pathHistory = list
     }
 
     companion object {
-        const val MAX_NAME_LENGTH = 32
+        const val MAX_NAME_LENGTH = 26
         private const val TAG = "FileExplorerTabFragment"
     }
 }

@@ -2,19 +2,20 @@ package com.raival.fileexplorer.tab.apps.adapter
 
 import android.annotation.SuppressLint
 import android.os.Environment
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.raival.fileexplorer.App
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.raival.fileexplorer.App.Companion.showMsg
 import com.raival.fileexplorer.R
 import com.raival.fileexplorer.common.BackgroundTask
-import com.raival.fileexplorer.common.dialog.CustomDialog
 import com.raival.fileexplorer.tab.apps.AppsTabFragment
 import com.raival.fileexplorer.tab.apps.model.Apk
-import com.raival.fileexplorer.tab.file.util.FileUtils
+import com.raival.fileexplorer.tab.file.misc.FileUtils
 import java.io.File
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -40,13 +41,13 @@ open class AppListAdapter(private val list: ArrayList<Apk>, private val fragment
     }
 
     private fun showSaveDialog(file: Apk) {
-        CustomDialog()
-            .setIconDrawable(file.icon)
+        MaterialAlertDialogBuilder(fragment.requireContext())
+            .setIcon(file.icon)
             .setTitle(file.name)
-            .setMsg("Do you want to save this app to Download folder?")
-            .setPositiveButton("Yes", { saveApkFile(file) }, true)
-            .setNegativeButton("No", null, true)
-            .show(fragment.parentFragmentManager, "")
+            .setMessage("Do you want to save this app to Download folder?")
+            .setPositiveButton("Yes") { _, _ -> saveApkFile(file) }
+            .setNegativeButton("No", null)
+            .show()
     }
 
     private fun saveApkFile(file: Apk) {
@@ -71,7 +72,7 @@ open class AppListAdapter(private val list: ArrayList<Apk>, private val fragment
             } catch (e: Exception) {
                 error.set(true)
                 e.printStackTrace()
-                App.appHandler.post { showMsg(e.toString()) }
+                Handler(Looper.getMainLooper()).post { showMsg(e.toString()) }
             }
         }) {
             if (!error.get()) showMsg("APK file has been saved in " + "/Downloads/" + file.name)

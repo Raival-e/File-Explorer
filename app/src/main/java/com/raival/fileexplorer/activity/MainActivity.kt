@@ -18,7 +18,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.progressindicator.LinearProgressIndicator
-import com.raival.fileexplorer.App
 import com.raival.fileexplorer.App.Companion.showMsg
 import com.raival.fileexplorer.R
 import com.raival.fileexplorer.activity.adapter.BookmarksAdapter
@@ -26,20 +25,24 @@ import com.raival.fileexplorer.activity.model.MainViewModel
 import com.raival.fileexplorer.common.view.BottomBarView
 import com.raival.fileexplorer.common.view.TabView
 import com.raival.fileexplorer.common.view.TabView.OnUpdateTabViewListener
+import com.raival.fileexplorer.extension.getAvailableMemoryBytes
+import com.raival.fileexplorer.extension.getShortLabel
+import com.raival.fileexplorer.extension.getTotalMemoryBytes
+import com.raival.fileexplorer.extension.getUsedMemoryBytes
 import com.raival.fileexplorer.tab.BaseDataHolder
 import com.raival.fileexplorer.tab.BaseTabFragment
 import com.raival.fileexplorer.tab.apps.AppsTabDataHolder
 import com.raival.fileexplorer.tab.apps.AppsTabFragment
 import com.raival.fileexplorer.tab.file.FileExplorerTabDataHolder
 import com.raival.fileexplorer.tab.file.FileExplorerTabFragment
-import com.raival.fileexplorer.tab.file.extension.getAvailableMemoryBytes
-import com.raival.fileexplorer.tab.file.extension.getShortLabel
-import com.raival.fileexplorer.tab.file.extension.getTotalMemoryBytes
-import com.raival.fileexplorer.tab.file.extension.getUsedMemoryBytes
-import com.raival.fileexplorer.tab.file.util.FileOpener
-import com.raival.fileexplorer.tab.file.util.FileUtils
+import com.raival.fileexplorer.tab.file.misc.FileOpener
+import com.raival.fileexplorer.tab.file.misc.FileUtils
 import com.raival.fileexplorer.util.PrefsUtils
 import com.raival.fileexplorer.util.Utils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.io.File
 
 class MainActivity : BaseActivity() {
@@ -94,13 +97,19 @@ class MainActivity : BaseActivity() {
             val dataHolder = mainViewModel.getDataHolders()[i]
             // The active fragment will create its own TabView, so we skip it
             if (dataHolder.tag != activeFragmentTag) {
-                if (dataHolder is FileExplorerTabDataHolder) {
-                    tabView.insertNewTabAt(i, dataHolder.tag, false)
-                        .setName(dataHolder.activeDirectory!!.getShortLabel(FileExplorerTabFragment.MAX_NAME_LENGTH))
-                } else if (dataHolder is AppsTabDataHolder) {
-                    tabView.insertNewTabAt(i, dataHolder.tag, false).setName("Apps")
+                when (dataHolder) {
+                    is FileExplorerTabDataHolder -> {
+                        tabView.insertNewTabAt(i, dataHolder.tag, false).setName(
+                            dataHolder.activeDirectory!!.getShortLabel(
+                                FileExplorerTabFragment.MAX_NAME_LENGTH
+                            )
+                        )
+                    }
+                    is AppsTabDataHolder -> {
+                        tabView.insertNewTabAt(i, dataHolder.tag, false).setName("Apps")
+                    }
+                    // handle other types of DataHolders here
                 }
-                // handle other types of DataHolders here
             }
         }
     }
@@ -390,7 +399,10 @@ class MainActivity : BaseActivity() {
         if (!confirmExit) {
             confirmExit = true
             showMsg("Press again to exit")
-            App.appHandler.postDelayed({ confirmExit = false }, 2000)
+            CoroutineScope(Dispatchers.Main).launch {
+                delay(2000)
+                confirmExit = false
+            }
             return
         }
         super.onBackPressed()

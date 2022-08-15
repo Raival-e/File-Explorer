@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import android.os.Handler
 import android.os.Process
 import android.widget.Toast
 import com.pixplicity.easyprefs.library.Prefs
@@ -21,7 +20,6 @@ class App : Application() {
 
         super.onCreate()
         appContext = this
-        appHandler = Handler(mainLooper)
 
         Prefs.Builder()
             .setContext(applicationContext)
@@ -33,9 +31,6 @@ class App : Application() {
 
     companion object {
         lateinit var appContext: Context
-
-        @Volatile
-        lateinit var appHandler: Handler
 
         @JvmStatic
         fun showMsg(message: String?) {

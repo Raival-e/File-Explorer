@@ -49,7 +49,7 @@ abstract class BaseTabFragment : Fragment() {
         private set
 
     abstract fun onBackPressed(): Boolean
-    abstract fun createNewDataHolder(): BaseDataHolder?
+    abstract fun createNewDataHolder(): BaseDataHolder
 
     fun getTabView(): TabView.Tab? {
         if (tabView == null && (requireActivity() as MainActivity).tabView.getTabByTag(tag)
@@ -78,5 +78,6 @@ abstract class BaseTabFragment : Fragment() {
         const val DEFAULT_TAB_FRAGMENT_PREFIX = "0_FileExplorerTabFragment_"
         const val FILE_EXPLORER_TAB_FRAGMENT_PREFIX = "FileExplorerTabFragment_"
         const val APPS_TAB_FRAGMENT_PREFIX = "AppsTabFragment_"
+        const val ARCHIVE_TAB_FRAGMENT_PREFIX = "ArchiveTabFragment_"
     }
 }

@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.raival.fileexplorer.App.Companion.showMsg
 import com.raival.fileexplorer.R
 import com.raival.fileexplorer.activity.MainActivity
-import com.raival.fileexplorer.tab.file.util.FileUtils
+import com.raival.fileexplorer.tab.file.misc.IconHelper
 import com.raival.fileexplorer.util.PrefsUtils
 import com.raival.fileexplorer.util.Utils
 import java.io.File
@@ -75,7 +75,7 @@ class BookmarksAdapter(private val activity: MainActivity) :
                 background.setOnClickListener { activity.onBookmarkSelected(file) }
             }
             details.text = file.absolutePath
-            FileUtils.setFileIcon(icon, file)
+            IconHelper.setFileIcon(icon, file)
             background.setOnLongClickListener {
                 list.remove(file.absolutePath)
                 PrefsUtils.General.setFileExplorerTabBookmarks(list)

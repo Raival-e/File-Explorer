@@ -10,11 +10,15 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.raival.fileexplorer.R
+import com.raival.fileexplorer.extension.getFileDetails
 import com.raival.fileexplorer.tab.file.FileExplorerTabDataHolder
 import com.raival.fileexplorer.tab.file.FileExplorerTabFragment
-import com.raival.fileexplorer.tab.file.extension.getFileDetails
+import com.raival.fileexplorer.tab.file.misc.IconHelper
 import com.raival.fileexplorer.tab.file.observer.FileListObserver
-import com.raival.fileexplorer.tab.file.util.FileUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 class FileListAdapter(private val parentFragment: FileExplorerTabFragment) :
@@ -22,6 +26,14 @@ class FileListAdapter(private val parentFragment: FileExplorerTabFragment) :
 
     private val selectedFileDrawable: ColorDrawable
     private val highlightedFileDrawable: ColorDrawable
+
+    init {
+        registerAdapterDataObserver(FileListObserver(parentFragment, this))
+        selectedFileDrawable =
+            ColorDrawable(parentFragment.requireContext().getColor(R.color.selectedFileHighlight))
+        highlightedFileDrawable =
+            ColorDrawable(parentFragment.requireContext().getColor(R.color.previousFileHighlight))
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         @SuppressLint("InflateParams") val view =
@@ -49,6 +61,14 @@ class FileListAdapter(private val parentFragment: FileExplorerTabFragment) :
         private var divider: View
         private lateinit var prevFile: File
 
+        init {
+            name = v.findViewById(R.id.file_name)
+            details = v.findViewById(R.id.file_details)
+            icon = v.findViewById(R.id.file_icon)
+            background = v.findViewById(R.id.background)
+            divider = v.findViewById(R.id.divider)
+        }
+
         /**
          * Update the ui of each item
          */
@@ -56,15 +76,23 @@ class FileListAdapter(private val parentFragment: FileExplorerTabFragment) :
             val position = adapterPosition
             val fileItem = parentFragment.files[position]
             if (!this::prevFile.isInitialized || !fileItem.file.isDirectory || !prevFile.isDirectory) {
-                FileUtils.setFileIcon(icon, fileItem.file)
+                IconHelper.setFileIcon(icon, fileItem.file)
             }
             if (TextUtils.isEmpty(fileItem.name)) {
-                name.text = fileItem.file.name
-            } else {
-                name.text = fileItem.name
+                fileItem.name = fileItem.file.name
             }
-            if (TextUtils.isEmpty(fileItem.details)) {
-                details.text = fileItem.file.getFileDetails()
+            name.text = fileItem.name
+
+            if (fileItem.details.isEmpty()) {
+                val pos = adapterPosition
+                CoroutineScope(Dispatchers.IO).launch {
+                    fileItem.details = fileItem.file.getFileDetails()
+                    if (position == pos) {
+                        withContext(Dispatchers.Main) {
+                            details.text = fileItem.details
+                        }
+                    }
+                }
             } else {
                 details.text = fileItem.details
             }
@@ -131,21 +159,5 @@ class FileListAdapter(private val parentFragment: FileExplorerTabFragment) :
             background.setOnLongClickListener(longClickListener)
             prevFile = fileItem.file
         }
-
-        init {
-            name = v.findViewById(R.id.file_name)
-            details = v.findViewById(R.id.file_details)
-            icon = v.findViewById(R.id.file_icon)
-            background = v.findViewById(R.id.background)
-            divider = v.findViewById(R.id.divider)
-        }
-    }
-
-    init {
-        registerAdapterDataObserver(FileListObserver(parentFragment, this))
-        selectedFileDrawable =
-            ColorDrawable(parentFragment.requireContext().getColor(R.color.selectedFileHighlight))
-        highlightedFileDrawable =
-            ColorDrawable(parentFragment.requireContext().getColor(R.color.previousFileHighlight))
     }
 }

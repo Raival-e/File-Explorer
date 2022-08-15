@@ -2,10 +2,13 @@ package com.raival.fileexplorer.tab.apps
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.raival.fileexplorer.App
 import com.raival.fileexplorer.tab.BaseDataHolder
 import com.raival.fileexplorer.tab.apps.model.Apk
 import com.raival.fileexplorer.tab.apps.resolver.ApkResolver
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AppsTabDataHolder(override val tag: String) : BaseDataHolder() {
     private val apps = MutableLiveData<ArrayList<Apk>>()
@@ -22,9 +25,9 @@ class AppsTabDataHolder(override val tag: String) : BaseDataHolder() {
     }
 
     private fun loadApps(showSystemApps: Boolean, sortNewerFirst: Boolean) {
-        Thread {
+        CoroutineScope(Dispatchers.IO).launch {
             val apks = ApkResolver().load(showSystemApps, sortNewerFirst).get()
-            App.appHandler.post { apps.setValue(apks) }
+            withContext(Dispatchers.Main) { apps.setValue(apks) }
         }.start()
     }
 }

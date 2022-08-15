@@ -1,9 +1,11 @@
 package com.raival.fileexplorer.tab.file.task
 
-import android.os.Handler
-import android.os.Looper
+import com.raival.fileexplorer.tab.file.misc.FileUtils
 import com.raival.fileexplorer.tab.file.model.Task
-import com.raival.fileexplorer.tab.file.util.FileUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 class CutTask(private val filesToCut: ArrayList<File>) : Task() {
@@ -36,14 +38,14 @@ class CutTask(private val filesToCut: ArrayList<File>) : Task() {
     }
 
     override fun start(onUpdate: OnUpdateListener, onFinish: OnFinishListener) {
-        Thread {
+        CoroutineScope(Dispatchers.IO).launch {
             var error = false
             try {
                 var progress = 1
                 for (file in filesToCut) {
                     try {
                         val finalProgress = progress
-                        Handler(Looper.getMainLooper()).post {
+                        withContext(Dispatchers.Main) {
                             onUpdate.onUpdate(
                                 "["
                                         + finalProgress
@@ -61,11 +63,11 @@ class CutTask(private val filesToCut: ArrayList<File>) : Task() {
                     ++progress
                 }
                 val finalError = error
-                Handler(Looper.getMainLooper()).post { onFinish.onFinish(if (finalError) "An error occurred, some files haven't been moved" else "Files have been moved successfully") }
+                withContext(Dispatchers.Main) { onFinish.onFinish(if (finalError) "An error occurred, some files haven't been moved" else "Files have been moved successfully") }
             } catch (e: Exception) {
                 e.printStackTrace()
-                Handler(Looper.getMainLooper()).post { onFinish.onFinish(e.toString()) }
+                withContext(Dispatchers.Main) { onFinish.onFinish(e.toString()) }
             }
-        }.start()
+        }
     }
 }

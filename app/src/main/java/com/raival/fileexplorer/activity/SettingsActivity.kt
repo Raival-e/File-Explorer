@@ -6,11 +6,10 @@ import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.slider.Slider
-import com.raival.fileexplorer.App
 import com.raival.fileexplorer.R
 import com.raival.fileexplorer.common.dialog.CustomDialog
 import com.raival.fileexplorer.common.dialog.OptionsDialog
-import com.raival.fileexplorer.tab.file.util.FileUtils
+import com.raival.fileexplorer.tab.file.misc.FileUtils
 import com.raival.fileexplorer.util.PrefsUtils
 
 class SettingsActivity : BaseActivity() {
@@ -112,7 +111,7 @@ class SettingsActivity : BaseActivity() {
     private fun setThemeMode(mode: String) {
         themeModeValue.text = mode
         PrefsUtils.Settings.themeMode = mode
-        App.appHandler.post { recreate() }
+        recreate()
     }
 
     companion object {

@@ -46,7 +46,6 @@ class ModuleRunner(dexFile: File, private val activity: AppCompatActivity) {
         return this
     }
 
-    @Throws(Exception::class)
     fun run() {
         val optimizedDir = App.appContext.codeCacheDir.absolutePath
         val dexClassLoader = DexClassLoader(

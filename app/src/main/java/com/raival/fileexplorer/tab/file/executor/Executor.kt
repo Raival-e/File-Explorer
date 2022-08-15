@@ -3,10 +3,9 @@ package com.raival.fileexplorer.tab.file.executor
 import androidx.appcompat.app.AppCompatActivity
 import com.android.tools.r8.D8
 import com.raival.fileexplorer.App
-import com.raival.fileexplorer.tab.file.extension.getAllFilesInDir
-import com.raival.fileexplorer.tab.file.extension.getFileExtension
-import com.raival.fileexplorer.tab.file.util.BuildUtils
-import com.raival.fileexplorer.tab.file.util.FileUtils
+import com.raival.fileexplorer.extension.getAllFilesInDir
+import com.raival.fileexplorer.tab.file.misc.BuildUtils
+import com.raival.fileexplorer.tab.file.misc.FileUtils
 import com.raival.fileexplorer.util.Log
 import org.eclipse.jdt.internal.compiler.batch.Main
 import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments
@@ -29,7 +28,6 @@ class Executor(folder: File, activity: AppCompatActivity) {
     private lateinit var libs: File
     private lateinit var activity: AppCompatActivity
 
-    @Throws(Exception::class)
     fun execute() {
         if (!clearOutput()) {
             throw Exception("Failed cleaning output folder")
@@ -43,7 +41,6 @@ class Executor(folder: File, activity: AppCompatActivity) {
         runD8()
     }
 
-    @Throws(Exception::class)
     operator fun invoke() {
         ModuleRunner(File(output, "classes.extension"), activity).apply {
             setProjectDir(project)
@@ -64,9 +61,7 @@ class Executor(folder: File, activity: AppCompatActivity) {
         D8.main(opt.toTypedArray())
 
         // Rename dex files to .extension to be able to run them with ExtensionRunner
-        for (file in Objects.requireNonNull(
-            output.listFiles()
-        )) {
+        for (file in output.listFiles()!!) {
             if (file.isFile) {
                 if (file.name.endsWith(".dex")) {
                     val path = file.absolutePath
@@ -81,7 +76,6 @@ class Executor(folder: File, activity: AppCompatActivity) {
      * - https://github.com/Sketchware-Pro/Sketchware-Pro/tree/main/app/src/minApi26/java/mod/hey/studios/compiler/kotlin
      * - https://github.com/MikeAndrson/kotlinc-android
      */
-    @Throws(Exception::class)
     private fun compileKotlin() {
         val ktHome = File(output, "ktHome")
         if (!ktHome.mkdir()) {
@@ -124,7 +118,6 @@ class Executor(folder: File, activity: AppCompatActivity) {
         }
     }
 
-    @Throws(Exception::class)
     private fun runECJ() {
         val opt = ArrayList<String>()
         val classes = File(output, "classes")
@@ -179,7 +172,6 @@ class Executor(folder: File, activity: AppCompatActivity) {
         }
     }
 
-    @Throws(Exception::class)
     private fun clearOutput(): Boolean {
         if (!this::output.isInitialized) {
             output = File(project, "output")
@@ -194,7 +186,7 @@ class Executor(folder: File, activity: AppCompatActivity) {
             val libs = File(App.appContext.getExternalFilesDir(null), "build/libs")
             if (libs.exists() && libs.isDirectory) {
                 for (file in libs.listFiles()!!) {
-                    if (file.isFile && file.getFileExtension() == "jar") {
+                    if (file.isFile && file.extension == "jar") {
                         jarFiles.add(file)
                     }
                 }
@@ -202,7 +194,7 @@ class Executor(folder: File, activity: AppCompatActivity) {
         }
 
     private fun parseInputFolder(input: File) {
-        for (file in Objects.requireNonNull(input.listFiles())) {
+        for (file in input.listFiles()!!) {
             if (file.isFile) {
                 if (file.name.lowercase(Locale.getDefault()).endsWith(".java")) {
                     javaFiles.add(file)
@@ -214,7 +206,7 @@ class Executor(folder: File, activity: AppCompatActivity) {
                     output = file
                 } else if (file.name == "libs") {
                     libs = file
-                    for (subFile in Objects.requireNonNull(file.listFiles())) {
+                    for (subFile in file.listFiles()!!) {
                         if (subFile.isFile) {
                             if (subFile.name.lowercase(Locale.getDefault()).endsWith(".jar")) {
                                 jarFiles.add(subFile)

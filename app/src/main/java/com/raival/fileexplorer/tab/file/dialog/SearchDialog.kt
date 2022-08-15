@@ -13,16 +13,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.textfield.TextInputLayout
 import com.raival.fileexplorer.R
+import com.raival.fileexplorer.extension.getFileDetails
 import com.raival.fileexplorer.tab.file.FileExplorerTabDataHolder
 import com.raival.fileexplorer.tab.file.FileExplorerTabFragment
-import com.raival.fileexplorer.tab.file.extension.getFileDetails
+import com.raival.fileexplorer.tab.file.misc.IconHelper
 import com.raival.fileexplorer.tab.file.model.FileItem
 import com.raival.fileexplorer.util.Log
 import com.raival.fileexplorer.util.PrefsUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.LineIterator
 import java.io.File
-import java.util.*
 import java.util.regex.Pattern
 
 class SearchDialog : BottomSheetDialogFragment {
@@ -38,7 +42,6 @@ class SearchDialog : BottomSheetDialogFragment {
     private lateinit var searchButton: Button
     private lateinit var progress: ProgressBar
     private lateinit var fileCount: TextView
-    private lateinit var searchThread: Thread
     private lateinit var query: String
     private var active = false
 
@@ -87,7 +90,7 @@ class SearchDialog : BottomSheetDialogFragment {
             if (active) {
                 searchButton.text = "Search"
                 progress.visibility = View.GONE
-                Objects.requireNonNull(recyclerView.adapter).notifyDataSetChanged()
+                recyclerView.adapter?.notifyDataSetChanged()
                 active = false
                 isCancelable = true
             } else {
@@ -99,7 +102,7 @@ class SearchDialog : BottomSheetDialogFragment {
                 loseFocus(input)
                 active = true
                 query = input.editText?.text.toString()
-                searchThread = Thread {
+                CoroutineScope(Dispatchers.IO).launch {
                     for (file in filesToSearchIn) {
                         if (!active) break
                         searchIn(
@@ -111,7 +114,7 @@ class SearchDialog : BottomSheetDialogFragment {
                             suffix.isChecked
                         )
                     }
-                    recyclerView.post {
+                    withContext(Dispatchers.Main) {
                         searchButton.text = "Search"
                         progress.visibility = View.GONE
                         recyclerView.adapter!!.notifyDataSetChanged()
@@ -120,7 +123,6 @@ class SearchDialog : BottomSheetDialogFragment {
                         updateFileCount()
                     }
                 }
-                searchThread.start()
             }
         }
         if ((tab.dataHolder as FileExplorerTabDataHolder?)!!.searchList.size > 0) {
@@ -211,7 +213,7 @@ class SearchDialog : BottomSheetDialogFragment {
         (tab.dataHolder as FileExplorerTabDataHolder?)!!.searchList.add(FileItem(file))
         recyclerView.post {
             updateFileCount()
-            Objects.requireNonNull(recyclerView.adapter).notifyDataSetChanged()
+            recyclerView.adapter?.notifyDataSetChanged()
         }
     }
 
@@ -253,7 +255,7 @@ class SearchDialog : BottomSheetDialogFragment {
                 val fileItem = (tab.dataHolder as FileExplorerTabDataHolder?)!!.searchList[position]
                 name.text = fileItem.file.name
                 details.text = fileItem.file.getFileDetails()
-                com.raival.fileexplorer.tab.file.util.FileUtils.setFileIcon(icon, fileItem.file)
+                IconHelper.setFileIcon(icon, fileItem.file)
                 icon.alpha = if (fileItem.file.isHidden) 0.5f else 1f
                 background.setOnClickListener {
                     tab.currentDirectory = fileItem.file.parentFile!!

@@ -11,10 +11,15 @@ import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
 import com.google.android.material.elevation.SurfaceColors
+import com.raival.fileexplorer.App
 import com.raival.fileexplorer.App.Companion.showMsg
 import com.raival.fileexplorer.R
 import com.raival.fileexplorer.util.PrefsUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 abstract class BaseActivity : AppCompatActivity() {
     @JvmField
@@ -80,6 +85,13 @@ abstract class BaseActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == 9011) {
             init()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        CoroutineScope(Dispatchers.Default).launch {
+            Glide.get(App.appContext).clearDiskCache()
         }
     }
 

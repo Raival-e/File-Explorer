@@ -12,6 +12,7 @@ import android.view.View
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.elevation.SurfaceColors
 import com.google.android.material.textfield.TextInputLayout
 import com.raival.fileexplorer.App
@@ -19,26 +20,24 @@ import com.raival.fileexplorer.App.Companion.showMsg
 import com.raival.fileexplorer.R
 import com.raival.fileexplorer.activity.editor.autocomplete.CustomCompletionItemAdapter
 import com.raival.fileexplorer.activity.editor.autocomplete.CustomCompletionLayout
-import com.raival.fileexplorer.activity.editor.formatter.java.JavaFormatter
+import com.raival.fileexplorer.activity.editor.language.java.JavaCodeLanguage
+import com.raival.fileexplorer.activity.editor.language.json.JsonLanguage
+import com.raival.fileexplorer.activity.editor.language.kotlin.KotlinCodeLanguage
+import com.raival.fileexplorer.activity.editor.language.xml.XmlLanguage
 import com.raival.fileexplorer.activity.editor.scheme.DarkScheme
 import com.raival.fileexplorer.activity.editor.scheme.LightScheme
 import com.raival.fileexplorer.activity.editor.view.SymbolInputView
 import com.raival.fileexplorer.activity.model.TextEditorViewModel
 import com.raival.fileexplorer.common.BackgroundTask
-import com.raival.fileexplorer.common.dialog.CustomDialog
 import com.raival.fileexplorer.tab.file.executor.Executor
-import com.raival.fileexplorer.tab.file.extension.getFileExtension
-import com.raival.fileexplorer.tab.file.util.FileExtensions
-import com.raival.fileexplorer.tab.file.util.FileUtils
+import com.raival.fileexplorer.tab.file.misc.FileMimeTypes
+import com.raival.fileexplorer.tab.file.misc.FileUtils
 import com.raival.fileexplorer.util.Log
 import com.raival.fileexplorer.util.PrefsUtils
 import com.raival.fileexplorer.util.Utils
 import io.github.rosemoe.sora.lang.EmptyLanguage
 import io.github.rosemoe.sora.lang.Language
-import io.github.rosemoe.sora.lang.format.Formatter
-import io.github.rosemoe.sora.langs.java.JavaLanguage
 import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme
-import io.github.rosemoe.sora.langs.textmate.TextMateLanguage
 import io.github.rosemoe.sora.widget.CodeEditor
 import io.github.rosemoe.sora.widget.EditorSearcher.SearchOptions
 import io.github.rosemoe.sora.widget.component.EditorAutoCompletion
@@ -47,7 +46,6 @@ import io.github.rosemoe.sora.widget.schemes.EditorColorScheme
 import org.eclipse.tm4e.core.internal.theme.reader.ThemeReader
 import java.io.File
 import java.io.IOException
-import java.io.InputStreamReader
 import java.util.*
 import java.util.concurrent.atomic.AtomicReference
 
@@ -138,12 +136,12 @@ class TextEditorActivity : BaseActivity() {
     }
 
     private fun askToLoadCodeSample(isJava: Boolean) {
-        CustomDialog()
+        MaterialAlertDialogBuilder(this)
             .setTitle("Help")
-            .setMsg("Do you want to use an executable code sample in this file?")
-            .setPositiveButton("Yes", { editor.setText(getCodeSample(isJava)) }, true)
-            .setNegativeButton("No", null, true)
-            .show(supportFragmentManager, "")
+            .setMessage("Do you want to use an executable code sample in this file?")
+            .setPositiveButton("Yes") { _, _ -> editor.setText(getCodeSample(isJava)) }
+            .setNegativeButton("No", null)
+            .show()
     }
 
     private fun getCodeSample(isJava: Boolean): String {
@@ -154,7 +152,7 @@ class TextEditorActivity : BaseActivity() {
                 TAG,
                 Log.SOMETHING_WENT_WRONG
                         + " while loading "
-                        + (if (isJava) FileExtensions.javaType else "kotlin")
+                        + (if (isJava) FileMimeTypes.javaType else "kotlin")
                         + " sample code",
                 e
             )
@@ -188,9 +186,9 @@ class TextEditorActivity : BaseActivity() {
         }
 
     private fun detectLanguage(file: File) {
-        when (file.getFileExtension().lowercase(Locale.getDefault())) {
-            FileExtensions.javaType -> setEditorLanguage(LANGUAGE_JAVA)
-            FileExtensions.KotlinType -> setEditorLanguage(LANGUAGE_KOTLIN)
+        when (file.extension.lowercase(Locale.getDefault())) {
+            FileMimeTypes.javaType -> setEditorLanguage(LANGUAGE_JAVA)
+            FileMimeTypes.kotlinType -> setEditorLanguage(LANGUAGE_KOTLIN)
             "json" -> setEditorLanguage(LANGUAGE_JSON)
             "xml" -> setEditorLanguage(LANGUAGE_XML)
             else -> setEditorLanguage(-1)
@@ -248,15 +246,15 @@ class TextEditorActivity : BaseActivity() {
         }
         try {
             if (editorViewModel.file?.readText() != editor.text.toString()) {
-                CustomDialog()
+                MaterialAlertDialogBuilder(this)
                     .setTitle("Save File")
-                    .setMsg("Do you want to save this file before exit?")
-                    .setPositiveButton("Yes", {
+                    .setMessage("Do you want to save this file before exit?")
+                    .setPositiveButton("Yes") { _, _ ->
                         saveFile(editor.text.toString())
                         finish()
-                    }, true)
-                    .setNegativeButton("No", { finish() }, true)
-                    .show(supportFragmentManager, "")
+                    }
+                    .setNegativeButton("No") { _, _ -> finish() }
+                    .show()
                 return
             }
         } catch (exception: Exception) {
@@ -284,9 +282,9 @@ class TextEditorActivity : BaseActivity() {
             PrefsUtils.TextEditor.textEditorShowLineNumber
         menu.findItem(R.id.editor_option_read_only).isChecked =
             PrefsUtils.TextEditor.textEditorReadOnly
-        if (FileExtensions.javaType != editorViewModel.file?.getFileExtension()) {
-            menu.findItem(R.id.editor_format).isVisible = false
-        }
+        menu.findItem(R.id.editor_option_autocomplete).isChecked =
+            PrefsUtils.TextEditor.textEditorAutocomplete
+
         if (!canExecute()) menu.findItem(R.id.editor_execute).isVisible = false
         return super.onCreateOptionsMenu(menu)
     }
@@ -397,51 +395,14 @@ class TextEditorActivity : BaseActivity() {
     }
 
     private val javaLanguage: Language
-        get() = object : JavaLanguage() {
-            private val javaFormatter = JavaFormatter()
-            override fun getFormatter(): Formatter {
-                return javaFormatter
-            }
-        }
+        get() = JavaCodeLanguage()
+
     private val jsonLang: Language
-        get() = try {
-            TextMateLanguage.create(
-                "json.tmLanguage.json",
-                assets.open("textmate/json/syntax/json.tmLanguage.json"),
-                InputStreamReader(assets.open("textmate/json/language-configuration.json")),
-                (getColorScheme(true) as TextMateColorScheme).rawTheme
-            )
-        } catch (e: IOException) {
-            Log.e(TAG, Log.SOMETHING_WENT_WRONG + " while loading JsonLanguage", e)
-            showMsg(Log.UNABLE_TO + " set the language: textmate/json/syntax/kotlin.tmLanguage.json")
-            EmptyLanguage()
-        }
+        get() = JsonLanguage((getColorScheme(true) as TextMateColorScheme).rawTheme)
     private val xmlLang: Language
-        get() = try {
-            TextMateLanguage.create(
-                "xml.tmLanguage.json",
-                assets.open("textmate/xml/syntax/xml.tmLanguage.json"),
-                InputStreamReader(assets.open("textmate/xml/language-configuration.json")),
-                (getColorScheme(true) as TextMateColorScheme).rawTheme
-            )
-        } catch (e: IOException) {
-            Log.e(TAG, Log.SOMETHING_WENT_WRONG + " while loading XmlLanguage", e)
-            showMsg(Log.UNABLE_TO + " set the language: textmate/xml/syntax/xml.tmLanguage.json")
-            EmptyLanguage()
-        }
+        get() = XmlLanguage((getColorScheme(true) as TextMateColorScheme).rawTheme)
     private val kotlinLang: Language
-        get() = try {
-            TextMateLanguage.create(
-                "kotlin.tmLanguage",
-                assets.open("textmate/kotlin/syntax/kotlin.tmLanguage"),
-                InputStreamReader(assets.open("textmate/kotlin/language-configuration.json")),
-                (getColorScheme(true) as TextMateColorScheme).rawTheme
-            )
-        } catch (e: IOException) {
-            Log.e(TAG, Log.SOMETHING_WENT_WRONG + " while loading KotlinLanguage", e)
-            showMsg(Log.UNABLE_TO + " set the language: textmate/kotlin/syntax/kotlin.tmLanguage")
-            EmptyLanguage()
-        }
+        get() = KotlinCodeLanguage((getColorScheme(true) as TextMateColorScheme).rawTheme)
 
     private fun getColorScheme(isTextmate: Boolean): EditorColorScheme {
         return if (Utils.isDarkMode) getDarkScheme(isTextmate) else getLightScheme(isTextmate)
@@ -553,11 +514,11 @@ class TextEditorActivity : BaseActivity() {
     }
 
     private fun showDialog(title: String, msg: String) {
-        CustomDialog()
+        MaterialAlertDialogBuilder(this)
             .setTitle(title)
-            .setMsg(msg)
-            .setPositiveButton("Ok", null, true)
-            .show(supportFragmentManager, "")
+            .setMessage(msg)
+            .setPositiveButton("Ok", null)
+            .show()
     }
 
     private fun saveFile(content: String) {

@@ -2,8 +2,12 @@ package com.raival.fileexplorer.tab.file.task
 
 import android.os.Handler
 import android.os.Looper
+import com.raival.fileexplorer.tab.file.misc.extract
 import com.raival.fileexplorer.tab.file.model.Task
-import com.raival.fileexplorer.tab.file.util.extract
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 class ExtractTask(private val filesToExtract: ArrayList<File>) : Task() {
@@ -36,14 +40,14 @@ class ExtractTask(private val filesToExtract: ArrayList<File>) : Task() {
     }
 
     override fun start(onUpdate: OnUpdateListener, onFinish: OnFinishListener) {
-        Thread {
+        CoroutineScope(Dispatchers.IO).launch {
             Handler(Looper.getMainLooper()).post { onUpdate.onUpdate("Extracting....") }
             try {
                 extract(filesToExtract, activeDirectory!!)
-                Handler(Looper.getMainLooper()).post { onFinish.onFinish("Files have been extracted successfully") }
+                withContext(Dispatchers.Main) { onFinish.onFinish("Files have been extracted successfully") }
             } catch (e: Exception) {
                 e.printStackTrace()
-                Handler(Looper.getMainLooper()).post { onFinish.onFinish(e.toString()) }
+                withContext(Dispatchers.Main) { onFinish.onFinish(e.toString()) }
             }
         }.start()
     }

@@ -5,8 +5,8 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import com.raival.fileexplorer.App
+import com.raival.fileexplorer.extension.toFormattedSize
 import com.raival.fileexplorer.tab.apps.model.Apk
-import com.raival.fileexplorer.tab.file.extension.getFormattedFileSize
 import java.io.File
 
 class ApkResolver {
@@ -44,7 +44,7 @@ class ApkResolver {
             val apk = Apk(
                 pm.getApplicationLabel(info).toString(),
                 info.packageName,
-                File(info.publicSourceDir).getFormattedFileSize(),
+                File(info.publicSourceDir).length().toFormattedSize(),
                 info.loadIcon(pm),
                 File(info.publicSourceDir).lastModified(),
                 File(info.publicSourceDir)
