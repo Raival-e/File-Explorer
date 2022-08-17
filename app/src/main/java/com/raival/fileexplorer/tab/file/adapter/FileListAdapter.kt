@@ -75,9 +75,11 @@ class FileListAdapter(private val parentFragment: FileExplorerTabFragment) :
         fun bind() {
             val position = adapterPosition
             val fileItem = parentFragment.files[position]
+
             if (!this::prevFile.isInitialized || !fileItem.file.isDirectory || !prevFile.isDirectory) {
                 IconHelper.setFileIcon(icon, fileItem.file)
             }
+
             if (TextUtils.isEmpty(fileItem.name)) {
                 fileItem.name = fileItem.file.name
             }

@@ -23,7 +23,8 @@ public class IconDataFetcher implements DataFetcher<Drawable> {
 
     @Override
     public void loadData(@NonNull Priority priority, @NonNull DataCallback<? super Drawable> callback) {
-        Drawable drawable = ContextCompat.getDrawable(context, model.getResId());
+        Context ctx = (model.getContext() != null) ? model.getContext() : context;
+        Drawable drawable = ContextCompat.getDrawable(ctx, model.getResId());
         callback.onDataReady(drawable);
     }
 

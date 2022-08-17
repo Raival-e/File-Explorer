@@ -1,3 +1,5 @@
 package com.raival.fileexplorer.glide.model
 
-class IconRes(val resId: Int)
+import android.content.Context
+
+class IconRes(val resId: Int, val context: Context? = null)
