@@ -27,7 +27,16 @@ class Executor(folder: File, activity: AppCompatActivity) {
     private lateinit var output: File
     private lateinit var libs: File
     private lateinit var activity: AppCompatActivity
-
+    
+    init {
+        if (!folder.isFile) {
+            this.activity = activity
+            project = folder
+            parseInputFolder(project)
+            commonLibs
+        }
+    }
+    
     fun execute() {
         if (!clearOutput()) {
             throw Exception("Failed cleaning output folder")
@@ -81,38 +90,50 @@ class Executor(folder: File, activity: AppCompatActivity) {
         if (!ktHome.mkdir()) {
             throw Exception(Log.UNABLE_TO + " " + FileUtils.CREATE_FILE + ": " + ktHome)
         }
+        
         val classes = File(output, "classes")
         if (!classes.mkdir()) {
             throw Exception(Log.UNABLE_TO + " " + FileUtils.CREATE_FILE + ": " + classes)
         }
+        
         val k2JVMCompiler = K2JVMCompiler()
         val messageCollector = DiagnosticCollector()
         val args = ArrayList<String>()
         args.add("-cp")
+        
         val sb = StringBuilder()
         for (jar in jarFiles) sb.append(":").append(jar.absolutePath)
         sb.append(":").append(BuildUtils.rtJarFile.absolutePath)
         args.add(sb.substring(1))
+        
         for (file in kotlinFiles) {
             args.add(file.absolutePath)
         }
+        
         for (file in javaFiles) {
             args.add(file.absolutePath)
         }
+        
+        val plugins = getKotlinCompilerPlugins().map(File::getAbsolutePath).toTypedArray()
+        
         val compilerArguments = K2JVMCompilerArguments().apply {
             compileJava = false
             includeRuntime = false
             noJdk = true
             noReflect = true
             noStdlib = true
+            
+            pluginClasspaths = plugins
             kotlinHome = ktHome.absolutePath
             destination = classes.absolutePath
         }
+        
         k2JVMCompiler.parseArguments(args.toTypedArray(), compilerArguments)
         k2JVMCompiler.exec(messageCollector, Services.EMPTY, compilerArguments)
 
         val file = File(classes, "META-INF")
         if (file.exists()) FileUtils.deleteFile(file)
+        
         if (messageCollector.hasErrors()) {
             throw Exception(messageCollector.getDiagnostics())
         }
@@ -231,6 +252,24 @@ class Executor(folder: File, activity: AppCompatActivity) {
             }
         }
     }
+    
+    private fun getKotlinCompilerPlugins(): List<File> {
+        val pluginDir = File(project, "kt_plugins")
+        
+        if (!pluginDir.exists() || pluginDir.isFile) {
+            return Collections.emptyList()
+        }
+        
+        val plugins = pluginDir.listFiles { file ->
+            file.name.endsWith(".jar")
+        }
+        
+        if (plugins == null) {
+            return Collections.emptyList()
+        }
+        
+        return plugins.toList()
+    }
 
     /**
      * Sources:
@@ -309,15 +348,6 @@ class Executor(folder: File, activity: AppCompatActivity) {
             }
             stringBuilder.append(System.lineSeparator()).append(message)
             return stringBuilder.toString()
-        }
-    }
-
-    init {
-        if (!folder.isFile) {
-            this.activity = activity
-            project = folder
-            parseInputFolder(project)
-            commonLibs
         }
     }
 }
