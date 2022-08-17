@@ -258,7 +258,7 @@ class SearchDialog : BottomSheetDialogFragment {
                 IconHelper.setFileIcon(icon, fileItem.file)
                 icon.alpha = if (fileItem.file.isHidden) 0.5f else 1f
                 background.setOnClickListener {
-                    tab.currentDirectory = fileItem.file.parentFile!!
+                    tab.setCurrentDirectory(fileItem.file.parentFile!!)
                     tab.refresh()
                     tab.focusOn(fileItem.file)
                     dismiss()

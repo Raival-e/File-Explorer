@@ -53,7 +53,7 @@ class PathHistoryAdapter(private val parentFragment: FileExplorerTabFragment) :
                 )
             )
             itemView.setOnClickListener {
-                parentFragment.currentDirectory = file
+                parentFragment.setCurrentDirectory(file)
                 // Restore RecyclerView state
                 parentFragment.restoreRecyclerViewState()
             }

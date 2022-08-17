@@ -49,32 +49,8 @@ class FileExplorerTabFragment : BaseTabFragment {
     private var requireRefresh = false
     var previousDirectory: File? = null
 
+    @JvmField
     var currentDirectory: File? = null
-        /**
-         * This method handles the following (in order):
-         * - Updating currentDirectory and previousDirectory fields
-         * - Updating recyclerViewStates in DataHolder
-         * - Sorting files based on the preferences
-         * - Updating tabView title
-         * - Update pathHistory list
-         * - Refreshing adapters (fileList & pathHistory)
-         * - Updating activeDirectory in DataHolder
-         *
-         * @param file the directory to open
-         */
-        set(file) {
-            if (currentDirectory != null) previousDirectory = currentDirectory
-            field = file
-            // Save only when previousDirectory is set (so that it can restore the state before onDestroy())
-            if (previousDirectory != null) (dataHolder as FileExplorerTabDataHolder).recyclerViewStates[previousDirectory!!] =
-                fileList.layoutManager!!
-                    .onSaveInstanceState()!!
-            prepareFiles()
-            updateTabTitle()
-            updatePathHistoryList()
-            refreshFileList()
-            (dataHolder as FileExplorerTabDataHolder).activeDirectory = field
-        }
 
     constructor() : super()
     constructor(directory: File) : super() {
@@ -91,7 +67,7 @@ class FileExplorerTabFragment : BaseTabFragment {
         placeHolder = view.findViewById(R.id.place_holder)
         val homeButton = view.findViewById<View>(R.id.home)
         homeButton.setOnClickListener {
-            currentDirectory = defaultHomeDirectory
+            setCurrentDirectory(defaultHomeDirectory)
         }
         homeButton.setOnLongClickListener { showSetPathDialog() }
         return view
@@ -106,7 +82,7 @@ class FileExplorerTabFragment : BaseTabFragment {
     }
 
     private fun loadData() {
-        currentDirectory = (dataHolder as FileExplorerTabDataHolder).activeDirectory!!
+        setCurrentDirectory((dataHolder as FileExplorerTabDataHolder).activeDirectory!!)
     }
 
     private fun prepareBottomBarView() {
@@ -205,7 +181,7 @@ class FileExplorerTabFragment : BaseTabFragment {
         )
         internal.text = "Internal Data Files"
         internal.setOnClickListener {
-            currentDirectory = requireActivity().filesDir
+            setCurrentDirectory(requireActivity().filesDir)
             customDialog.dismiss()
         }
         val external = Chip(requireContext())
@@ -215,7 +191,7 @@ class FileExplorerTabFragment : BaseTabFragment {
         )
         external.text = "External Data Files"
         external.setOnClickListener {
-            currentDirectory = requireActivity().getExternalFilesDir(null)!!
+            setCurrentDirectory(requireActivity().getExternalFilesDir(null)!!)
             customDialog.dismiss()
         }
         layout.addView(internal)
@@ -233,7 +209,7 @@ class FileExplorerTabFragment : BaseTabFragment {
                         if (file.isFile) {
                             FileOpener(requireActivity() as MainActivity).openFile(file)
                         } else {
-                            currentDirectory = file
+                            setCurrentDirectory(file)
                         }
                     } else {
                         showMsg(Log.UNABLE_TO + " read the provided file")
@@ -309,7 +285,7 @@ class FileExplorerTabFragment : BaseTabFragment {
         // Go back if possible
         val parent = currentDirectory?.parentFile
         if (parent != null && parent.exists() && parent.canRead()) {
-            currentDirectory = currentDirectory?.parentFile!!
+            setCurrentDirectory(currentDirectory?.parentFile!!)
             // restore RecyclerView state
             restoreRecyclerViewState()
             // Clear any selected files from the DataHolder (it also gets cleared
@@ -418,6 +394,32 @@ class FileExplorerTabFragment : BaseTabFragment {
     }
 
     /**
+     * This method handles the following (in order):
+     * - Updating currentDirectory and previousDirectory fields
+     * - Updating recyclerViewStates in DataHolder
+     * - Sorting files based on the preferences
+     * - Updating tabView title
+     * - Update pathHistory list
+     * - Refreshing adapters (fileList & pathHistory)
+     * - Updating activeDirectory in DataHolder
+     *
+     * @param file the directory to open
+     */
+    fun setCurrentDirectory(file: File) {
+        if (currentDirectory != null) previousDirectory = currentDirectory
+        currentDirectory = file
+        // Save only when previousDirectory is set (so that it can restore the state before onDestroy())
+        if (previousDirectory != null) (dataHolder as FileExplorerTabDataHolder).recyclerViewStates[previousDirectory!!] =
+            fileList.layoutManager!!
+                .onSaveInstanceState()!!
+        prepareFiles()
+        updateTabTitle()
+        updatePathHistoryList()
+        refreshFileList()
+        (dataHolder as FileExplorerTabDataHolder).activeDirectory = currentDirectory
+    }
+
+    /**
      * This method automatically removes the restored state from DataHolder recyclerViewStates
      * This method is called when:
      * - Create the fragment
@@ -450,7 +452,7 @@ class FileExplorerTabFragment : BaseTabFragment {
      * Used to refresh the tab
      */
     fun refresh() {
-        currentDirectory = currentDirectory
+        setCurrentDirectory(currentDirectory!!)
         restoreRecyclerViewState()
     }
 

@@ -142,7 +142,7 @@ class FileListAdapter(private val parentFragment: FileExplorerTabFragment) :
                 if (fileItem.file.isFile) {
                     parentFragment.openFile(fileItem)
                 } else {
-                    parentFragment.currentDirectory = fileItem.file
+                    parentFragment.setCurrentDirectory(fileItem.file)
                     // Clear any selected files from the DataHolder (it also gets cleared
                     // in onBackPressed (when go back)
                     (parentFragment.dataHolder as FileExplorerTabDataHolder?)!!.selectedFiles.clear()
