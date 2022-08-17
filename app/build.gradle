@@ -21,6 +21,12 @@ android {
     }
 
     signingConfigs {
+        debug {
+            storeFile file('../testkey.keystore')
+            storePassword 'testkey'
+            keyAlias 'testkey'
+            keyPassword 'testkey'
+        }
         release {
             storeFile file("../testkey.keystore")
             storePassword "testkey"
