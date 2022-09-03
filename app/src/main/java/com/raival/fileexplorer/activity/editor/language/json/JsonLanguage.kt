@@ -9,18 +9,21 @@ import io.github.rosemoe.sora.langs.java.Tokens
 import io.github.rosemoe.sora.langs.textmate.TextMateLanguage
 import io.github.rosemoe.sora.text.ContentReference
 import io.github.rosemoe.sora.text.TextUtils
-import org.eclipse.tm4e.core.theme.IRawTheme
-import java.io.InputStream
+import org.eclipse.tm4e.core.registry.IGrammarSource
+import org.eclipse.tm4e.core.registry.IThemeSource
 import java.io.InputStreamReader
 import java.io.Reader
 
 class JsonLanguage(
-    theme: IRawTheme,
-    grammarName: String = "json.tmLanguage.json",
-    grammarIns: InputStream = App.appContext.assets.open("textmate/json/syntax/json.tmLanguage.json"),
+    iThemeSource: IThemeSource,
+    iGrammarSource: IGrammarSource = IGrammarSource.fromInputStream(
+        App.appContext.assets.open("textmate/json/syntax/json.tmLanguage.json"),
+        "json.tmLanguage.json",
+        null
+    ),
     languageConfiguration: Reader = InputStreamReader(App.appContext.assets.open("textmate/json/language-configuration.json")),
     createIdentifiers: Boolean = true
-) : TextMateLanguage(grammarName, grammarIns, languageConfiguration, theme, createIdentifiers) {
+) : TextMateLanguage(iGrammarSource, languageConfiguration, iThemeSource, createIdentifiers) {
 
     private val jsonFormatter = JsonFormatter()
     private val newlineHandlers = arrayOf<NewlineHandler>(BraceHandler())

@@ -10,19 +10,22 @@ import io.github.rosemoe.sora.langs.java.Tokens
 import io.github.rosemoe.sora.langs.textmate.TextMateLanguage
 import io.github.rosemoe.sora.text.ContentReference
 import io.github.rosemoe.sora.text.TextUtils
-import org.eclipse.tm4e.core.theme.IRawTheme
-import java.io.InputStream
+import org.eclipse.tm4e.core.registry.IGrammarSource
+import org.eclipse.tm4e.core.registry.IThemeSource
 import java.io.InputStreamReader
 import java.io.Reader
 
 
 class KotlinCodeLanguage(
-    theme: IRawTheme,
-    grammarName: String = "kotlin.tmLanguage",
-    grammarIns: InputStream = App.appContext.assets.open("textmate/kotlin/syntax/kotlin.tmLanguage"),
+    iThemeSource: IThemeSource,
+    iGrammarSource: IGrammarSource = IGrammarSource.fromInputStream(
+        App.appContext.assets.open("textmate/kotlin/syntax/kotlin.tmLanguage"),
+        "kotlin.tmLanguage",
+        null
+    ),
     languageConfiguration: Reader = InputStreamReader(App.appContext.assets.open("textmate/kotlin/language-configuration.json")),
     createIdentifiers: Boolean = true
-) : TextMateLanguage(grammarName, grammarIns, languageConfiguration, theme, createIdentifiers) {
+) : TextMateLanguage(iGrammarSource, languageConfiguration, iThemeSource, createIdentifiers) {
 
     private val javaFormatter = JavaFormatter()
     private val newlineHandlers = arrayOf<NewlineHandler>(BraceHandler())

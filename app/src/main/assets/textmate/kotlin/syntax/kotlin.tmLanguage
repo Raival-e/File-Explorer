@@ -44,21 +44,6 @@
                         <key>name</key>
                         <string>keyword.other.import.kotlin</string>
                     </dict>
-                    <key>2</key>
-                    <dict>
-                        <key>name</key>
-                        <string>storage.modifier.import.java</string>
-                    </dict>
-                    <key>3</key>
-                    <dict>
-                        <key>name</key>
-                        <string>keyword.other.kotlin</string>
-                    </dict>
-                    <key>4</key>
-                    <dict>
-                        <key>name</key>
-                        <string>entity.name.type</string>
-                    </dict>
                 </dict>
                 <key>match</key>
                 <string>^\s*(import)\s+([^ $.]+(?:\.(?:[`][^$`]+[`]|[^` $.]+))+)(?:\s+(as)\s+([`][^$`]+[`]|[^` $.]+))?</string>

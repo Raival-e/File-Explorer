@@ -43,7 +43,7 @@ import io.github.rosemoe.sora.widget.EditorSearcher.SearchOptions
 import io.github.rosemoe.sora.widget.component.EditorAutoCompletion
 import io.github.rosemoe.sora.widget.component.Magnifier
 import io.github.rosemoe.sora.widget.schemes.EditorColorScheme
-import org.eclipse.tm4e.core.internal.theme.reader.ThemeReader
+import org.eclipse.tm4e.core.registry.IThemeSource
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -398,11 +398,11 @@ class TextEditorActivity : BaseActivity() {
         get() = JavaCodeLanguage()
 
     private val jsonLang: Language
-        get() = JsonLanguage((getColorScheme(true) as TextMateColorScheme).rawTheme)
+        get() = JsonLanguage((getColorScheme(true) as TextMateColorScheme).themeSource)
     private val xmlLang: Language
-        get() = XmlLanguage((getColorScheme(true) as TextMateColorScheme).rawTheme)
+        get() = XmlLanguage((getColorScheme(true) as TextMateColorScheme).themeSource)
     private val kotlinLang: Language
-        get() = KotlinCodeLanguage((getColorScheme(true) as TextMateColorScheme).rawTheme)
+        get() = KotlinCodeLanguage((getColorScheme(true) as TextMateColorScheme).themeSource)
 
     private fun getColorScheme(isTextmate: Boolean): EditorColorScheme {
         return if (Utils.isDarkMode) getDarkScheme(isTextmate) else getLightScheme(isTextmate)
@@ -412,9 +412,10 @@ class TextEditorActivity : BaseActivity() {
         val scheme: EditorColorScheme = if (isTextmate) {
             try {
                 TextMateColorScheme.create(
-                    ThemeReader.readThemeSync(
+                    IThemeSource.fromInputStream(
+                        assets.open("textmate/light.tmTheme"),
                         "light.tmTheme",
-                        assets.open("textmate/light.tmTheme")
+                        null
                     )
                 )
             } catch (e: Exception) {
@@ -451,9 +452,10 @@ class TextEditorActivity : BaseActivity() {
         val scheme: EditorColorScheme = if (isTextmate) {
             try {
                 TextMateColorScheme.create(
-                    ThemeReader.readThemeSync(
+                    IThemeSource.fromInputStream(
+                        assets.open("textmate/dark.json"),
                         "dark.json",
-                        assets.open("textmate/dark.json")
+                        null
                     )
                 )
             } catch (e: Exception) {
