@@ -72,15 +72,15 @@ dependencies {
     implementation "net.lingala.zip4j:zip4j:2.11.1"
     implementation "io.github.damianvdb:materialchecklist:1.0.0"
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
-    implementation "io.github.Rosemoe.sora-editor:editor:0.16.5", {
+    implementation "io.github.Rosemoe.sora-editor:editor:0.17.0", {
         exclude group: "androidx.annotation", module: "annotation"
     }
-    implementation "io.github.Rosemoe.sora-editor:language-textmate:0.16.5", {
+    implementation "io.github.Rosemoe.sora-editor:language-textmate:0.17.0", {
         // I had to exclude it to resolve a conflict with some kotlinc classes (javax.xml.stream.*)
         // TODO: only exclude classes in javax.xml.stream
         exclude group: "xml-apis", module: "xml-apis"
     }
-    implementation "io.github.Rosemoe.sora-editor:language-java:0.16.5"
+    implementation "io.github.Rosemoe.sora-editor:language-java:0.17.0"
 
     api "com.android.tools:r8:3.3.28"
     implementation "org.eclipse.jdt:ecj:3.26.0"
