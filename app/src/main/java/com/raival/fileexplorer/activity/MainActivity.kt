@@ -63,7 +63,7 @@ class MainActivity : BaseActivity() {
 
     private val mainViewModel: MainViewModel
         get() {
-            return ViewModelProvider(this).get(MainViewModel::class.java)
+            return ViewModelProvider(this)[MainViewModel::class.java]
         }
 
     private val tabFragments: List<BaseTabFragment>
@@ -135,6 +135,8 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        receiveCommands()
 
         tabView = findViewById(R.id.tabs)
         fragmentContainerView = findViewById(R.id.fragment_container)
@@ -250,6 +252,21 @@ class MainActivity : BaseActivity() {
 
         checkPermissions()
         setupDrawer()
+    }
+
+    private fun receiveCommands() {
+        val command = "run_extension"
+        val commandValue = "value"
+
+        intent.getStringExtra("command")?.let {
+            if (it == command) {
+                intent.getStringExtra(commandValue)?.let { path ->
+                    FileOpener(this).openFile(File(path))
+                    intent.removeExtra(command)
+                    intent.removeExtra(commandValue)
+                }
+            }
+        }
     }
 
     override fun onResume() {
