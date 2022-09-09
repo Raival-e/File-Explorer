@@ -132,7 +132,9 @@ class Executor(folder: File, activity: AppCompatActivity) {
         k2JVMCompiler.exec(messageCollector, Services.EMPTY, compilerArguments)
 
         val file = File(classes, "META-INF")
-        if (file.exists()) FileUtils.deleteFile(file)
+        if (file.exists()) {
+            FileUtils.move(file, output)
+        }
         
         if (messageCollector.hasErrors()) {
             throw Exception(messageCollector.getDiagnostics())
