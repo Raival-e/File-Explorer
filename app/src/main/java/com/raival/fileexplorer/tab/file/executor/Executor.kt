@@ -144,7 +144,7 @@ class Executor(folder: File, activity: AppCompatActivity) {
     private fun runECJ() {
         val opt = ArrayList<String>()
         val classes = File(output, "classes")
-        if (!classes.mkdir()) {
+        if (!classes.exists() && !classes.mkdir()) {
             throw Exception(Log.UNABLE_TO + " " + FileUtils.CREATE_FILE + ": " + classes)
         }
 
