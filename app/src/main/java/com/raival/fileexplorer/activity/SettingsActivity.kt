@@ -11,6 +11,10 @@ import com.raival.fileexplorer.common.dialog.CustomDialog
 import com.raival.fileexplorer.common.dialog.OptionsDialog
 import com.raival.fileexplorer.tab.file.misc.FileUtils
 import com.raival.fileexplorer.util.PrefsUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class SettingsActivity : BaseActivity() {
     private lateinit var logModeValue: TextView
@@ -34,9 +38,21 @@ class SettingsActivity : BaseActivity() {
 
         findViewById<View>(R.id.settings_theme).setOnClickListener {
             OptionsDialog("Select theme mode")
-                .addOption(THEME_MODE_AUTO, { setThemeMode(THEME_MODE_AUTO) }, true)
-                .addOption(THEME_MODE_DARK, { setThemeMode(THEME_MODE_DARK) }, true)
-                .addOption(THEME_MODE_LIGHT, { setThemeMode(THEME_MODE_LIGHT) }, true)
+                .addOption(
+                    label = THEME_MODE_AUTO,
+                    listener = { setThemeMode(THEME_MODE_AUTO) },
+                    dismissOnClick = true
+                )
+                .addOption(
+                    label = THEME_MODE_DARK,
+                    listener = { setThemeMode(THEME_MODE_DARK) },
+                    dismissOnClick = true
+                )
+                .addOption(
+                    label = THEME_MODE_LIGHT,
+                    listener = { setThemeMode(THEME_MODE_LIGHT) },
+                    dismissOnClick = true
+                )
                 .show(supportFragmentManager, "")
         }
 
@@ -111,7 +127,10 @@ class SettingsActivity : BaseActivity() {
     private fun setThemeMode(mode: String) {
         themeModeValue.text = mode
         PrefsUtils.Settings.themeMode = mode
-        recreate()
+        CoroutineScope(Dispatchers.Main).launch {
+            delay(150)
+            recreate()
+        }
     }
 
     companion object {
