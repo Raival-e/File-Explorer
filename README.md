@@ -2,6 +2,12 @@
 
 A full-featured file manager with Material 3 Dynamic colors and Java/Kotlin compiler!
 
+# Screenshots
+
+<div style="overflow: hidden">
+<img src="/assets/screenshot1.png" width="32%" /> <img src="/assets/screenshot2.png" width="32%" /> <img src="/assets/screenshot3.png" width="32%" />
+</div>
+
 # Features
 
 - Open source and simple.
@@ -26,12 +32,6 @@ then put all JARs and DEXs here.
 After running the code, an output folder will be created. In this folder, you can see the output `.extension` file(s), you
 can run these files directly without the need to compile your code again by clicking on `classes.extension`.
 Using this features, the possibilities are endless, and you can create any extension you want and use it as part of the app!.
-
-# Screenshots
-
-<div style="overflow: hidden">
-<img src="/assets/screenshot1.png" width="32%" /> <img src="/assets/screenshot2.png" width="32%" /> <img src="/assets/screenshot3.png" width="32%" />
-</div>
 
 # Special thanks
 
