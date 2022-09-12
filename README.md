@@ -22,22 +22,24 @@ A full-featured file manager with Material 3 Dynamic colors and Java/Kotlin comp
 - Powerful Code Editor ([Sora Editor](https://github.com/Rosemoe/sora-editor)).
 - Deep search that allows you to search in files contents.
 - Additional features:
-  - Jar2Dex: you can convert .jar files to .dex files
-  - Executor: you can run java/kotlin projects. see Executor bellow.
+  - Java/Kotlin compiler: you can run java/kotlin projects. see the compiler details bellow.
 
-# Executor
+# Compiler
 
 To use this feature, all you need to do is to create Main.java/.kt file (it is recommended to create
 it in an empty folder), then open it, a dialog will show asking you if you want to use a sample
 code, click Yes. Now you can run you code by clicking run button in the toolbar. The main method
 gives you the context and the folder where the Main.java/.kt is located.
 
-You can add additional java files to the same directory, and if you want to use a local library, create a folder and name it `libs`,
-then put all JARs and DEXs here.
+You can add additional java files to the same directory, and if you want to use a local library, 
+create a folder and name it `libs`, then put all libraries there (note that **only** `.dex` and `.jar` are allowed.
+If the library comes with jar file only, long click onthe jar file and use `Jar2Dex` option to create a dex file.
+You **must** have both `.dex` and `.jar` files of the library in `/libs` folder to allow the app compiling and running it properly).
 
-After running the code, an output folder will be created. In this folder, you can see the output `.extension` file(s), you
-can run these files directly without the need to compile your code again by clicking on `classes.extension`.
-Using this features, the possibilities are endless, and you can create any extension you want and use it as part of the app!.
+After running the code, an output folder will be created. In this folder, you can see the output `.extension` file(s),
+you can run these files directly without the need to compile your code again by clicking on `classes.extension`.
+
+Using this features, the possibilities are endless!, and you can create any extension you want and use it as part of the app!.
 
 # Download
 
