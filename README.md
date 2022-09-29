@@ -31,15 +31,5 @@ A full-featured and lightweight file manager with Material 3 Dynamic colors
 
 [<img alt="Get it on IzzyOnDroid" height="80" src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png">](https://apt.izzysoft.de/fdroid/index/apk/com.raival.fileexplorer)
 
-- Latest release from [here](https://github.com/Raival-e/File-Explorer/releases/tag/v1.0.0).
+- Latest release from [here](https://github.com/Raival-e/File-Explorer/releases/tag/v1.1.0).
 - Latest debug build from [Github Actions](https://github.com/Raival-e/File-Explorer/actions).
-
-# Special thanks
-
-- [Mike Anderson](https://github.com/MikeAndrson).
-
-- [Tyron](https://github.com/tyron12233).
-
-- [Sketchware Pro](https://github.com/Sketchware-Pro/Sketchware-Pro).
-
-- [PranavPurwar](https://github.com/PranavPurwar)
