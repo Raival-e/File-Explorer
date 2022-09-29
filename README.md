@@ -6,7 +6,7 @@
 
 # File Explorer
 
-A full-featured file manager with Material 3 Dynamic colors
+A full-featured and lightweight file manager with Material 3 Dynamic colors
 
 # Screenshots
 
