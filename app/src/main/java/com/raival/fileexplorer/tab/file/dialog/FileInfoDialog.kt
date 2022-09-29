@@ -7,19 +7,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.raival.fileexplorer.App.Companion.copyString
-import com.raival.fileexplorer.App.Companion.showMsg
+import com.google.android.material.textfield.TextInputLayout
 import com.raival.fileexplorer.R
 import com.raival.fileexplorer.extension.getFolderSize
 import com.raival.fileexplorer.extension.getFormattedFileCount
 import com.raival.fileexplorer.extension.getLastModifiedDate
 import com.raival.fileexplorer.extension.toFormattedSize
 import com.raival.fileexplorer.tab.file.misc.IconHelper
+import com.raival.fileexplorer.tab.file.misc.md5.HashUtils
+import com.raival.fileexplorer.tab.file.misc.md5.MessageDigestAlgorithm
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.security.MessageDigest
 
 class FileInfoDialog(private val file: File) : BottomSheetDialogFragment() {
     private val infoList = ArrayList<InfoHolder>()
@@ -69,9 +71,6 @@ class FileInfoDialog(private val file: File) : BottomSheetDialogFragment() {
             val s = file.getFormattedFileCount()
             withContext(Dispatchers.Main) { count.text = s }
         }.start()
-        addItemView(InfoHolder("Type:", if (file.isFile) "File" else "Folder", true), container)
-        addItemView(InfoHolder("Read:", if (file.canRead()) "Yes" else "No", true), container)
-        addItemView(InfoHolder("Write:", if (file.canWrite()) "Yes" else "No", true), container)
         val size = addItemView(InfoHolder("Size:", "Counting...", true), container)
         CoroutineScope(Dispatchers.IO).launch {
             val s = file.getFolderSize().toFormattedSize()
@@ -91,31 +90,62 @@ class FileInfoDialog(private val file: File) : BottomSheetDialogFragment() {
                 "Modified:", file.getLastModifiedDate(), true
             ), container
         )
-        addItemView(InfoHolder("Type:", if (file.isFile) "File" else "Folder", true), container)
-        addItemView(InfoHolder("Read:", if (file.canRead()) "Yes" else "No", true), container)
-        addItemView(InfoHolder("Write:", if (file.canWrite()) "Yes" else "No", true), container)
         addItemView(
             InfoHolder(
                 "Size:", file.length().toFormattedSize(), true
             ), container
         )
+
+        val md5 = addItemView(InfoHolder("MD5:", "calculating...", true), container)
+        CoroutineScope(Dispatchers.IO).launch {
+            val s = HashUtils.getCheckSumFromFile(
+                MessageDigest.getInstance(MessageDigestAlgorithm.MD5),
+                file
+            )
+            withContext(Dispatchers.Main) { md5.text = s }
+        }.start()
+
+        val sha1 = addItemView(InfoHolder("SHA1:", "calculating...", true), container)
+        CoroutineScope(Dispatchers.IO).launch {
+            val s = HashUtils.getCheckSumFromFile(
+                MessageDigest.getInstance(MessageDigestAlgorithm.SHA_1),
+                file
+            )
+            withContext(Dispatchers.Main) { sha1.text = s }
+        }.start()
+
+        val sha256 = addItemView(InfoHolder("SHA256:", "calculating...", true), container)
+        CoroutineScope(Dispatchers.IO).launch {
+            val s = HashUtils.getCheckSumFromFile(
+                MessageDigest.getInstance(MessageDigestAlgorithm.SHA_256),
+                file
+            )
+            withContext(Dispatchers.Main) { sha256.text = s }
+        }.start()
+
+        val sha512 = addItemView(InfoHolder("SHA_512:", "calculating...", true), container)
+        CoroutineScope(Dispatchers.IO).launch {
+            val s = HashUtils.getCheckSumFromFile(
+                MessageDigest.getInstance(MessageDigestAlgorithm.SHA_512),
+                file
+            )
+            withContext(Dispatchers.Main) { sha512.text = s }
+        }.start()
     }
 
     private fun addItemView(holder: InfoHolder, container: ViewGroup?): TextView {
         @SuppressLint("InflateParams") val view =
             layoutInflater.inflate(R.layout.file_explorer_tab_info_dialog_item, null, false)
-        (view.findViewById<View>(R.id.name) as TextView).text = holder.name
-        val details = view.findViewById<TextView>(R.id.details)
-        details.text = holder.info
-        if (holder.clickable) {
-            details.isClickable = true
-            details.setOnClickListener {
-                copyString(holder.info)
-                showMsg(holder.name + " has been copied")
+        val v = (view.findViewById<View>(R.id.item) as TextInputLayout).apply {
+            editText!!.apply {
+                keyListener = null
+                setTextIsSelectable(true)
+                setText(holder.info)
             }
+            hint = holder.name
         }
         container!!.addView(view)
-        return details
+        return v.editText!!
     }
 
     fun addItem(name: String, info: String?, clickable: Boolean): FileInfoDialog {
