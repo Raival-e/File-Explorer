@@ -22,6 +22,11 @@ A full-featured and lightweight file manager with Material 3 Dynamic colors
 - Powerful Code Editor ([Sora Editor](https://github.com/Rosemoe/sora-editor)).
 - Deep search that allows you to search in files contents.
 
+# Upcoming features
+- [ ] Built-in audio/video player and PDF/image viewer
+- [ ] Archive viewer
+- [ ] Support for exploring root/external storage
+
 # Download
 
 [<img alt="Get it on IzzyOnDroid" height="80" src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png">](https://apt.izzysoft.de/fdroid/index/apk/com.raival.fileexplorer)
