@@ -8,6 +8,9 @@ import android.os.Environment
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
+import android.widget.HorizontalScrollView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.view.menu.MenuBuilder
@@ -17,18 +20,19 @@ import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.google.android.material.progressindicator.LinearProgressIndicator
+import com.google.android.material.textview.MaterialTextView
 import com.raival.fileexplorer.App.Companion.showMsg
 import com.raival.fileexplorer.R
 import com.raival.fileexplorer.activity.adapter.BookmarksAdapter
 import com.raival.fileexplorer.activity.model.MainViewModel
+import com.raival.fileexplorer.common.dialog.CustomDialog
 import com.raival.fileexplorer.common.view.BottomBarView
 import com.raival.fileexplorer.common.view.TabView
 import com.raival.fileexplorer.common.view.TabView.OnUpdateTabViewListener
-import com.raival.fileexplorer.extension.getAvailableMemoryBytes
-import com.raival.fileexplorer.extension.getShortLabel
-import com.raival.fileexplorer.extension.getTotalMemoryBytes
-import com.raival.fileexplorer.extension.getUsedMemoryBytes
+import com.raival.fileexplorer.extension.*
 import com.raival.fileexplorer.tab.BaseDataHolder
 import com.raival.fileexplorer.tab.BaseTabFragment
 import com.raival.fileexplorer.tab.apps.AppsTabDataHolder
@@ -37,6 +41,7 @@ import com.raival.fileexplorer.tab.file.FileExplorerTabDataHolder
 import com.raival.fileexplorer.tab.file.FileExplorerTabFragment
 import com.raival.fileexplorer.tab.file.misc.FileOpener
 import com.raival.fileexplorer.tab.file.misc.FileUtils
+import com.raival.fileexplorer.util.Log
 import com.raival.fileexplorer.util.PrefsUtils
 import com.raival.fileexplorer.util.Utils
 import kotlinx.coroutines.CoroutineScope
@@ -135,8 +140,6 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        receiveCommands()
 
         tabView = findViewById(R.id.tabs)
         fragmentContainerView = findViewById(R.id.fragment_container)
@@ -244,29 +247,11 @@ class MainActivity : BaseActivity() {
         })
 
         findViewById<View>(R.id.tabs_options).setOnClickListener {
-            addNewTab(
-                FileExplorerTabFragment(),
-                BaseTabFragment.FILE_EXPLORER_TAB_FRAGMENT_PREFIX + generateRandomTag()
-            )
+            addNewTab()
         }
 
         checkPermissions()
         setupDrawer()
-    }
-
-    private fun receiveCommands() {
-        val command = "run_extension"
-        val commandValue = "value"
-
-        intent.getStringExtra("command")?.let {
-            if (it == command) {
-                intent.getStringExtra(commandValue)?.let { path ->
-                    FileOpener(this).openFile(File(path))
-                    intent.removeExtra(command)
-                    intent.removeExtra(commandValue)
-                }
-            }
-        }
     }
 
     override fun onResume() {
@@ -376,6 +361,99 @@ class MainActivity : BaseActivity() {
             .replace(R.id.fragment_container, fragment, tag)
             .setReorderingAllowed(true)
             .commit()
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun addNewTab() {
+        val customDialog = CustomDialog()
+        val input = customDialog.createInput(this, "destination path")
+        input.editText?.setSingleLine()
+        val textView = MaterialTextView(this)
+        textView.setPadding(0, 8.toDp(), 0, 0)
+        textView.alpha = 0.7f
+        textView.text = "Quick Links:"
+        val layout = ChipGroup(this).apply {
+            isScrollContainer = true
+        }
+
+        // Chips
+        layout.addView(createChip("Downloads") {
+            addNewTab(
+                FileExplorerTabFragment(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)),
+                BaseTabFragment.FILE_EXPLORER_TAB_FRAGMENT_PREFIX + generateRandomTag()
+            )
+            customDialog.dismiss()
+        })
+
+        layout.addView(createChip("Documents") {
+            addNewTab(
+                FileExplorerTabFragment(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)),
+                BaseTabFragment.FILE_EXPLORER_TAB_FRAGMENT_PREFIX + generateRandomTag()
+            )
+            customDialog.dismiss()
+        })
+
+        layout.addView(createChip("DCIM") {
+            addNewTab(
+                FileExplorerTabFragment(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)),
+                BaseTabFragment.FILE_EXPLORER_TAB_FRAGMENT_PREFIX + generateRandomTag()
+            )
+            customDialog.dismiss()
+        })
+
+        layout.addView(createChip("Music") {
+            addNewTab(
+                FileExplorerTabFragment(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)),
+                BaseTabFragment.FILE_EXPLORER_TAB_FRAGMENT_PREFIX + generateRandomTag()
+            )
+            customDialog.dismiss()
+        })
+
+        customDialog.setTitle("Set destination path")
+            .addView(input)
+            .addView(textView)
+            .addView(HorizontalScrollView(this).apply {
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+                addView(layout)
+            })
+            .setPositiveButton("Go", {
+                val file = File(
+                    input.editText!!.text.toString()
+                )
+                if (file.exists()) {
+                    if (file.canRead()) {
+                        if (file.isFile) {
+                            FileOpener(this).openFile(file)
+                        } else {
+                            addNewTab(
+                                FileExplorerTabFragment(file),
+                                BaseTabFragment.FILE_EXPLORER_TAB_FRAGMENT_PREFIX + generateRandomTag()
+                            )
+                        }
+                    } else {
+                        showMsg(Log.UNABLE_TO + " read the provided file")
+                    }
+                } else {
+                    showMsg("The destination path doesn't exist!")
+                }
+            }, true)
+            .show(supportFragmentManager, "")
+    }
+
+    private fun createChip(title: String, onClick: () -> Unit): View {
+        return Chip(this).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            text = title
+            setOnClickListener {
+                onClick.invoke()
+            }
+        }
     }
 
     @SuppressLint("RestrictedApi")

@@ -196,14 +196,6 @@ object IconHelper {
             return
         }
 
-        if (ext == "extension") {
-            Glide.with(icon.context)
-                .load(IconRes(R.drawable.extension_file_extension))
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
-                .into(icon)
-            return
-        }
         Glide.with(icon.context)
             .load(IconRes(R.drawable.unknown_file_extension))
             .diskCacheStrategy(DiskCacheStrategy.NONE)

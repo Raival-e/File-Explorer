@@ -7,13 +7,13 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textview.MaterialTextView
 import com.raival.fileexplorer.App.Companion.showMsg
 import com.raival.fileexplorer.R
@@ -167,39 +167,55 @@ class FileExplorerTabFragment : BaseTabFragment {
     @SuppressLint("SetTextI18n")
     private fun showSetPathDialog(): Boolean {
         val customDialog = CustomDialog()
-        val input = customDialog.createInput(requireActivity(), "File path")
+        val input = customDialog.createInput(requireActivity(), "destination path")
         input.editText?.setSingleLine()
         val textView = MaterialTextView(requireContext())
         textView.setPadding(0, 8.toDp(), 0, 0)
         textView.alpha = 0.7f
         textView.text = "Quick Links:"
-        val layout = ChipGroup(requireContext())
-        val internal = Chip(requireContext())
-        internal.layoutParams = LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-        internal.text = "Internal Data Files"
-        internal.setOnClickListener {
-            setCurrentDirectory(requireActivity().filesDir)
-            customDialog.dismiss()
+        val layout = ChipGroup(requireContext()).apply {
+            isScrollContainer = true
         }
-        val external = Chip(requireContext())
-        external.layoutParams = LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-        external.text = "External Data Files"
-        external.setOnClickListener {
-            setCurrentDirectory(requireActivity().getExternalFilesDir(null)!!)
+
+        // Chips
+        layout.addView(createChip("Downloads") {
+            setCurrentDirectory(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+            )
             customDialog.dismiss()
-        }
-        layout.addView(internal)
-        layout.addView(external)
+        })
+
+        layout.addView(createChip("Documents") {
+            setCurrentDirectory(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+            )
+            customDialog.dismiss()
+        })
+
+        layout.addView(createChip("DCIM") {
+            setCurrentDirectory(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
+            )
+            customDialog.dismiss()
+        })
+
+        layout.addView(createChip("Music") {
+            setCurrentDirectory(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
+            )
+            customDialog.dismiss()
+        })
+
         customDialog.setTitle("Jump to path")
             .addView(input)
             .addView(textView)
-            .addView(layout)
+            .addView(HorizontalScrollView(requireContext()).apply {
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+                addView(layout)
+            })
             .setPositiveButton("Go", {
                 val file = File(
                     input.editText!!.text.toString()
@@ -220,6 +236,19 @@ class FileExplorerTabFragment : BaseTabFragment {
             }, true)
             .show(parentFragmentManager, "")
         return true
+    }
+
+    private fun createChip(title: String, onClick: () -> Unit): View {
+        return Chip(requireContext()).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            text = title
+            setOnClickListener {
+                onClick.invoke()
+            }
+        }
     }
 
     private fun showAddNewFileDialog() {
@@ -507,14 +536,6 @@ class FileExplorerTabFragment : BaseTabFragment {
 
     fun openFile(fileItem: FileItem) {
         FileOpener(requireActivity() as MainActivity).openFile(fileItem.file)
-    }
-
-    fun showDialog(title: String?, msg: String?) {
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(title!!)
-            .setMessage(msg!!)
-            .setPositiveButton("Ok", null)
-            .show()
     }
 
     private fun updatePathHistoryList() {
