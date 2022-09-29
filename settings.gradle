@@ -8,6 +8,3 @@ dependencyResolutionManagement {
 }
 rootProject.name = "File Explorer"
 include ':app'
-include ':kotlinc'
-include ':jaxp:xml'
-include ':jaxp:internal'
