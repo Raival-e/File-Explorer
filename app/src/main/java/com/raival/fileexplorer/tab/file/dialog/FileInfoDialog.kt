@@ -64,11 +64,11 @@ class FileInfoDialog(private val file: File) : BottomSheetDialogFragment() {
                 "Modified:", file.getLastModifiedDate(), true
             ), container
         )
-        addItemView(
-            InfoHolder(
-                "Content:", file.getFormattedFileCount(), true
-            ), container
-        )
+        val count = addItemView(InfoHolder("Content:", "Counting...", true), container)
+        CoroutineScope(Dispatchers.IO).launch {
+            val s = file.getFormattedFileCount()
+            withContext(Dispatchers.Main) { count.text = s }
+        }.start()
         addItemView(InfoHolder("Type:", if (file.isFile) "File" else "Folder", true), container)
         addItemView(InfoHolder("Read:", if (file.canRead()) "Yes" else "No", true), container)
         addItemView(InfoHolder("Write:", if (file.canWrite()) "Yes" else "No", true), container)
