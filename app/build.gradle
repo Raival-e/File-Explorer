@@ -58,9 +58,8 @@ dependencies {
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.9'
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation project(path: ':kotlinc')
 
-    implementation "androidx.appcompat:appcompat:1.5.0"
+    implementation "androidx.appcompat:appcompat:1.5.1"
     implementation "com.google.android.material:material:1.6.1"
     implementation "com.google.code.gson:gson:2.9.1"
     implementation 'commons-io:commons-io:2.11.0'
@@ -70,21 +69,13 @@ dependencies {
 
     implementation "com.pixplicity.easyprefs:EasyPrefs:1.10.0"
     implementation "net.lingala.zip4j:zip4j:2.11.1"
-    implementation "io.github.damianvdb:materialchecklist:1.0.0"
+
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
     implementation "io.github.Rosemoe.sora-editor:editor:0.17.1", {
         exclude group: "androidx.annotation", module: "annotation"
     }
-    implementation "io.github.Rosemoe.sora-editor:language-textmate:0.17.1", {
-        // I had to exclude it to resolve a conflict with some kotlinc classes (javax.xml.stream.*)
-        // TODO: only exclude classes in javax.xml.stream
-        exclude group: "xml-apis", module: "xml-apis"
-    }
+    implementation "io.github.Rosemoe.sora-editor:language-textmate:0.17.1"
     implementation "io.github.Rosemoe.sora-editor:language-java:0.17.1"
-
-    api "com.android.tools:r8:3.3.28"
-    implementation "org.eclipse.jdt:ecj:3.26.0"
-    implementation 'io.github.itsaky:nb-javac-android:17.0.0.2'
 
     testImplementation "junit:junit:4.13.2"
     androidTestImplementation "androidx.test.ext:junit:1.1.3"

@@ -5,7 +5,6 @@ import android.content.Intent
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.raival.fileexplorer.App.Companion.showMsg
@@ -21,17 +20,16 @@ import com.raival.fileexplorer.tab.BaseTabFragment
 import com.raival.fileexplorer.tab.file.FileExplorerTabFragment
 import com.raival.fileexplorer.tab.file.dialog.FileInfoDialog
 import com.raival.fileexplorer.tab.file.dialog.SearchDialog
-import com.raival.fileexplorer.tab.file.executor.Executor
 import com.raival.fileexplorer.tab.file.misc.FileUtils
 import com.raival.fileexplorer.tab.file.model.FileItem
 import com.raival.fileexplorer.tab.file.model.Task.OnFinishListener
 import com.raival.fileexplorer.tab.file.model.Task.OnUpdateListener
-import com.raival.fileexplorer.tab.file.task.*
-import com.raival.fileexplorer.util.Log
+import com.raival.fileexplorer.tab.file.task.CompressTask
+import com.raival.fileexplorer.tab.file.task.CopyTask
+import com.raival.fileexplorer.tab.file.task.CutTask
+import com.raival.fileexplorer.tab.file.task.ExtractTask
 import com.raival.fileexplorer.util.PrefsUtils
 import java.io.File
-import java.util.*
-import java.util.concurrent.atomic.AtomicReference
 
 class FileOptionsHandler(private val parentFragment: FileExplorerTabFragment) {
     private var mainViewModel: MainViewModel? = null
@@ -59,17 +57,6 @@ class FileOptionsHandler(private val parentFragment: FileExplorerTabFragment) {
         bottomDialog.show(parentFragment.parentFragmentManager, "FileOptionsDialog")
 
         //______________| Options |_______________\\
-        if (FileUtils.isSingleFile(selectedFiles)) {
-            if (selectedFiles[0].name.lowercase(Locale.getDefault()).endsWith(".java")
-                || selectedFiles[0].name.lowercase(Locale.getDefault()).endsWith(".kt")
-            ) {
-                bottomDialog.addOption("Execute", R.drawable.ic_round_code_24, {
-                    exeJava(
-                        selectedFiles[0].parentFile!!
-                    )
-                }, true)
-            }
-        }
         if (selectedFiles.size == 1) {
             val list = PrefsUtils.TextEditor.fileExplorerTabBookmarks
             if (!list.contains(selectedFiles[0].toString())) {
@@ -192,17 +179,6 @@ class FileOptionsHandler(private val parentFragment: FileExplorerTabFragment) {
             { compressFiles(CompressTask(selectedFiles)) },
             true
         )
-        if (FileUtils.isSingleFile(selectedFiles)) {
-            if (selectedFiles[0].extension.equals("jar", ignoreCase = true)) {
-                bottomDialog.addOption("Jar2Dex", R.drawable.ic_round_code_24, {
-                    jar2Dex(
-                        Jar2DexTask(
-                            selectedFiles[0]
-                        )
-                    )
-                }, true)
-            }
-        }
         if (selectedFiles.size == 1) {
             bottomDialog.addOption("Details", R.drawable.ic_baseline_info_24, {
                 showFileInfoDialog(
@@ -258,33 +234,6 @@ class FileOptionsHandler(private val parentFragment: FileExplorerTabFragment) {
             i++
         }
         return file.name
-    }
-
-    @SuppressLint("SetTextI18n")
-    private fun jar2Dex(task: Jar2DexTask) {
-        if (task.isValid) {
-            val dir = parentFragment.currentDirectory
-            task.setActiveDirectory(dir!!)
-            val view = progressView
-            val progressText = view.findViewById<TextView>(R.id.msg)
-            progressText.text = "Processing..."
-            val dialog = dialog.setView(view).show()
-            task.start(
-                object : OnUpdateListener {
-                    override fun onUpdate(progress: String) {
-                        progressText.text = progress
-                    }
-                },
-                object : OnFinishListener {
-                    override fun onFinish(result: String) {
-                        showMsg(result)
-                        parentFragment.refresh()
-                        dialog.dismiss()
-                    }
-                })
-        } else {
-            showMsg("The jar file doesn't exist")
-        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -358,39 +307,6 @@ class FileOptionsHandler(private val parentFragment: FileExplorerTabFragment) {
     private val dialog: AlertDialog.Builder
         get() = MaterialAlertDialogBuilder(parentFragment.requireActivity())
             .setCancelable(false)
-
-    private fun exeJava(file: File) {
-        val executor = Executor(file, (parentFragment.requireActivity() as AppCompatActivity))
-        val backgroundTask = BackgroundTask()
-        val error = AtomicReference("")
-        backgroundTask.setTasks({
-            backgroundTask.showProgressDialog(
-                "compiling files...",
-                parentFragment.requireActivity()
-            )
-        }, {
-            try {
-                executor.execute()
-            } catch (exception: Exception) {
-                error.set(Log.getStackTrace(exception))
-            }
-        }) {
-            try {
-                if (error.get() != "") {
-                    backgroundTask.dismiss()
-                    parentFragment.showDialog("Error", error.get())
-                    return@setTasks
-                }
-                executor.invoke()
-                backgroundTask.dismiss()
-            } catch (exception: Exception) {
-                backgroundTask.dismiss()
-                parentFragment.showDialog("Error", Log.getStackTrace(exception))
-            }
-            parentFragment.refresh()
-        }
-        backgroundTask.run()
-    }
 
     private fun showRenameDialog(selectedFiles: ArrayList<File>) {
         val customDialog = CustomDialog()

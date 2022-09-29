@@ -15,7 +15,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.elevation.SurfaceColors
 import com.google.android.material.textfield.TextInputLayout
-import com.raival.fileexplorer.App
 import com.raival.fileexplorer.App.Companion.showMsg
 import com.raival.fileexplorer.R
 import com.raival.fileexplorer.activity.editor.autocomplete.CustomCompletionItemAdapter
@@ -28,10 +27,7 @@ import com.raival.fileexplorer.activity.editor.scheme.DarkScheme
 import com.raival.fileexplorer.activity.editor.scheme.LightScheme
 import com.raival.fileexplorer.activity.editor.view.SymbolInputView
 import com.raival.fileexplorer.activity.model.TextEditorViewModel
-import com.raival.fileexplorer.common.BackgroundTask
-import com.raival.fileexplorer.tab.file.executor.Executor
 import com.raival.fileexplorer.tab.file.misc.FileMimeTypes
-import com.raival.fileexplorer.tab.file.misc.FileUtils
 import com.raival.fileexplorer.util.Log
 import com.raival.fileexplorer.util.PrefsUtils
 import com.raival.fileexplorer.util.Utils
@@ -47,7 +43,6 @@ import org.eclipse.tm4e.core.registry.IThemeSource
 import java.io.File
 import java.io.IOException
 import java.util.*
-import java.util.concurrent.atomic.AtomicReference
 
 class TextEditorActivity : BaseActivity() {
     private lateinit var editor: CodeEditor
@@ -123,67 +118,7 @@ class TextEditorActivity : BaseActivity() {
             showMsg("Failed to read file: " + editorViewModel.file!!.absolutePath)
             finish()
         }
-
-        editor.post {
-            if (editor.text.toString().isEmpty()) {
-                if ("Main.java".equals(editorViewModel.file!!.name, ignoreCase = true)) {
-                    askToLoadCodeSample(true)
-                } else if ("Main.kt".equals(editorViewModel.file!!.name, ignoreCase = true)) {
-                    askToLoadCodeSample(false)
-                }
-            }
-        }
     }
-
-    private fun askToLoadCodeSample(isJava: Boolean) {
-        MaterialAlertDialogBuilder(this)
-            .setTitle("Help")
-            .setMessage("Do you want to use an executable code sample in this file?")
-            .setPositiveButton("Yes") { _, _ -> editor.setText(getCodeSample(isJava)) }
-            .setNegativeButton("No", null)
-            .show()
-    }
-
-    private fun getCodeSample(isJava: Boolean): String {
-        return try {
-            if (isJava) javaSampleCode else kotlinSampleCode
-        } catch (e: Exception) {
-            Log.e(
-                TAG,
-                Log.SOMETHING_WENT_WRONG
-                        + " while loading "
-                        + (if (isJava) FileMimeTypes.javaType else "kotlin")
-                        + " sample code",
-                e
-            )
-            showMsg("Failed to load sample code")
-            ""
-        }
-    }
-
-    @get:Throws(Exception::class)
-    private val javaSampleCode: String
-        get() {
-            val customSampleCode = File(
-                App.appContext.getExternalFilesDir(null),
-                "sample_code/java_sample_code.java"
-            )
-            return if (customSampleCode.exists() && customSampleCode.isFile) {
-                customSampleCode.readText()
-            } else FileUtils.copyFromInputStream(assets.open("sample_code/java_sample_code.java"))
-        }
-
-    @get:Throws(Exception::class)
-    private val kotlinSampleCode: String
-        get() {
-            val customSampleCode = File(
-                App.appContext.getExternalFilesDir(null),
-                "sample_code/kotlin_sample_code.kt"
-            )
-            return if (customSampleCode.exists() && customSampleCode.isFile) {
-                customSampleCode.readText()
-            } else FileUtils.copyFromInputStream(assets.open("sample_code/kotlin_sample_code.kt"))
-        }
 
     private fun detectLanguage(file: File) {
         when (file.extension.lowercase(Locale.getDefault())) {
@@ -304,9 +239,6 @@ class TextEditorActivity : BaseActivity() {
         val id = item.itemId
         if (id == R.id.editor_format) {
             editor.formatCodeAsync()
-        } else if (id == R.id.editor_execute) {
-            saveFile(editor.text.toString())
-            executeFile()
         } else if (id == R.id.editor_language_def) {
             item.isChecked = true
             editor.setEditorLanguage(null)
@@ -486,41 +418,6 @@ class TextEditorActivity : BaseActivity() {
             setColor(EditorColorScheme.HIGHLIGHTED_DELIMITERS_FOREGROUND, Color.RED)
         }
         return scheme
-    }
-
-    private fun executeFile() {
-        val executor = Executor(editorViewModel.file?.parentFile!!, this)
-        val backgroundTask = BackgroundTask()
-        val error = AtomicReference("")
-        backgroundTask.setTasks({ backgroundTask.showProgressDialog("compiling files...", this) }, {
-            try {
-                executor.execute()
-            } catch (exception: Exception) {
-                error.set(Log.getStackTrace(exception))
-            }
-        }) {
-            try {
-                if (error.get().isNotEmpty()) {
-                    backgroundTask.dismiss()
-                    showDialog("Error", error.get())
-                    return@setTasks
-                }
-                executor.invoke()
-                backgroundTask.dismiss()
-            } catch (exception: Exception) {
-                backgroundTask.dismiss()
-                showDialog("Error", Log.getStackTrace(exception))
-            }
-        }
-        backgroundTask.run()
-    }
-
-    private fun showDialog(title: String, msg: String) {
-        MaterialAlertDialogBuilder(this)
-            .setTitle(title)
-            .setMessage(msg)
-            .setPositiveButton("Ok", null)
-            .show()
     }
 
     private fun saveFile(content: String) {
