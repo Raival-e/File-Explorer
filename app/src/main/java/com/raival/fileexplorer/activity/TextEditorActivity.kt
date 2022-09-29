@@ -198,11 +198,6 @@ class TextEditorActivity : BaseActivity() {
         super.onBackPressed()
     }
 
-    private fun canExecute(): Boolean {
-        return (File(editorViewModel.file?.parentFile, "Main.java").exists()
-                || File(editorViewModel.file?.parentFile, "Main.kt").exists())
-    }
-
     @SuppressLint("RestrictedApi")
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.text_editor_menu, menu)
@@ -219,8 +214,6 @@ class TextEditorActivity : BaseActivity() {
             PrefsUtils.TextEditor.textEditorReadOnly
         menu.findItem(R.id.editor_option_autocomplete).isChecked =
             PrefsUtils.TextEditor.textEditorAutocomplete
-
-        if (!canExecute()) menu.findItem(R.id.editor_execute).isVisible = false
         return super.onCreateOptionsMenu(menu)
     }
 

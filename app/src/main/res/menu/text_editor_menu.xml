@@ -73,11 +73,6 @@
         android:icon="@drawable/ic_baseline_sort_24"
         android:title="Format" />
     <item
-        android:id="@+id/editor_execute"
-        android:icon="@drawable/ic_round_play_arrow_24"
-        android:title="Execute"
-        app:showAsAction="always" />
-    <item
         android:id="@+id/editor_option_save"
         android:icon="@drawable/ic_baseline_save_24"
         android:title="Save"
