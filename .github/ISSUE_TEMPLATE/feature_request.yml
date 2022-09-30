@@ -1,0 +1,36 @@
+name: Feature Request
+description: Requesting a new feature
+title: "[Feature]: "
+labels: ["feature request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this feature request! Please provide a proper title and clear description to this feature. You must request one feature at a time, if you want to request multiple features, create a new request for each one.
+        
+  - type: textarea
+    id: feature-details
+    attributes:
+      label: Feature Description
+      description: Describe the feature properly.
+      placeholder: Describe the feature
+    validations:
+      required: true
+
+  - type: textarea
+    id: implementation
+    attributes:
+      label: How can this feature be implemented?
+      description: Tell us any idea on how can we implement this feature
+      placeholder: Describe the possible implementation
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: not-a-duplicate
+    attributes:
+      label: Duplicate feature
+      description: Please make sure that there are no similar feature opened. Duplicate feature will be closed directly. If there are any similar looking features, leave a comment there.
+      options:
+        - label: This feature has not been requested yet.
+          required: true
