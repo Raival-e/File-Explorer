@@ -1,1 +1,1 @@
-file explorer with java/kotlin compiler
+a full-featured file manager for android
