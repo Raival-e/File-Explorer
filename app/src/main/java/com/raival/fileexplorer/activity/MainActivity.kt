@@ -366,7 +366,7 @@ class MainActivity : BaseActivity() {
     @SuppressLint("SetTextI18n")
     private fun addNewTab() {
         val customDialog = CustomDialog()
-        val input = customDialog.createInput(this, "destination path")
+        val input = customDialog.createInput(this, "e.g. /sdcard/...")
         input.editText?.setSingleLine()
         val textView = MaterialTextView(this)
         textView.setPadding(0, 8.toDp(), 0, 0)
@@ -377,6 +377,14 @@ class MainActivity : BaseActivity() {
         }
 
         // Chips
+        layout.addView(createChip("Internal Storage") {
+            addNewTab(
+                FileExplorerTabFragment(),
+                BaseTabFragment.FILE_EXPLORER_TAB_FRAGMENT_PREFIX + generateRandomTag()
+            )
+            customDialog.dismiss()
+        })
+
         layout.addView(createChip("Downloads") {
             addNewTab(
                 FileExplorerTabFragment(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)),
@@ -409,7 +417,7 @@ class MainActivity : BaseActivity() {
             customDialog.dismiss()
         })
 
-        customDialog.setTitle("Set destination path")
+        customDialog.setTitle("Set tab path")
             .addView(input)
             .addView(textView)
             .addView(HorizontalScrollView(this).apply {

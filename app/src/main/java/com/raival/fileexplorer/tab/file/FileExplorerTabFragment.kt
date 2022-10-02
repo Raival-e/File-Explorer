@@ -167,7 +167,7 @@ class FileExplorerTabFragment : BaseTabFragment {
     @SuppressLint("SetTextI18n")
     private fun showSetPathDialog(): Boolean {
         val customDialog = CustomDialog()
-        val input = customDialog.createInput(requireActivity(), "destination path")
+        val input = customDialog.createInput(requireActivity(), "e.g. /sdcard/...")
         input.editText?.setSingleLine()
         val textView = MaterialTextView(requireContext())
         textView.setPadding(0, 8.toDp(), 0, 0)
@@ -178,6 +178,13 @@ class FileExplorerTabFragment : BaseTabFragment {
         }
 
         // Chips
+        layout.addView(createChip("Internal Storage") {
+            setCurrentDirectory(
+                defaultHomeDirectory
+            )
+            customDialog.dismiss()
+        })
+
         layout.addView(createChip("Downloads") {
             setCurrentDirectory(
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
