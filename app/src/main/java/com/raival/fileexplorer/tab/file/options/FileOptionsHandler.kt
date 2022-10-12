@@ -348,6 +348,7 @@ class FileOptionsHandler(private val parentFragment: FileExplorerTabFragment) {
 
     private fun doDelete(selectedFiles: ArrayList<File>) {
         parentFragment.setSelectAll(false)
+        var errorMsg = ""
         val backgroundTask = BackgroundTask()
         backgroundTask.setTasks({
             backgroundTask.showProgressDialog(
@@ -359,11 +360,11 @@ class FileOptionsHandler(private val parentFragment: FileExplorerTabFragment) {
                 FileUtils.deleteFiles(selectedFiles)
             } catch (e: Exception) {
                 e.printStackTrace()
-                showMsg(e.toString())
+                errorMsg = "Something went wrong, check logs for more details"
             }
         }) {
             backgroundTask.dismiss()
-            showMsg("Files have been deleted")
+            showMsg(if(errorMsg.isEmpty()) "Files have been deleted" else errorMsg)
             parentFragment.refresh()
         }
         backgroundTask.run()
