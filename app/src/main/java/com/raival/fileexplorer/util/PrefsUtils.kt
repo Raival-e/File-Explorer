@@ -30,7 +30,7 @@ object PrefsUtils {
                 Prefs.putBoolean("text_editor_pin_line_number", pinLineNumber)
             }
         var textEditorMagnifier: Boolean
-            get() = Prefs.getBoolean("text_editor_magnifier", true)
+            get() = Prefs.getBoolean("text_editor_magnifier", false)
             set(magnifier) {
                 Prefs.putBoolean("text_editor_magnifier", magnifier)
             }
