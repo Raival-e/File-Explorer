@@ -4,6 +4,9 @@
 [![Total downloads](https://img.shields.io/github/downloads/Raival-e/File-Explorer/total)](https://github.com/Raival-e/File-Explorer/releases)
 ![Repository Size](https://img.shields.io/github/repo-size/Raival-e/File-Explorer)
 
+> [!WARNING]  
+> This project is no longer maintained. Check out the new version [here](https://github.com/Raival-e/File-Explorer-Compose).
+
 # File Explorer
 
 A full-featured and lightweight file manager with Material 3 Dynamic colors
